@@ -12,6 +12,7 @@ bug-reports: "https://github.com/de-alchmst/bast/issues"
 depends: [
   "dune" {>= "3.20"}
   "ocaml"
+  "menhirLib"
   "odoc" {with-doc}
 ]
 build: [

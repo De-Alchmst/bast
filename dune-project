@@ -17,10 +17,13 @@
 
 (package
  (name bast)
+ (allow_empty)
  (synopsis "The BAST programming language")
  (description "The BAST programming language")
- (depends ocaml)
+ (depends ocaml menhirLib)
  (tags
   ("add topics" "to describe" your project)))
+
+(using menhir 3.0)
 
 ; See the complete stanza docs at https://dune.readthedocs.io/en/stable/reference/dune-project/index.html
