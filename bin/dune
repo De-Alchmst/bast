@@ -1,16 +1,5 @@
-; dune - Build configuration file
-; This tells dune how to build our compiler
-
-; The main executable
 (executable
  (public_name bast)
  (name main)
  (modules main)
  (libraries bast_lib))
-
-; ; Tell dune to use ocamllex to generate lexer.ml from lexer.mll
-; (ocamllex lexer)
-
-; ; Tell dune to use menhir to generate parser.ml and parser.mli from parser.mly
-; (menhir
-;  (modules parser))

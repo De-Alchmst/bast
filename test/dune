@@ -1,2 +1,4 @@
 (test
- (name test_bast))
+ (name test_parser)
+ (modules test_parser)
+ (libraries bast_lib))

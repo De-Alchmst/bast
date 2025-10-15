@@ -15,9 +15,9 @@ let letter = ['a'-'z' 'A'-'Z']
 
 (* The main lexing rule. This is a function that takes a lexbuf and returns tokens.
    'parse' is a keyword that means we're pattern matching on the input characters. *)
-rule token = parse
-  | whitespace+  { token lexbuf }
-  | newline      { Lexing.new_line lexbuf; token lexbuf }
+rule tokenize = parse
+  | whitespace+  { tokenize lexbuf }
+  | newline      { Lexing.new_line lexbuf; tokenize lexbuf }
   | "print"      { PRINT }
   | "var"        { VAR }
 

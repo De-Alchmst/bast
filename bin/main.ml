@@ -11,12 +11,7 @@ let compile input_channel =
   lexbuf.lex_curr_p <- { lexbuf.lex_curr_p with pos_fname = "input" };
   
   try
-    (* Run the parser! 
-       - Parser.prog is the start symbol from parser.mly
-       - Lexer.token is the lexing function from lexer.mll
-       - lexbuf is the input buffer
-       This will return an Ast.program (list of statements) *)
-    let ast = Parser.prog Lexer.token lexbuf in
+    let ast = Parser.prog Lexer.tokenize lexbuf in
     Moonbit_project.gen_skelet ();
     Moonbit_project.write_file_ast "main.mbt" ast;
     Moonbit_project.run ();
