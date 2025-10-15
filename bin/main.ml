@@ -1,13 +1,7 @@
 (* main.ml - Main entry point for the compiler *)
 
-(* This file ties everything together:
-   1. Reads input
-   2. Lexes it into tokens
-   3. Parses tokens into AST
-   4. Generates Python code
-   5. Outputs the result *)
+open Bast_lib
 
-(* Main compilation function *)
 let compile input_channel =
   (* Create a lexer buffer from the input channel - defined outside try
      so it's accessible in the error handlers *)

@@ -1,2 +1,15 @@
 (library
- (name bast))
+ (name bast_lib)
+ (modules files encoding ast lexer parser
+          moonbit_codegen moonbit_project moonbit_lib)
+ (libraries str unix
+            menhirLib))
+
+  
+; Tell dune to use ocamllex to generate lexer.ml from lexer.mll
+(ocamllex lexer)
+
+; Tell dune to use menhir to generate parser.ml and parser.mli from parser.mly
+(menhir
+ (modules parser))
+
