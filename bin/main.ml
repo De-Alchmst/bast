@@ -24,7 +24,7 @@ let compile input_channel =
        This will return an Ast.program (list of statements) *)
     let ast = Parser.prog Lexer.token lexbuf in
     Moonbit_project.gen_skelet ();
-    print_endline @@ Moonbit_project.file_of_ast ast;
+    Moonbit_project.write_file_ast "main.mbt" ast;
     0 (* Return success *)
     
   with

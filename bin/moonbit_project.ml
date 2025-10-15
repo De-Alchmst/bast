@@ -29,7 +29,10 @@ let gen_skelet () =
 let file_of_ast ast =
 {|fn main {
 |}
-^ string_of_program ast ^
+^ string_of_ast ast ^
 {|
 }|}
 
+
+let write_file_ast name ast =
+  Files.write_file_string (basedir ^ name) (file_of_ast ast)

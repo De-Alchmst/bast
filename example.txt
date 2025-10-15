@@ -4,6 +4,6 @@ var z
 
 x-x = 10
 y = 20.77
-z = x + y * 2
+z = x-x + y * 2
 print z
 print x-x - 5

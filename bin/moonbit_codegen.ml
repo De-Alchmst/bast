@@ -13,7 +13,7 @@ let string_of_binop = function
 let rec string_of_expr = function
   (* Ocaml ends whole floats in '.', not '.0' *)
   | Num n -> "Num(" ^ (string_of_float n) ^ "0)"
-  | Var x -> (Encoding.encode_prefix "_bast_" x) ^ ".val"
+  | Var x -> (Encoding.encode_prefix x) ^ ".val"
   
   | BinOp (op, e1, e2) ->
       (* Recursively convert sub-expressions *)
@@ -21,17 +21,18 @@ let rec string_of_expr = function
       let right = string_of_expr e2 in
       let op_str = string_of_binop op in
       (* Build the Python expression with explicit parentheses *)
-      Printf.sprintf "%s(%s, %s)" op_str left right
+      Printf.sprintf "%s([%s, %s])" op_str left right
 
 let string_of_stmt = function
   | Assign (name, expr) ->
-      Printf.sprintf "%s.val = %s" (Encoding.sanitize name) (string_of_expr expr)
+      Printf.sprintf "%s.val = %s" (Encoding.encode_prefix name) (string_of_expr expr)
 
   | Print expr ->
-      Printf.sprintf "print(%s)" (string_of_expr expr)
+      Printf.sprintf "println(%s)" (string_of_expr expr)
 
   | Declare name ->
-      Printf.sprintf "let %s = Var::{name: \"%s\", val: Nil}" (Encoding.sanitize name) name
+      Printf.sprintf "let %s = Var::{name: \"%s\", val: Nil}" (Encoding.encode_prefix name) name
 
-let string_of_program stmts =
-  String.concat "\n" (List.map string_of_stmt stmts)
+
+let string_of_ast ast =
+  " " ^ String.concat "\n " (List.map string_of_stmt ast)

@@ -73,8 +73,4 @@ fn val_div(argv: Array[Value]) -> Value {
       } else {x/y}
   }, "add", argv)
 }
-
-fn val_println(argv: Array[Value]) -> Unit {
-  println(argv[0])
-}
 |}
