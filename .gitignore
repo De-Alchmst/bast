@@ -35,4 +35,6 @@ setup.log
 # Local OPAM switch
 _opam/
 
+# BAST specigic
 _BAST_work_dir
+*.wasm

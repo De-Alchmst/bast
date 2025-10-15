@@ -25,6 +25,7 @@ let compile input_channel =
     let ast = Parser.prog Lexer.token lexbuf in
     Moonbit_project.gen_skelet ();
     Moonbit_project.write_file_ast "main.mbt" ast;
+    Moonbit_project.run ();
     0 (* Return success *)
     
   with
