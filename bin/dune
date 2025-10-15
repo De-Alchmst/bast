@@ -5,8 +5,8 @@
 (executable
  (public_name bast)
  (name main)
- (modules ast lexer parser codegen main)
- (libraries bast menhirLib))
+ (modules encoding ast lexer parser codegen main)
+ (libraries bast str menhirLib))
 
 ; Tell dune to use ocamllex to generate lexer.ml from lexer.mll
 (ocamllex lexer)

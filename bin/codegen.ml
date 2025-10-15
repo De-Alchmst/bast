@@ -4,6 +4,7 @@
    We use a simple recursive approach to convert each AST node to a string. *)
 
 open Ast
+open Encoding
 
 (* Convert a binary operator to its Python equivalent *)
 let string_of_binop = function
@@ -15,11 +16,9 @@ let string_of_binop = function
 (* Convert an expression to Python code.
    Returns a string representing the Python expression. *)
 let rec string_of_expr = function
-  (* Integer literals stay the same *)
-  | Num n -> string_of_int n
-  
-  (* Variable names stay the same *)
-  | Var x -> x
+  (* Ocaml ends whole floats in '.', not '.0' *)
+  | Num n -> string_of_float n ^ "0"
+  | Var x -> encode_prefix "BAST_"  x
   
   (* Binary operations: wrap in parentheses to preserve order of operations *)
   | BinOp (op, e1, e2) ->

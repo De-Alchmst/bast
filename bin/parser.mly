@@ -5,20 +5,22 @@
   open Ast  (* We need the AST types we defined *)
 %}
 
-(* Token declarations - these define all possible tokens the lexer can produce.
-   Tokens with <type> carry additional data. *)
-%token <int> INT        (* Integer literals carry their value *)
-%token <string> IDENT   (* Identifiers carry their name *)
-%token PLUS MINUS TIMES DIVIDE  (* Arithmetic operators *)
-%token EQUALS           (* Assignment operator *)
-%token LPAREN RPAREN    (* Parentheses *)
-%token PRINT            (* Print keyword *)
-%token EOF              (* End of file *)
+%token <float> NUM
+%token <string> IDENT
+%token BIND
+%token PLUS MINUS TIMES DIVIDE WHOLE_DIVIDE MODULO
+%token CONS
+%token EQUALS
+%token LPAREN RPAREN LSQUARE RSQUARE LCURLY RCURLY
+%token EOF
 
-(* Operator precedence and associativity - lower declarations = lower precedence.
-   This tells Menhir how to resolve ambiguities like "1 + 2 * 3" *)
-%left PLUS MINUS        (* + and - are left-associative and lowest precedence *)
-%left TIMES DIVIDE      (* * and / are left-associative and higher precedence *)
+%token PRINT
+
+(* lower declarations = lower precedence. *)
+   
+%right CONS
+%left PLUS MINUS
+%left TIMES DIVIDE WHOLE_DIVIDE MODULO
 
 (* The start symbol - what the parser tries to parse.
    <Ast.program> is the type that this rule returns. *)
@@ -51,7 +53,7 @@ stmt:
 (* Expression grammar - builds up expression AST nodes *)
 expr:
   (* Integer literal *)
-  | n = INT
+  | n = NUM
       { Num n }
   
   (* Variable reference *)

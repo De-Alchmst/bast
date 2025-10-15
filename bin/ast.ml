@@ -5,16 +5,16 @@
 
 (* Binary operators for arithmetic *)
 type binop =
-  | Add      (* + *)
-  | Sub      (* - *)
-  | Mul      (* * *)
-  | Div      (* / *)
+  | Add
+  | Sub
+  | Mul
+  | Div
 
 (* Expressions - things that evaluate to values *)
 type expr =
-  | Num of int                    (* Integer literals: 42 *)
-  | Var of string                 (* Variable references: x *)
-  | BinOp of binop * expr * expr  (* Binary operations: x + 5 *)
+  | Num of float
+  | Var of string
+  | BinOp of binop * expr * expr
 
 (* Statements - things that do actions *)
 type stmt =
