@@ -23,15 +23,9 @@ let compile input_channel =
        - lexbuf is the input buffer
        This will return an Ast.program (list of statements) *)
     let ast = Parser.prog Lexer.token lexbuf in
-    
-    (* Generate Python code from the AST *)
-    let python_code = Codegen.string_of_program ast in
-    
-    (* Output the generated Python code *)
-    print_endline python_code;
-    
-    (* Return success *)
-    0
+    Moonbit_project.gen_skelet ();
+    print_endline @@ Moonbit_project.file_of_ast ast;
+    0 (* Return success *)
     
   with
   (* Handle lexer errors *)

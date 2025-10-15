@@ -1,3 +1,7 @@
+var x-x
+var y
+var z
+
 x-x = 10
 y = 20.77
 z = x + y * 2

@@ -10,7 +10,7 @@
 %token BIND
 %token PLUS MINUS TIMES DIVIDE WHOLE_DIVIDE MODULO
 %token CONS
-%token EQUALS
+%token EQUALS VAR
 %token LPAREN RPAREN LSQUARE RSQUARE LCURLY RCURLY
 %token EOF
 
@@ -40,23 +40,21 @@ prog:
   | stmts = list(stmt); EOF
       { stmts }  (* Just return the list of statements *)
 
-(* A statement is either an assignment or a print statement *)
 stmt:
-  (* Assignment: identifier = expression *)
   | name = IDENT; EQUALS; e = expr
       { Assign (name, e) }
   
-  (* Print statement: print expression *)
   | PRINT; e = expr
       { Print e }
 
+  | VAR; name = IDENT
+      { Declare name }
+
 (* Expression grammar - builds up expression AST nodes *)
 expr:
-  (* Integer literal *)
   | n = NUM
       { Num n }
   
-  (* Variable reference *)
   | x = IDENT
       { Var x }
   

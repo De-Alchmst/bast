@@ -18,8 +18,9 @@ type expr =
 
 (* Statements - things that do actions *)
 type stmt =
-  | Assign of string * expr  (* Variable assignment: x = 10 *)
-  | Print of expr            (* Print statement: print x + 5 *)
+  | Assign of string * expr
+  | Print of expr
+  | Declare of string
 
 (* A program is a list of statements *)
 type program = stmt list

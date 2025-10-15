@@ -19,6 +19,8 @@ rule token = parse
   | whitespace+  { token lexbuf }
   | newline      { Lexing.new_line lexbuf; token lexbuf }
   | "print"      { PRINT }
+  | "var"        { VAR }
+
   | '-'* letter (letter | '-' | digit)*
       { 
         IDENT (Lexing.lexeme lexbuf) 
