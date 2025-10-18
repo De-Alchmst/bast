@@ -1,8 +1,3 @@
-(* codegen.ml - Python code generation *)
-
-(* This module walks the AST and generates equivalent Python code.
-   We use a simple recursive approach to convert each AST node to a string. *)
-
 open Ast
 
 let string_of_binop = function
@@ -20,18 +15,20 @@ let rec string_of_expr = function
       let left = string_of_expr e1 in
       let right = string_of_expr e2 in
       let op_str = string_of_binop op in
-      (* Build the Python expression with explicit parentheses *)
-      Printf.sprintf "%s([%s, %s])" op_str left right
+      Printf.sprintf "%s([%s,%s])" op_str left right
 
 let string_of_stmt = function
   | Assign (name, expr) ->
-      Printf.sprintf "%s.val = %s" (Encoding.encode_prefix name) (string_of_expr expr)
+      Printf.sprintf "%s.val=%s" (Encoding.encode_prefix name) (string_of_expr expr)
 
   | Print expr ->
       Printf.sprintf "println(%s)" (string_of_expr expr)
 
   | Declare name ->
-      Printf.sprintf "let %s = Var::{name: \"%s\", val: Nil}" (Encoding.encode_prefix name) name
+      Printf.sprintf "let %s=Var::{name:\"%s\",val:Nil}" (Encoding.encode_prefix name) name
+
+  | ExprStmt expr ->
+      Printf.sprintf "let _=%s" (string_of_expr expr)
 
 
 let string_of_ast ast =

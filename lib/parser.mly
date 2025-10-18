@@ -50,6 +50,9 @@ stmt:
   | VAR; name = IDENT
       { Declare name }
 
+  | e = expr
+      { ExprStmt e }
+
 (* Expression grammar - builds up expression AST nodes *)
 expr:
   | n = NUM

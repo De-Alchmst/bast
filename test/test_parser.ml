@@ -95,6 +95,11 @@ let tests = [
      BinOp (Sub,
        BinOp (Add, Num 1., Num 2.),
        BinOp (Div, BinOp (Mul, Num 3., Num 4.), Num 5.)))]);
+
+  (* Test 12: ExprStmt *)
+  ("ExprStmt",
+   "5 + 7",
+   [ExprStmt (BinOp (Add, Num 5., Num 7.))]);
 ]
 
 
