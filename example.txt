@@ -1,10 +1,20 @@
 var x-x
-var y
+var blk-y
 var z
 
 x-x = 10
-y = 20.77
-z = x-x + y * 2
+blk-y = 20.77
+z = x-x + blk-y * 2
+
+do [
+  x-x - 7
+  z = 3
+]
+
+x-x = blk [
+  7 - 7
+  5 - 2
+]
 
 z * 77
 

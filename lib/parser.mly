@@ -5,8 +5,10 @@
   open Ast  (* We need the AST types we defined *)
 %}
 
+%token NIL
 %token <float> NUM
 %token <string> IDENT
+
 %token BIND
 %token PLUS MINUS TIMES DIVIDE WHOLE_DIVIDE MODULO
 %token CONS
@@ -14,7 +16,10 @@
 %token LPAREN RPAREN LSQUARE RSQUARE LCURLY RCURLY
 %token EOF
 
+%token DO
+
 %token PRINT
+%token RETURN
 
 (* lower declarations = lower precedence. *)
    
@@ -28,14 +33,6 @@
 
 %%
 
-(* Grammar rules follow. Format is:
-   rule_name:
-     | pattern1 { action1 }
-     | pattern2 { action2 }
-   
-   Actions are OCaml code that builds AST nodes. *)
-
-(* A program is a list of statements followed by EOF *)
 prog:
   | stmts = list(stmt); EOF
       { stmts }  (* Just return the list of statements *)
@@ -50,11 +47,17 @@ stmt:
   | VAR; name = IDENT
       { Declare name }
 
+  | RETURN; e = expr
+      { Return e }
+
   | e = expr
       { ExprStmt e }
 
 (* Expression grammar - builds up expression AST nodes *)
 expr:
+  | NIL
+      { Nil }
+
   | n = NUM
       { Num n }
   
@@ -64,6 +67,13 @@ expr:
   (* Parenthesized expression - just returns the inner expression *)
   | LPAREN; e = expr; RPAREN
       { e }
+
+  (* `s = list(stmt); e = expr` failed me, so we're doing this then I guess *)
+  | DO; LSQUARE; s = list(stmt); RSQUARE
+      { let aux = function
+          | ExprStmt(e) :: t -> Block (List.rev t, e)
+          | x -> Block (List.rev x, Nil)
+        in aux (List.rev s) }
   
   (* Binary operations - precedence is handled by the %left declarations *)
   | e1 = expr; PLUS; e2 = expr

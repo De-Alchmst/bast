@@ -12,16 +12,19 @@ type binop =
 
 (* Expressions - things that evaluate to values *)
 type expr =
+  | Nil
   | Num of float
   | Var of string
   | BinOp of binop * expr * expr
+  | Block of stmt list * expr (* stetements + return *)
 
 (* Statements - things that do actions *)
-type stmt =
+and stmt = (* 'and' for mutually recursive types *)
   | Assign of string * expr
   | Print of expr
   | Declare of string
   | ExprStmt of expr
+  | Return of expr
 
 (* A program is a list of statements *)
 type program = stmt list

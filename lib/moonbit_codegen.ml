@@ -7,6 +7,7 @@ let string_of_binop = function
   | Div -> "val_div"
 let rec string_of_expr = function
   (* Ocaml ends whole floats in '.', not '.0' *)
+  | Nil   -> "Nil"
   | Num n -> "Num(" ^ (string_of_float n) ^ "0)"
   | Var x -> (Encoding.encode_prefix x) ^ ".val"
   
@@ -17,18 +18,28 @@ let rec string_of_expr = function
       let op_str = string_of_binop op in
       Printf.sprintf "%s([%s,%s])" op_str left right
 
-let string_of_stmt = function
+  | Block (s, e) ->
+      Printf.sprintf "{\n %s\n %s\n }"
+        (String.concat "\n " (List.map string_of_stmt s))
+        (string_of_expr e)
+
+and string_of_stmt = function
   | Assign (name, expr) ->
-      Printf.sprintf "%s.val=%s" (Encoding.encode_prefix name) (string_of_expr expr)
+      Printf.sprintf "%s.val=%s"
+        (Encoding.encode_prefix name) (string_of_expr expr)
 
   | Print expr ->
       Printf.sprintf "println(%s)" (string_of_expr expr)
 
   | Declare name ->
-      Printf.sprintf "let %s=Var::{name:\"%s\",val:Nil}" (Encoding.encode_prefix name) name
+      Printf.sprintf "let %s=Var::{name:\"%s\",val:Nil}"
+        (Encoding.encode_prefix name) name
 
   | ExprStmt expr ->
       Printf.sprintf "let _=%s" (string_of_expr expr)
+
+  | Return expr ->
+      Printf.sprintf "return %s" (string_of_expr expr)
 
 
 let string_of_ast ast =
