@@ -8,7 +8,7 @@ z = x-x + blk-y * 2
 
 do [
   x-x - 7
-  z = 3
+  z = do [3]
 ]
 
 x-x = blk [

@@ -91,7 +91,9 @@ let tests = [
 
   ("Nil block",
    "do [3+2 x = 9]",
-   [ExprStmt (Block ([ExprStmt (BinOp (Add, Num 3., Num 2.)); Assign ("x", Num 9.)], Nil))]);
+   [ExprStmt (Block
+               ([ExprStmt (BinOp (Add, Num 3., Num 2.)); Assign ("x", Num 9.)],
+               SpecVar "nil"))]);
 
   ("Value block",
    "x = blk [7]",

@@ -5,11 +5,23 @@ let string_of_binop = function
   | Sub -> "val_sub"
   | Mul -> "val_mul"
   | Div -> "val_div"
+
+let string_of_specvar = function
+  | "nil" -> "Nil"
+  | "f+"  -> "Fun(val_add, 2)"
+  | "f-"  -> "Fun(val_sub, 2)"
+  | "f*"  -> "Fun(val_mul, 2)"
+  | "f//" -> "Fun(val_div_remles, 2)"
+  | "f/"  -> "Fun(val_div, 2)"
+  | "f%"  -> "Fun(val_mod, 2)"
+  | _     -> "Nil"
+
 let rec string_of_expr = function
   (* Ocaml ends whole floats in '.', not '.0' *)
   | Nil   -> "Nil"
   | Num n -> "Num(" ^ (string_of_float n) ^ "0)"
   | Var x -> (Encoding.encode_prefix x) ^ ".val"
+  | SpecVar x -> string_of_specvar x
   
   | BinOp (op, e1, e2) ->
       (* Recursively convert sub-expressions *)

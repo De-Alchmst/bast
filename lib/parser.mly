@@ -5,10 +5,9 @@
   open Ast  (* We need the AST types we defined *)
 %}
 
-%token NIL
 %token <float> NUM
 %token <string> IDENT
-
+%token <string> SPECIAL_IDENT
 %token BIND
 %token PLUS MINUS TIMES DIVIDE WHOLE_DIVIDE MODULO
 %token CONS
@@ -55,14 +54,14 @@ stmt:
 
 (* Expression grammar - builds up expression AST nodes *)
 expr:
-  | NIL
-      { Nil }
-
   | n = NUM
       { Num n }
   
   | x = IDENT
       { Var x }
+
+  | x = SPECIAL_IDENT
+      { SpecVar x }
   
   (* Parenthesized expression - just returns the inner expression *)
   | LPAREN; e = expr; RPAREN
@@ -72,7 +71,7 @@ expr:
   | DO; LSQUARE; s = list(stmt); RSQUARE
       { let aux = function
           | ExprStmt(e) :: t -> Block (List.rev t, e)
-          | x -> Block (List.rev x, Nil)
+          | x -> Block (List.rev x, SpecVar "nil")
         in aux (List.rev s) }
   
   (* Binary operations - precedence is handled by the %left declarations *)

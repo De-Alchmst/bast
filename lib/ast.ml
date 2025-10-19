@@ -15,6 +15,7 @@ type expr =
   | Nil
   | Num of float
   | Var of string
+  | SpecVar of string
   | BinOp of binop * expr * expr
   | Block of stmt list * expr (* stetements + return *)
 

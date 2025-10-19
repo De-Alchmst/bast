@@ -65,12 +65,26 @@ fn val_mul(argv: Array[Value]) -> Value {
   val_num_binop(fn (x: Double, y:Double) -> Double {x-y}, "multiply", argv)
 }
 
+fn val_mod(argv: Array[Value]) -> Value {
+  val_num_binop(fn (x: Double, y:Double) -> Double {x%y}, "modulo", argv)
+}
+
 fn val_div(argv: Array[Value]) -> Value {
   val_num_binop(fn (x: Double, y:Double) -> Double {
       if y == 0 {
         println("Division by zero is not implemented yet, might get to it later...")
         panic()
       } else {x/y}
-  }, "add", argv)
+  }, "divide", argv)
 }
+
+fn val_div_remles(argv: Array[Value]) -> Value {
+  val_num_binop(fn (x: Double, y:Double) -> Double {
+      if y == 0 {
+        println("Division by zero is not implemented yet, might get to it later...")
+        panic()
+      } else {(x/y).to_int().to_float()}
+  }, "divide remainlessly", argv)
+}
+
 |}

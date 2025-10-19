@@ -18,11 +18,13 @@ let letter = ['a'-'z' 'A'-'Z']
 rule tokenize = parse
   | whitespace+  { tokenize lexbuf }
   | newline      { Lexing.new_line lexbuf; tokenize lexbuf }
-  | "nil" | "n"  { NIL }
   | "print"      { PRINT }
   | "var"        { VAR }
   | "return"     { RETURN }
   | "do" | "blk" | "blck" | "block" { DO }
+
+  | "nil" | "n"  { SPECIAL_IDENT "nil" }
+  | 'f' ('+'|'-'|'*'|"//"|'/'|'%') { SPECIAL_IDENT (Lexing.lexeme lexbuf) }
 
   | '-'* letter (letter | '-' | digit)*
       { 
