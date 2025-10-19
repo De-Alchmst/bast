@@ -1,14 +1,14 @@
 var x-x
 var blk-y
-var z
+var zz
 
 x-x = 10
 blk-y = 20.77
-z = x-x + blk-y * 2
+zz = x-x + blk-y * 2
 
 do [
   x-x - 7
-  z = do [3]
+  zz = do [3]
 ]
 
 x-x = blk [
@@ -16,7 +16,7 @@ x-x = blk [
   5 - 2
 ]
 
-z * 77
+zz * 77
 
-print z
+print zz
 print x-x - 5
