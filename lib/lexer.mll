@@ -29,17 +29,16 @@ rule tokenize = parse
   | '-'* letter (letter | '-' | digit)+
       { IDENT (Lexing.lexeme lexbuf) }
   
-  (* Integer literals - one or more digits *)
-  | digit+ '.'? (digit)*
+  | '-'? digit+ '.'? (digit)*
       { 
         (* Extract the matched text and convert to integer *)
         NUM (float_of_string (Lexing.lexeme lexbuf)) 
       }
 
   (* comments *)
-  | ';' ([^'\n'])+ { tokenize lexbuf }
-
   | ':'          { BIND }
+  | '|'          { PIPE }
+  | ';' ([^'\n'])+ { tokenize lexbuf }
 
   | '+'          { PLUS }
   | '-'          { MINUS }

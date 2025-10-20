@@ -8,7 +8,7 @@
 %token <float> NUM
 %token <string> IDENT
 %token <string> SPECIAL_IDENT
-%token BIND
+%token BIND PIPE
 %token PLUS MINUS TIMES DIVIDE WHOLE_DIVIDE MODULO
 %token CONS
 %token EQUALS VAR
@@ -25,6 +25,7 @@
 %right CONS
 %left PLUS MINUS
 %left TIMES DIVIDE WHOLE_DIVIDE MODULO
+%nonassoc unary_minus unary_plus
 
 (* The start symbol - what the parser tries to parse.
    <Ast.program> is the type that this rule returns. *)
@@ -79,21 +80,38 @@ expr:
         | Var h :: t -> VarFunc (h, t)
         | h :: t     -> ValFunc (h, t)}
   
-  (* Binary operations - precedence is handled by the %left declarations *)
-  | e1 = expr; op = bin_op ; e2 = expr
-      { BinOp (op, e1, e2) }
+  (* cannot be factored, because percedence *)
+  | e1 = expr; PLUS; m=bin_op_mod ; e2 = expr
+    { BinOp ((Add m), e1, e2) }
+
+  | e1 = expr; MINUS; m=bin_op_mod ; e2 = expr
+    { BinOp ((Sub m), e1, e2) }
+
+  | e1 = expr; TIMES; m=bin_op_mod ; e2 = expr
+    { BinOp ((Mul m), e1, e2) }
+
+  | e1 = expr; DIVIDE; m=bin_op_mod ; e2 = expr
+    { BinOp ((Div m), e1, e2) }
+
+  | e1 = expr; MODULO; m=bin_op_mod ; e2 = expr
+    { BinOp ((Mod m), e1, e2) }
+
+  | e1 = expr; WHOLE_DIVIDE; m=bin_op_mod ; e2 = expr
+    { BinOp ((WholeDiv m), e1, e2) }
+
 
   (* Unary operations *)
-  | MINUS; e = expr
+  | MINUS; e = expr %prec unary_minus
       { UnOp (Minus, e)  }
     
-  | PLUS; e = expr
+  | PLUS; e = expr %prec unary_plus
       { UnOp (Plus, e) }
 
-bin_op:
-  | PLUS           { Add NoMod }
-  | MINUS          { Sub NoMod }
-  | TIMES          { Mul NoMod }
-  | DIVIDE         { Div NoMod }
-  | MODULO         { Mod NoMod }
-  | WHOLE_DIVIDE   { WholeDiv NoMod }
+bin_op_mod:
+  | BIND; PIPE; BIND; e = expr
+      { OpNum e }
+
+  | BIND; n = NUM
+      { OpNum (Num n) }
+
+  | { NoMod }
