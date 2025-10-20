@@ -119,8 +119,9 @@ let tests = [
    [ExprStmt (ValFunc (SpecVar "f+", [Var "bar"; Num 7.]))]);
 
   ("BinOp bind",
-  "4 +:|:-2 0\nfoo -:3 7",
-  [ExprStmt (BinOp (Add (OpNum (Num (-2.))), Num 4., Num 0.));
+  "4 +:|:-2*2 0\nfoo -:3 7",
+  [ExprStmt (BinOp (Add (OpNum (BinOp (Mul NoMod, Num (-2.), Num 2.))),
+                        Num 4., Num 0.));
    ExprStmt (BinOp (Sub (OpNum (Num 3.)), Var "foo", Num 7.))]);
 ]
 

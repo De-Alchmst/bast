@@ -1,18 +1,22 @@
 open Ast
 
-let string_of_binop = function
-  | Add _ -> "val_add"
-  | Sub _ -> "val_sub"
-  | Mul _ -> "val_mul"
-  | Div _ -> "val_div"
-  | Mod _ -> "val_mod"
-  | WholeDiv _ -> "val_div_remles"
+let rec string_of_opmod = function
+  | NoMod -> "Nil"
+  | OpNum e -> string_of_expr e
 
-let string_of_unop = function
+and string_of_binop = function
+  | Add m -> "op_val_add(" ^ (string_of_opmod m)
+  | Sub m -> "op_val_sub(" ^ (string_of_opmod m)
+  | Mul m -> "op_val_mul(" ^ (string_of_opmod m)
+  | Div m -> "op_val_div(" ^ (string_of_opmod m)
+  | Mod m -> "op_val_mod(" ^ (string_of_opmod m)
+  | WholeDiv m -> "op_val_div_remles(" ^ (string_of_opmod m)
+
+and string_of_unop = function
   | Plus  -> "val_plus"
   | Minus -> "val_minus"
 
-let string_of_specvar = function
+and string_of_specvar = function
   | "nil" -> "Nil"
   | "f+"  -> "Fun(val_add, 2)"
   | "f-"  -> "Fun(val_sub, 2)"
@@ -22,7 +26,7 @@ let string_of_specvar = function
   | "f%"  -> "Fun(val_mod, 2)"
   | _     -> "Nil"
 
-let rec string_of_expr = function
+and string_of_expr = function
   (* Ocaml ends whole floats in '.', not '.0' *)
   | Nil   -> "Nil"
   | Num n -> "Num(" ^ (string_of_float n) ^ "0)"
@@ -34,7 +38,7 @@ let rec string_of_expr = function
       let op_str = string_of_binop op in
       let left   = string_of_expr  e1 in
       let right  = string_of_expr  e2 in
-      Printf.sprintf "%s([%s,%s])" op_str left right
+      Printf.sprintf "%s,[%s,%s])" op_str left right
 
   | UnOp (op, e) ->
       let op_str = string_of_unop op in
@@ -73,5 +77,5 @@ and string_of_stmt = function
       Printf.sprintf "return %s" (string_of_expr expr)
 
 
-let string_of_ast ast =
+and string_of_ast ast =
   " " ^ String.concat "\n " (List.map string_of_stmt ast)

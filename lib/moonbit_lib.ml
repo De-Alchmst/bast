@@ -40,9 +40,28 @@ fn call_var_func(fun: Var, argv: Array[Value]) -> Value {
 }
 
 
-fn val_num_binop(f: (Double, Double) -> Double, cannot: String, argv: Array[Value]) -> Value {
+fn num_up_to(base: Double, res:Double, upto:Double) -> Double {
+  if base < upto {
+    if res < upto { res } else { upto }
+  } else {
+    if res > upto { res } else { upto }
+  }
+}
+
+
+fn val_num_binop(mod: Value, f: (Double, Double) -> Double, cannot: String, argv: Array[Value]) -> Value {
   match argv {
-    [Num(x), Num(y)] => Num(f(x, y))
+    [Num(x), Num(y)] => {
+      let res = f(x, y)
+      match mod {
+        Nil => Num(res)
+        Num(z) => Num(num_up_to(x, res, z))
+        _ => {
+          println("cannot bind upto \{x} to \{cannot}")
+          panic()
+        }
+      }
+    }
     [x, y] => {
       println("cannot \{cannot} values of type: \{x}, \{y}")
       panic()
@@ -50,6 +69,7 @@ fn val_num_binop(f: (Double, Double) -> Double, cannot: String, argv: Array[Valu
     _ => panic()
   }
 }
+
 
 fn val_num_unop(f: (Double) -> Double, cannot: String, argv: Value) -> Value {
   match argv {
@@ -76,24 +96,24 @@ fn call_fun(fun: Value, argv: Array[Value]) -> Value {
 
 // binops
 
-fn val_add(argv: Array[Value]) -> Value {
-  val_num_binop(fn (x: Double, y:Double) -> Double {x+y}, "add", argv)
+fn op_val_add(mod: Value, argv: Array[Value]) -> Value {
+  val_num_binop(mod, fn (x: Double, y:Double) -> Double {x+y}, "add", argv)
 }
 
-fn val_sub(argv: Array[Value]) -> Value {
-  val_num_binop(fn (x: Double, y:Double) -> Double {x-y}, "substract", argv)
+fn op_val_sub(mod: Value, argv: Array[Value]) -> Value {
+  val_num_binop(mod, fn (x: Double, y:Double) -> Double {x-y}, "substract", argv)
 }
 
-fn val_mul(argv: Array[Value]) -> Value {
-  val_num_binop(fn (x: Double, y:Double) -> Double {x-y}, "multiply", argv)
+fn op_val_mul(mod: Value, argv: Array[Value]) -> Value {
+  val_num_binop(mod, fn (x: Double, y:Double) -> Double {x-y}, "multiply", argv)
 }
 
-fn val_mod(argv: Array[Value]) -> Value {
-  val_num_binop(fn (x: Double, y:Double) -> Double {x%y}, "modulo", argv)
+fn op_val_mod(mod: Value, argv: Array[Value]) -> Value {
+  val_num_binop(mod, fn (x: Double, y:Double) -> Double {x%y}, "modulo", argv)
 }
 
-fn val_div(argv: Array[Value]) -> Value {
-  val_num_binop(fn (x: Double, y:Double) -> Double {
+fn op_val_div(mod: Value, argv: Array[Value]) -> Value {
+  val_num_binop(mod, fn (x: Double, y:Double) -> Double {
       if y == 0 {
         println("Division by zero is not implemented yet, might get to it later...")
         panic()
@@ -101,14 +121,22 @@ fn val_div(argv: Array[Value]) -> Value {
   }, "divide", argv)
 }
 
-fn val_div_remles(argv: Array[Value]) -> Value {
-  val_num_binop(fn (x: Double, y:Double) -> Double {
+fn op_val_div_remles(mod: Value, argv: Array[Value]) -> Value {
+  val_num_binop(mod, fn (x: Double, y:Double) -> Double {
       if y == 0 {
         println("Division by zero is not implemented yet, might get to it later...")
         panic()
       } else {(x/y).to_int().to_double()}
   }, "divide remainlessly", argv)
 }
+
+// as standalone functions
+fn val_add(argv: Array[Value]) -> Value { op_val_add(Nil, argv) }
+fn val_sub(argv: Array[Value]) -> Value { op_val_sub(Nil, argv) }
+fn val_mul(argv: Array[Value]) -> Value { op_val_mul(Nil, argv) }
+fn val_div(argv: Array[Value]) -> Value { op_val_div(Nil, argv) }
+fn val_mod(argv: Array[Value]) -> Value { op_val_mod(Nil, argv) }
+fn val_div_remles(argv: Array[Value]) -> Value { op_val_div_remles(Nil, argv) }
 
 // unops
 

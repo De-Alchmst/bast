@@ -32,7 +32,8 @@ print 7 / 3
 print 7//3
 print 7%3
 
-print 10 - 5 - 2
+print 10 -:|:4+4 (5 - 2)
+print 10 -:8 (5 - 2)
 
 ; Num(3)
 ; Num(3)
@@ -42,3 +43,5 @@ print 10 - 5 - 2
 ; Num(2.3333333333333335)
 ; Num(2)
 ; Num(1)
+; Num(8)
+; Num(8)
