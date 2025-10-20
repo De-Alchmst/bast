@@ -35,6 +35,14 @@ let rec string_of_expr = function
         (String.concat "\n " (List.map string_of_stmt s))
         (string_of_expr e)
 
+  | VarFunc (v, b) ->
+      Printf.sprintf "call_var_func(%s,[%s])"
+        (Encoding.encode_prefix v) (String.concat "," (List.map string_of_expr b))
+
+  | ValFunc (e, b) ->
+      Printf.sprintf "call_fun(%s,[%s])"
+        (string_of_expr e) (String.concat "," (List.map string_of_expr b))
+
 and string_of_stmt = function
   | Assign (name, expr) ->
       Printf.sprintf "%s.val=%s"

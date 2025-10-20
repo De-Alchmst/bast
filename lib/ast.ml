@@ -18,6 +18,8 @@ type expr =
   | SpecVar of string
   | BinOp of binop * expr * expr
   | Block of stmt list * expr (* stetements + return *)
+  | VarFunc of string * expr list (* contains var name data for errors *)
+  | ValFunc of expr * expr list
 
 (* Statements - things that do actions *)
 and stmt = (* 'and' for mutually recursive types *)

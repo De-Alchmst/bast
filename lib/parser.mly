@@ -73,6 +73,12 @@ expr:
           | ExprStmt(e) :: t -> Block (List.rev t, e)
           | x -> Block (List.rev x, SpecVar "nil")
         in aux (List.rev s) }
+
+  | LSQUARE; e = list(expr); RSQUARE
+      { match e with
+        | []         -> Block ([], SpecVar "nil")(* how to raise error again? *)
+        | Var h :: t -> VarFunc (h, t)
+        | h :: t     -> ValFunc (h, t)}
   
   (* Binary operations - precedence is handled by the %left declarations *)
   | e1 = expr; PLUS; e2 = expr

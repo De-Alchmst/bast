@@ -2,11 +2,18 @@ var x-x
 var blk-y
 var zz
 
+var xx
+xx = f+
+
+print [xx 1 2]
+print [f+ 1 2]
+
 x-x = 10
 blk-y = 20.77
 zz = x-x + blk-y * 2
 
 do [
+  f+
   x-x - 7
   zz = do [3]
 ]

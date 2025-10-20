@@ -30,57 +30,57 @@ let run_test name input expected =
 
 let tests = [
   ("simple assignment",
-   "x = 42",
-   [Assign ("x", Num 42.)]);
+   "foo = 42",
+   [Assign ("foo", Num 42.)]);
   
   ("variable assignment",
-   "y = x",
-   [Assign ("y", Var "x")]);
+   "foo = bar",
+   [Assign ("foo", Var "bar")]);
   
   ("addition",
-   "z = 1 + 2",
-   [Assign ("z", BinOp (Add, Num 1., Num 2.))]);
+   "foo = 1 + 2",
+   [Assign ("foo", BinOp (Add, Num 1., Num 2.))]);
   
   ("precedence mul before add",
-   "a = 1 + 2 * 3",
-   [Assign ("a", BinOp (Add, Num 1., BinOp (Mul, Num 2., Num 3.)))]);
+   "foo = 1 + 2 * 3",
+   [Assign ("foo", BinOp (Add, Num 1., BinOp (Mul, Num 2., Num 3.)))]);
   
   ("parentheses",
-   "b = (1 + 2) * 3",
-   [Assign ("b", BinOp (Mul, BinOp (Add, Num 1., Num 2.), Num 3.))]);
+   "foo = (1 + 2) * 3",
+   [Assign ("foo", BinOp (Mul, BinOp (Add, Num 1., Num 2.), Num 3.))]);
   
   ("left associativity",
-   "c = 10 - 5 - 2",
-   [Assign ("c", BinOp (Sub, BinOp (Sub, Num 10., Num 5.), Num 2.))]);
+   "foo = 10 - 5 - 2",
+   [Assign ("foo", BinOp (Sub, BinOp (Sub, Num 10., Num 5.), Num 2.))]);
   
   ("print statement",
    "print 42",
    [Print (Num 42.)]);
   
   ("print expression",
-   "print x + 5",
-   [Print (BinOp (Add, Var "x", Num 5.))]);
+   "print foo + 5",
+   [Print (BinOp (Add, Var "foo", Num 5.))]);
   
   ("multiple statements",
-   "x = 10\ny = 20\nprint x + y",
+   "foo = 10\nbar = 20\nprint foo + bar",
    [
-     Assign ("x", Num 10.);
-     Assign ("y", Num 20.);
-     Print (BinOp (Add, Var "x", Var "y"))
+     Assign ("foo", Num 10.);
+     Assign ("bar", Num 20.);
+     Print (BinOp (Add, Var "foo", Var "bar"))
    ]);
   
   ("complex expression",
-   "result = (a + b) * (c - d) / 2",
+   "result = (foo + bar) * (baz - bax) / 2",
    [Assign ("result", 
      BinOp (Div,
        BinOp (Mul,
-         BinOp (Add, Var "a", Var "b"),
-         BinOp (Sub, Var "c", Var "d")),
+         BinOp (Add, Var "foo", Var "bar"),
+         BinOp (Sub, Var "baz", Var "bax")),
        Num 2.))]);
   
   ("all operators",
-   "x = 1 + 2 - 3 * 4 / 5",
-   [Assign ("x",
+   "foo = 1 + 2 - 3 * 4 / 5",
+   [Assign ("foo",
      BinOp (Sub,
        BinOp (Add, Num 1., Num 2.),
        BinOp (Div, BinOp (Mul, Num 3., Num 4.), Num 5.)))]);
@@ -90,14 +90,23 @@ let tests = [
    [ExprStmt (BinOp (Add, Num 5., Num 7.))]);
 
   ("Nil block",
-   "do [3+2 x = 9]",
+   "do [3+2 foo = 9]",
    [ExprStmt (Block
-               ([ExprStmt (BinOp (Add, Num 3., Num 2.)); Assign ("x", Num 9.)],
+               ([ExprStmt (BinOp (Add, Num 3., Num 2.));
+                 Assign ("foo", Num 9.)],
                SpecVar "nil"))]);
 
   ("Value block",
-   "x = blk [7]",
-   [Assign ("x", Block ([], Num 7.))]);
+   "foo = blk [7]",
+   [Assign ("foo", Block ([], Num 7.))]);
+
+  ("VarFunc",
+   "[foo bar 7]",
+   [ExprStmt (VarFunc ("foo", [Var "bar"; Num 7.]))]);
+
+  ("ValFunc",
+   "[f+ bar 7]",
+   [ExprStmt (ValFunc (SpecVar "f+", [Var "bar"; Num 7.]))]);
 ]
 
 

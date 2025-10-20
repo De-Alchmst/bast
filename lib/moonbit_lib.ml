@@ -27,6 +27,16 @@ fn call_val_func(name: String, fun: (Array[Value]) -> Value, arity: Int, argv: A
   }
 }
 
+fn call_fun(fun: Value, argv: Array[Value]) -> Value {
+  match fun {
+    Fun(f, arity) => call_val_func("λ", f, arity, argv)
+    _ => {
+      println("\{fun} is not a function!")
+      panic()
+    }
+  }
+}
+
 // FUNCTION CALL WRAPPERS //
 
 fn call_var_func(fun: Var, argv: Array[Value]) -> Value {
@@ -83,7 +93,7 @@ fn val_div_remles(argv: Array[Value]) -> Value {
       if y == 0 {
         println("Division by zero is not implemented yet, might get to it later...")
         panic()
-      } else {(x/y).to_int().to_float()}
+      } else {(x/y).to_int().to_double()}
   }, "divide remainlessly", argv)
 }
 
