@@ -1,10 +1,16 @@
 open Ast
 
 let string_of_binop = function
-  | Add -> "val_add"
-  | Sub -> "val_sub"
-  | Mul -> "val_mul"
-  | Div -> "val_div"
+  | Add _ -> "val_add"
+  | Sub _ -> "val_sub"
+  | Mul _ -> "val_mul"
+  | Div _ -> "val_div"
+  | Mod _ -> "val_mod"
+  | WholeDiv _ -> "val_div_remles"
+
+let string_of_unop = function
+  | Plus  -> "val_plus"
+  | Minus -> "val_minus"
 
 let string_of_specvar = function
   | "nil" -> "Nil"
@@ -25,10 +31,15 @@ let rec string_of_expr = function
   
   | BinOp (op, e1, e2) ->
       (* Recursively convert sub-expressions *)
-      let left = string_of_expr e1 in
-      let right = string_of_expr e2 in
       let op_str = string_of_binop op in
+      let left   = string_of_expr  e1 in
+      let right  = string_of_expr  e2 in
       Printf.sprintf "%s([%s,%s])" op_str left right
+
+  | UnOp (op, e) ->
+      let op_str = string_of_unop op in
+      let exp    = string_of_expr e  in
+      Printf.sprintf "%s(%s)" op_str exp
 
   | Block (s, e) ->
       Printf.sprintf "{\n %s\n %s\n }"

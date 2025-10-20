@@ -69,10 +69,9 @@ expr:
 
   (* `s = list(stmt); e = expr` failed me, so we're doing this then I guess *)
   | DO; LSQUARE; s = list(stmt); RSQUARE
-      { let aux = function
+      { match (List.rev s) with
           | ExprStmt(e) :: t -> Block (List.rev t, e)
-          | x -> Block (List.rev x, SpecVar "nil")
-        in aux (List.rev s) }
+          | x -> Block (List.rev x, SpecVar "nil")}
 
   | LSQUARE; e = list(expr); RSQUARE
       { match e with
@@ -81,14 +80,20 @@ expr:
         | h :: t     -> ValFunc (h, t)}
   
   (* Binary operations - precedence is handled by the %left declarations *)
-  | e1 = expr; PLUS; e2 = expr
-      { BinOp (Add, e1, e2) }
-  
-  | e1 = expr; MINUS; e2 = expr
-      { BinOp (Sub, e1, e2) }
-  
-  | e1 = expr; TIMES; e2 = expr
-      { BinOp (Mul, e1, e2) }
-  
-  | e1 = expr; DIVIDE; e2 = expr
-      { BinOp (Div, e1, e2) }
+  | e1 = expr; op = bin_op ; e2 = expr
+      { BinOp (op, e1, e2) }
+
+  (* Unary operations *)
+  | MINUS; e = expr
+      { UnOp (Minus, e)  }
+    
+  | PLUS; e = expr
+      { UnOp (Plus, e) }
+
+bin_op:
+  | PLUS           { Add NoMod }
+  | MINUS          { Sub NoMod }
+  | TIMES          { Mul NoMod }
+  | DIVIDE         { Div NoMod }
+  | MODULO         { Mod NoMod }
+  | WHOLE_DIVIDE   { WholeDiv NoMod }

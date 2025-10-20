@@ -27,9 +27,7 @@ rule tokenize = parse
   | 'f' ('+'|'-'|'*'|"//"|'/'|'%') { SPECIAL_IDENT (Lexing.lexeme lexbuf) }
 
   | '-'* letter (letter | '-' | digit)+
-      { 
-        IDENT (Lexing.lexeme lexbuf) 
-      }
+      { IDENT (Lexing.lexeme lexbuf) }
   
   (* Integer literals - one or more digits *)
   | digit+ '.'? (digit)*
@@ -37,6 +35,9 @@ rule tokenize = parse
         (* Extract the matched text and convert to integer *)
         NUM (float_of_string (Lexing.lexeme lexbuf)) 
       }
+
+  (* comments *)
+  | ';' ([^'\n'])+ { tokenize lexbuf }
 
   | ':'          { BIND }
 

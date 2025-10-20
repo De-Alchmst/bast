@@ -27,16 +27,6 @@ fn call_val_func(name: String, fun: (Array[Value]) -> Value, arity: Int, argv: A
   }
 }
 
-fn call_fun(fun: Value, argv: Array[Value]) -> Value {
-  match fun {
-    Fun(f, arity) => call_val_func("λ", f, arity, argv)
-    _ => {
-      println("\{fun} is not a function!")
-      panic()
-    }
-  }
-}
-
 // FUNCTION CALL WRAPPERS //
 
 fn call_var_func(fun: Var, argv: Array[Value]) -> Value {
@@ -61,7 +51,30 @@ fn val_num_binop(f: (Double, Double) -> Double, cannot: String, argv: Array[Valu
   }
 }
 
+fn val_num_unop(f: (Double) -> Double, cannot: String, argv: Value) -> Value {
+  match argv {
+    Num(x) => Num(f(x))
+    x => {
+      println("cannot \{cannot} value of type \{x}")
+      panic()
+    }
+  }
+}
+
+
+fn call_fun(fun: Value, argv: Array[Value]) -> Value {
+  match fun {
+    Fun(f, arity) => call_val_func("λ", f, arity, argv)
+    _ => {
+      println("\{fun} is not a function!")
+      panic()
+    }
+  }
+}
+
 // DYNAMIC FUNCTIONS //
+
+// binops
 
 fn val_add(argv: Array[Value]) -> Value {
   val_num_binop(fn (x: Double, y:Double) -> Double {x+y}, "add", argv)
@@ -95,6 +108,17 @@ fn val_div_remles(argv: Array[Value]) -> Value {
         panic()
       } else {(x/y).to_int().to_double()}
   }, "divide remainlessly", argv)
+}
+
+// unops
+
+fn val_minus(arg: Value) -> Value {
+  val_num_unop(fn (x: Double) -> Double {-x}, "negate", arg)
+}
+
+fn val_plus(arg: Value) -> Value {
+  // ah yes, usefulness
+  val_num_unop(fn (x: Double) -> Double {x}, "nop?", arg)
 }
 
 |}
