@@ -130,7 +130,13 @@ let tests = [
 
   ("Bind operator to var",
    "foo:+:3 7",
-   [ExprStmt (Assign ("foo", (BinOp (Add (OpNum(Num 3.)), Var "foo", Num 7.))))])
+   [ExprStmt (Assign ("foo", (BinOp (Add (OpNum(Num 3.)), Var "foo", Num 7.))))]);
+
+  ("Increment/decrement",
+   "foo:dec + bar:++",
+   [ExprStmt (BinOp (Add NoMod,
+                      (Assign ("foo", (BinOp (Sub NoMod, Var "foo", Num 1.)))),
+                      (Assign ("bar", (BinOp (Add NoMod, Var "bar", Num 1.))))))]);
 ]
 
 

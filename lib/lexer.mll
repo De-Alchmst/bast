@@ -23,10 +23,11 @@ rule tokenize = parse
   | "return"     { RETURN }
   | "do" | "blk" | "blck" | "block" { DO }
 
+  | "inc" | "++" { INCREMENT }
+  | "dec" | "--" { DECREMENT }
+
   | "nil" | "n"  { SPECIAL_IDENT "nil" }
   | 'f' ('+'|'-'|'*'|"//"|'/'|'%') { SPECIAL_IDENT (Lexing.lexeme lexbuf) }
-  | "inc" | "++" { SPECIAL_IDENT "inc" }
-  | "dec" | "--" { SPECIAL_IDENT "dec" }
 
   | '-'* letter (letter | '-' | digit)+
       { IDENT (Lexing.lexeme lexbuf) }

@@ -8,6 +8,7 @@
 %token <float> NUM
 %token <string> IDENT
 %token <string> SPECIAL_IDENT
+%token INCREMENT DECREMENT
 %token BIND PIPE
 %token PLUS MINUS TIMES DIVIDE WHOLE_DIVIDE MODULO
 %token CONS
@@ -58,11 +59,9 @@ expr:
   | name = IDENT; BIND; op = bin_op; e = expr
       { Assign (name, BinOp (op, Var (name), e)) }
 
-  | name = IDENT; BIND; op = SPECIAL_IDENT; m = bin_op_mod; e = expr
-    when (op = "inc") 
+  | name = IDENT; BIND; INCREMENT; m = bin_op_mod
       { Assign (name, BinOp (Add (m), Var (name), Num 1.)) }
-  | name = IDENT; BIND; op = SPECIAL_IDENT; m = bin_op_mod; e = expr
-    when (op = "dec") 
+  | name = IDENT; BIND; DECREMENT; m = bin_op_mod
       { Assign (name, BinOp (Sub (m), Var (name), Num 1.)) }
 
   | n = NUM
@@ -114,7 +113,10 @@ expr:
   | MINUS; e = expr %prec unary_minus
       { UnOp (Minus, e)  }
     
-  | PLUS; e = expr %prec unary_plus
+  (* to allow -++--foo, since it's fun*)
+  | PLUS     ; e = expr %prec unary_plus
+  | INCREMENT; e = expr %prec unary_plus
+  | DECREMENT; e = expr %prec unary_plus
       { UnOp (Plus, e) }
 
 bin_op:
