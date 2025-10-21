@@ -55,6 +55,9 @@ expr:
   | name = IDENT; BIND; EQUALS; e = expr
       { Assign (name, e) }
 
+  | name = IDENT; BIND; op = bin_op; e = expr
+      { Assign (name, BinOp (op, Var (name), e)) }
+
   | n = NUM
       { Num n }
   
@@ -106,6 +109,14 @@ expr:
     
   | PLUS; e = expr %prec unary_plus
       { UnOp (Plus, e) }
+
+bin_op:
+  | PLUS;         m = bin_op_mod { Add      m }
+  | MINUS;        m = bin_op_mod { Sub      m }
+  | TIMES;        m = bin_op_mod { Mul      m }
+  | DIVIDE;       m = bin_op_mod { Div      m }
+  | MODULO;       m = bin_op_mod { Mod      m }
+  | WHOLE_DIVIDE; m = bin_op_mod { WholeDiv m }
 
 bin_op_mod:
   | BIND; PIPE; BIND; e = expr
