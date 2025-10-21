@@ -32,6 +32,11 @@ and string_of_expr = function
   | Num n -> "Num(" ^ (string_of_float n) ^ "0)"
   | Var x -> (Encoding.encode_prefix x) ^ ".val"
   | SpecVar x -> string_of_specvar x
+
+  | Assign (n, expr) ->
+      let name = Encoding.encode_prefix n in
+      Printf.sprintf "{%s.val=%s;%s}"
+        name (string_of_expr expr) name
   
   | BinOp (op, e1, e2) ->
       (* Recursively convert sub-expressions *)
@@ -59,10 +64,6 @@ and string_of_expr = function
         (string_of_expr e) (String.concat "," (List.map string_of_expr b))
 
 and string_of_stmt = function
-  | Assign (name, expr) ->
-      Printf.sprintf "%s.val=%s"
-        (Encoding.encode_prefix name) (string_of_expr expr)
-
   | Print expr ->
       Printf.sprintf "println(%s)" (string_of_expr expr)
 

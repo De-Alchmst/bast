@@ -38,9 +38,6 @@ prog:
       { stmts }  (* Just return the list of statements *)
 
 stmt:
-  | name = IDENT; EQUALS; e = expr
-      { Assign (name, e) }
-  
   | PRINT; e = expr
       { Print e }
 
@@ -55,6 +52,9 @@ stmt:
 
 (* Expression grammar - builds up expression AST nodes *)
 expr:
+  | name = IDENT; BIND; EQUALS; e = expr
+      { Assign (name, e) }
+
   | n = NUM
       { Num n }
   

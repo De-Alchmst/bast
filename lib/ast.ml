@@ -31,10 +31,11 @@ and expr =
   | Block of stmt list * expr (* stetements + return *)
   | VarFunc of string * expr list (* contains var name data for errors *)
   | ValFunc of expr * expr list
+  | Assign of string * expr
+  (* | VarOp of string * binop * expr *)
 
 (* Statements - things that do actions *)
 and stmt = (* 'and' for mutually recursive types *)
-  | Assign of string * expr
   | Print of expr
   | Declare of string
   | ExprStmt of expr

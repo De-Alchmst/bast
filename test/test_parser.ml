@@ -30,28 +30,28 @@ let run_test name input expected =
 
 let tests = [
   ("simple assignment",
-   "foo = 42",
-   [Assign ("foo", Num 42.)]);
+   "foo := 42",
+   [ExprStmt (Assign ("foo", Num 42.))]);
   
   ("variable assignment",
-   "foo = bar",
-   [Assign ("foo", Var "bar")]);
+   "foo := bar",
+   [ExprStmt (Assign ("foo", Var "bar"))]);
   
   ("addition",
-   "foo = 1 + 2",
-   [Assign ("foo", BinOp (Add NoMod, Num 1., Num 2.))]);
+   "foo := 1 + 2",
+   [ExprStmt (Assign ("foo", BinOp (Add NoMod, Num 1., Num 2.)))]);
   
   ("precedence mul before add",
-   "foo = 1 + 2 * 3",
-   [Assign ("foo", BinOp (Add NoMod, Num 1., BinOp (Mul NoMod, Num 2., Num 3.)))]);
+   "foo := 1 + 2 * 3",
+   [ExprStmt (Assign ("foo", BinOp (Add NoMod, Num 1., BinOp (Mul NoMod, Num 2., Num 3.))))]);
   
   ("parentheses",
-   "foo = (1 + 2) * 3",
-   [Assign ("foo", BinOp (Mul NoMod, BinOp (Add NoMod, Num 1., Num 2.), Num 3.))]);
+   "foo := (1 + 2) * 3",
+   [ExprStmt (Assign ("foo", BinOp (Mul NoMod, BinOp (Add NoMod, Num 1., Num 2.), Num 3.)))]);
   
   ("left associativity",
-   "foo = 10 - 5 - 2",
-   [Assign ("foo", BinOp (Sub NoMod, BinOp (Sub NoMod, Num 10., Num 5.), Num 2.))]);
+   "foo := 10 - 5 - 2",
+   [ExprStmt (Assign ("foo", BinOp (Sub NoMod, BinOp (Sub NoMod, Num 10., Num 5.), Num 2.)))]);
   
   ("print statement",
    "print 42",
@@ -62,25 +62,25 @@ let tests = [
    [Print (BinOp (Add NoMod, Var "foo", Num 5.))]);
   
   ("multiple statements",
-   "foo = 10\nbar = 20\nprint foo + bar",
+   "foo := 10\nbar := 20\nprint foo + bar",
    [
-     Assign ("foo", Num 10.);
-     Assign ("bar", Num 20.);
+     ExprStmt (Assign ("foo", Num 10.));
+     ExprStmt (Assign ("bar", Num 20.));
      Print (BinOp (Add NoMod, Var "foo", Var "bar"))
    ]);
   
   ("complex expression",
-   "result = (foo + bar) * (baz - bax) / 2",
-   [Assign ("result", 
+   "result := (foo + bar) * (baz - bax) / 2",
+   [ExprStmt (Assign ("result", 
      BinOp (Div NoMod,
        BinOp (Mul NoMod,
          BinOp (Add NoMod, Var "foo", Var "bar"),
          BinOp (Sub NoMod, Var "baz", Var "bax")),
-       Num 2.))]);
+       Num 2.)))]);
   
   ("all binary operators",
-   "foo = 1 + 2 - 3 * 4 / 5 // 4 % 3",
-   [Assign ("foo",
+   "foo := 1 + 2 - 3 * 4 / 5 // 4 % 3",
+   [ExprStmt (Assign ("foo",
      BinOp (Sub NoMod,
        BinOp (Add NoMod, Num 1., Num 2.),
        BinOp (Mod NoMod,
@@ -89,7 +89,7 @@ let tests = [
                             BinOp (Mul NoMod, Num 3., Num 4.),
                             Num 5.),
                      Num 4.),
-              Num 3.)))]);
+              Num 3.))))]);
 
   ("all of unary operators",
    "3 * +- 7",
@@ -100,15 +100,15 @@ let tests = [
    [ExprStmt (BinOp (Add NoMod, Num 5., Num 7.))]);
 
   ("Nil block",
-   "do [3+2 foo = 9]",
+   "do [3+2 print 69]",
    [ExprStmt (Block
                ([ExprStmt (BinOp (Add NoMod, Num 3., Num 2.));
-                 Assign ("foo", Num 9.)],
+                 Print (Num 69.)],
                SpecVar "nil"))]);
 
   ("Value block",
-   "foo = blk [7]",
-   [Assign ("foo", Block ([], Num 7.))]);
+   "foo:=blk[7]",
+   [ExprStmt (Assign ("foo", Block ([], Num 7.)))]);
 
   ("VarFunc",
    "[foo bar 7]",
