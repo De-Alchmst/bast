@@ -25,6 +25,8 @@ rule tokenize = parse
 
   | "nil" | "n"  { SPECIAL_IDENT "nil" }
   | 'f' ('+'|'-'|'*'|"//"|'/'|'%') { SPECIAL_IDENT (Lexing.lexeme lexbuf) }
+  | "inc" | "++" { SPECIAL_IDENT "inc" }
+  | "dec" | "--" { SPECIAL_IDENT "dec" }
 
   | '-'* letter (letter | '-' | digit)+
       { IDENT (Lexing.lexeme lexbuf) }

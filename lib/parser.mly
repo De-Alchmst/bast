@@ -58,6 +58,13 @@ expr:
   | name = IDENT; BIND; op = bin_op; e = expr
       { Assign (name, BinOp (op, Var (name), e)) }
 
+  | name = IDENT; BIND; op = SPECIAL_IDENT; m = bin_op_mod; e = expr
+    when (op = "inc") 
+      { Assign (name, BinOp (Add (m), Var (name), Num 1.)) }
+  | name = IDENT; BIND; op = SPECIAL_IDENT; m = bin_op_mod; e = expr
+    when (op = "dec") 
+      { Assign (name, BinOp (Sub (m), Var (name), Num 1.)) }
+
   | n = NUM
       { Num n }
   
