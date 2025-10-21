@@ -18,6 +18,12 @@ struct Var {
 } derive(Show)
 
 
+fn ass_var(ass: Var, new: Value) -> Value {
+  ass.val = new
+  ass.val
+}
+
+
 fn call_val_func(name: String, fun: (Array[Value]) -> Value, arity: Int, argv: Array[Value]) -> Value {
   if arity != argv.length() {
     println("Wrong number of arguments for \{name}, expected \{arity}, but got \{argv.length()}")

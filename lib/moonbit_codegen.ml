@@ -35,8 +35,8 @@ and string_of_expr = function
 
   | Assign (n, expr) ->
       let name = Encoding.encode_prefix n in
-      Printf.sprintf "{%s.val=%s;%s}"
-        name (string_of_expr expr) name
+      Printf.sprintf "ass_var(%s,%s)"
+        name (string_of_expr expr)
   
   | BinOp (op, e1, e2) ->
       (* Recursively convert sub-expressions *)
