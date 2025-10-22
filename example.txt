@@ -5,4 +5,4 @@ var baz
 foo := 1
 bar := 2
 
-print foo +:>:5 bar
+print foo +:%:5 bar
