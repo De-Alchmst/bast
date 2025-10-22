@@ -4,7 +4,7 @@ let rec string_of_opmod = function
   | NoMod -> "NoMod"
   | UpTo   e -> Printf.sprintf "UpTo(%s)"   (string_of_expr e) 
   | DownTo e -> Printf.sprintf "DownTo(%s)" (string_of_expr e) 
-  | ModTo  e -> Printf.sprintf "ModTo_to(%s)"   (string_of_expr e) 
+  | ModTo  e -> Printf.sprintf "ModTo(%s)"  (string_of_expr e) 
   | InRange (e1, e2) -> Printf.sprintf "InRange(%s, %s)"
       (string_of_expr e1) (string_of_expr e2)
   | LoopInRange (e1, e2) -> Printf.sprintf "LoopInRange(%s, %s)"

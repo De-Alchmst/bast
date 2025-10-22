@@ -124,6 +124,14 @@ let tests = [
                          Num 4., Num 0.));
     ExprStmt (BinOp (Sub (UpTo (Num 3.)), Var "foo", Num 7.))]);
 
+  ("More complex bin op",
+   "3 +:<:6:9:> 420 -:%:<:42:666:> 7",
+   [ExprStmt (BinOp (Sub (LoopInRange (Num 42., Num 666.)),
+               (BinOp (Add (InRange (Num 6., Num 9.)),
+                 (Num 3.),
+                 (Num 420.))),
+               (Num 7.)))]);
+
   ("Assign as expression",
    "foo := bar := baz",
    [ExprStmt (Assign ("foo", Assign ("bar", Var "baz")))]);

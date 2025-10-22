@@ -1,49 +1,8 @@
-var x-x
-var blk-y
-var zz
+var foo
+var bar
+var baz
 
-var xx
-xx:= f+
+foo := 1
+bar := 2
 
-print [xx 1 2]
-print [f+ 1 2]
-
-x-x := 10
-blk-y := 20.77
-zz := x-x + blk-y * 2
-
-do [
-  f+
-  x-x - 7
-  zz := do [3]
-]
-
-x-x := blk [
-  7 - 7
-  5 - 2
-]
-
-zz * 77
-
-print zz:--
-print x-x - 5
-print 7 - -++--+3
-print 7 / 3
-print 7//3
-print 7%3
-
-print 10 -:<:4+4 (5 - 2)
-zz := x-x := 10 -:8 (5 - 2)
-zz:++
-print zz:++
-
-; Num(3)
-; Num(3)
-; Num(3)
-; Num(-2)
-; Num(10)
-; Num(2.3333333333333335)
-; Num(2)
-; Num(1)
-; Num(8)
-; Num(9)
+print foo +:>:5 bar

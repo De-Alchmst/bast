@@ -147,10 +147,16 @@ bin_op:
 
 
 bin_op_mod:
-  | BIND; GREATER; BIND; e = expr
-      { UpTo e }
+  | BIND; LESSER; BIND; e1 = expr; BIND; e2 = expr; BIND; GREATER
+      { InRange (e1, e2) }
+
+  | BIND; MODULO; BIND; LESSER; BIND; e1 = expr; BIND; e2 = expr; BIND; GREATER
+      { LoopInRange (e1, e2) }
 
   | BIND; LESSER; BIND; e = expr
+      { UpTo e }
+
+  | BIND; GREATER; BIND; e = expr
       { DownTo e }
 
   | BIND; MODULO; BIND; e = expr
