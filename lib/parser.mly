@@ -69,16 +69,16 @@ expr:
       { Assign (name, BinOp (Sub (m), Var (name), Num 1.)) }
 
   (* post assign binds *)
-  | EQUALS; e = expr; BIND; name = IDENT
-      { PostAssign (name, e) }
+  (* | EQUALS; e = expr; BIND; name = IDENT *)
+  (*     { PostAssign (name, e) } *)
 
-  | op = bin_op; e = expr; BIND; name = IDENT
-      { PostAssign (name, BinOp (op, Var (name), e)) }
+  (* | op = bin_op; e = expr; BIND; name = IDENT *)
+  (*     { PostAssign (name, BinOp (op, Var (name), e)) } *)
 
-  | INCREMENT; m = bin_op_mod; BIND; name = IDENT
-      { PostAssign (name, BinOp (Add (m), Var (name), Num 1.)) }
-  | DECREMENT; m = bin_op_mod; BIND; name = IDENT
-      { PostAssign (name, BinOp (Sub (m), Var (name), Num 1.)) }
+  (* | INCREMENT; m = bin_op_mod; BIND; name = IDENT *)
+  (*     { PostAssign (name, BinOp (Add (m), Var (name), Num 1.)) } *)
+  (* | DECREMENT; m = bin_op_mod; BIND; name = IDENT *)
+  (*     { PostAssign (name, BinOp (Sub (m), Var (name), Num 1.)) } *)
 
 
   | n = NUM
