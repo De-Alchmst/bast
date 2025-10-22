@@ -1,8 +1,14 @@
 open Ast
 
 let rec string_of_opmod = function
-  | NoMod -> "Nil"
-  | OpNum e -> string_of_expr e
+  | NoMod -> "NoMod"
+  | UpTo   e -> Printf.sprintf "UpTo(%s)"   (string_of_expr e) 
+  | DownTo e -> Printf.sprintf "DownTo(%s)" (string_of_expr e) 
+  | ModTo  e -> Printf.sprintf "ModTo_to(%s)"   (string_of_expr e) 
+  | InRange (e1, e2) -> Printf.sprintf "InRange(%s, %s)"
+      (string_of_expr e1) (string_of_expr e2)
+  | LoopInRange (e1, e2) -> Printf.sprintf "LoopInRange(%s, %s)"
+      (string_of_expr e1) (string_of_expr e2)
 
 and string_of_binop = function
   | Add m -> "op_val_add(" ^ (string_of_opmod m)
@@ -36,6 +42,11 @@ and string_of_expr = function
   | Assign (n, expr) ->
       let name = Encoding.encode_prefix n in
       Printf.sprintf "ass_var(%s,%s)"
+        name (string_of_expr expr)
+
+  | PostAssign (n, expr) ->
+      let name = Encoding.encode_prefix n in
+      Printf.sprintf "pos_ass_var(%s,%s)"
         name (string_of_expr expr)
   
   | BinOp (op, e1, e2) ->

@@ -6,7 +6,11 @@
 (* Binary operators for arithmetic *)
 type opmod =
   | NoMod
-  | OpNum of expr
+  | UpTo of expr
+  | DownTo of expr
+  | ModTo of expr
+  | InRange of expr * expr
+  | LoopInRange of expr * expr
 
 and binop =
   | Add of opmod
@@ -32,7 +36,7 @@ and expr =
   | VarFunc of string * expr list (* contains var name data for errors *)
   | ValFunc of expr * expr list
   | Assign of string * expr
-  (* | VarOp of string * binop * expr *)
+  | PostAssign of string * expr (* assign, but return the old value *)
 
 (* Statements - things that do actions *)
 and stmt = (* 'and' for mutually recursive types *)

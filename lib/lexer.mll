@@ -49,6 +49,8 @@ rule tokenize = parse
   | "//"         { WHOLE_DIVIDE }
   | '/'          { DIVIDE }
   | '%'          { MODULO }
+  | '>'          { GREATER }
+  | '<'          { LESSER }
   | '='          { EQUALS }
   | '('          { LPAREN }
   | ')'          { RPAREN }

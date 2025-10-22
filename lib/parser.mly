@@ -11,6 +11,7 @@
 %token INCREMENT DECREMENT
 %token BIND PIPE
 %token PLUS MINUS TIMES DIVIDE WHOLE_DIVIDE MODULO
+%token LESSER GREATER
 %token CONS
 %token EQUALS VAR
 %token LPAREN RPAREN LSQUARE RSQUARE LCURLY RCURLY
@@ -24,6 +25,7 @@
 (* lower declarations = lower precedence. *)
    
 %right CONS
+%left LESSER GREATER 
 %left PLUS MINUS
 %left TIMES DIVIDE WHOLE_DIVIDE MODULO
 %nonassoc unary_minus unary_plus
@@ -37,6 +39,7 @@
 prog:
   | stmts = list(stmt); EOF
       { stmts }  (* Just return the list of statements *)
+
 
 stmt:
   | PRINT; e = expr
@@ -56,6 +59,7 @@ expr:
   | name = IDENT; BIND; EQUALS; e = expr
       { Assign (name, e) }
 
+  (* assign binds *)
   | name = IDENT; BIND; op = bin_op; e = expr
       { Assign (name, BinOp (op, Var (name), e)) }
 
@@ -63,6 +67,19 @@ expr:
       { Assign (name, BinOp (Add (m), Var (name), Num 1.)) }
   | name = IDENT; BIND; DECREMENT; m = bin_op_mod
       { Assign (name, BinOp (Sub (m), Var (name), Num 1.)) }
+
+  (* post assign binds *)
+  | EQUALS; e = expr; BIND; name = IDENT
+      { PostAssign (name, e) }
+
+  | op = bin_op; e = expr; BIND; name = IDENT
+      { PostAssign (name, BinOp (op, Var (name), e)) }
+
+  | INCREMENT; m = bin_op_mod; BIND; name = IDENT
+      { PostAssign (name, BinOp (Add (m), Var (name), Num 1.)) }
+  | DECREMENT; m = bin_op_mod; BIND; name = IDENT
+      { PostAssign (name, BinOp (Sub (m), Var (name), Num 1.)) }
+
 
   | n = NUM
       { Num n }
@@ -119,6 +136,7 @@ expr:
   | DECREMENT; e = expr %prec unary_plus
       { UnOp (Plus, e) }
 
+
 bin_op:
   | PLUS;         m = bin_op_mod { Add      m }
   | MINUS;        m = bin_op_mod { Sub      m }
@@ -127,11 +145,18 @@ bin_op:
   | MODULO;       m = bin_op_mod { Mod      m }
   | WHOLE_DIVIDE; m = bin_op_mod { WholeDiv m }
 
+
 bin_op_mod:
-  | BIND; PIPE; BIND; e = expr
-      { OpNum e }
+  | BIND; GREATER; BIND; e = expr
+      { UpTo e }
+
+  | BIND; LESSER; BIND; e = expr
+      { DownTo e }
+
+  | BIND; MODULO; BIND; e = expr
+      { ModTo e }
 
   | BIND; n = NUM
-      { OpNum (Num n) }
+      { UpTo (Num n) }
 
   | { NoMod }

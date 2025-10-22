@@ -32,10 +32,10 @@ print 7 / 3
 print 7//3
 print 7%3
 
-print 10 -:|:4+4 (5 - 2)
+print 10 -:<:4+4 (5 - 2)
 zz := x-x := 10 -:8 (5 - 2)
-zz:+ 1
-print zz
+zz:++
+print zz:++
 
 ; Num(3)
 ; Num(3)
