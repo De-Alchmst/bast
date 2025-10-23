@@ -26,23 +26,26 @@ rule tokenize = parse
   | "nil"   | "n" { SPECIAL_IDENT "nil" }
   | "true"  | "t" { SPECIAL_IDENT "true" }
   | "false" | "f" { SPECIAL_IDENT "false" }
-  | 'f' ('+'|'-'|'*'|"//"|'/'|'%') { SPECIAL_IDENT (Lexing.lexeme lexbuf) }
+  | 'f' ('+'|'-'|'*'|"//"|'/'|'%'
+        |"!"|"&&"|"||"|"^^"|"<="|">="|"="|"<"|">")
+      { SPECIAL_IDENT (Lexing.lexeme lexbuf) }
+  | "f!=" | "f<>" { SPECIAL_IDENT "f!=" }
 
   | "inc" | "++"   { INCREMENT }
   | "dec" | "--"   { DECREMENT }
-  | '!'   | "not"  { NOT }
-  | "&&"  | "and"  { AND }
-  | "||"  | "or"   { OR }
-  | "^^"  | "xor"  { XOR }
+  | "not" | '!'    { NOT }
+  | "and" | "&&"   { AND }
+  | "or"  | "||"   { OR }
+  | "xor" | "^^"   { XOR }
   | "!="  | "<>"   { NOT_EQUALS }
   | "<="           { LESSER_OR_EQUAL }
   | ">="           { GREATER_OR_EQUAL }
 
 
-  | '-'* letter (letter | '-' | digit)+
+  | letter (letter | '-' | digit)+
       { IDENT (Lexing.lexeme lexbuf) }
   
-  | '-'? digit+ '.'? (digit)*
+  | digit+ '.'? (digit)*
       { 
         (* Extract the matched text and convert to integer *)
         NUM (float_of_string (Lexing.lexeme lexbuf)) 

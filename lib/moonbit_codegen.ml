@@ -16,15 +16,16 @@ and string_of_binop = function
   | Mul m -> "op_val_mul(" ^ (string_of_opmod m)
   | Div m -> "op_val_div(" ^ (string_of_opmod m)
   | Mod m -> "op_val_mod(" ^ (string_of_opmod m)
-  | WholeDiv m -> "op_val_div_remles(" ^ (string_of_opmod m)
-  | Equals     -> "op_val_equal("
-  | Greater    -> "op_val_greater("
-  | Lesser     -> "op_val_less("
-  | GreaterEq  -> "op_val_greater_eq("
-  | LesserEq   -> "op_val_less_eq("
-  | And        -> "op_val_and("
-  | Or         -> "op_val_or("
-  | Xor        -> "op_val_xor("
+  | WholeDiv m -> "val_div_remles(" ^ (string_of_opmod m)
+  | Equals     -> "val_equal("
+  | NotEquals  -> "val_not_equal("
+  | Greater    -> "val_greater("
+  | Lesser     -> "val_lower("
+  | GreaterEq  -> "val_greater_eq("
+  | LesserEq   -> "val_lower_eq("
+  | And        -> "val_and("
+  | Or         -> "val_or("
+  | Xor        -> "val_xor("
 
 
 and string_of_unop = function
@@ -40,6 +41,16 @@ and string_of_specvar = function
   | "f//"   -> "Fun(val_div_remles, 2)"
   | "f/"    -> "Fun(val_div, 2)"
   | "f%"    -> "Fun(val_mod, 2)"
+  | "f&&"   -> "Fun(val_and, 2)"
+  | "f||"   -> "Fun(val_or , 2)"
+  | "f^^"   -> "Fun(val_xor, 2)"
+  | "f!"    -> "Fun(val_a not, 1)"
+  | "f<"    -> "Fun(val_lower, 2)"
+  | "f<="   -> "Fun(val_lower_eq, 2)"
+  | "f>"    -> "Fun(val_greater_eq, 2)"
+  | "f>="   -> "Fun(val_greater_eq, 2)"
+  | "f="    -> "Fun(val_equal, 2)"
+  | "f!="   -> "Fun(val_not_equal, 2)"
   | "true"  -> "Boo(true)"
   | "false" -> "Boo(false)"
   | _       -> "Nil"

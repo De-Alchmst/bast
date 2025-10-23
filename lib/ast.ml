@@ -20,6 +20,7 @@ and binop =
   | Mod of opmod
   | WholeDiv of opmod
   | Equals
+  | NotEquals
   | Greater
   | Lesser
   | GreaterEq

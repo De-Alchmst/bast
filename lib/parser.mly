@@ -25,12 +25,12 @@
    
 %right CONS
 
+%nonassoc unary_minus unary_plus
 %left AND OR XOR
 %left EQUALS NOT_EQUALS
 %left LESSER GREATER LESSER_OR_EQUAL GREATER_OR_EQUAL
 %left PLUS MINUS
 %left TIMES DIVIDE WHOLE_DIVIDE MODULO
-%nonassoc unary_minus unary_plus not
 
 (* The start symbol - what the parser tries to parse.
    <Ast.program> is the type that this rule returns. *)
@@ -96,8 +96,8 @@ expr:
       { PostAssign (name, BinOp (Sub (m), Var (name), Num 1.)) }
 
 
-  | n = NUM
-      { Num n }
+  | n = num
+      { n }
   
   | x = IDENT
       { Var x }
@@ -145,16 +145,15 @@ expr:
   | e1 = expr; GREATER; e2 = expr           { BinOp (Greater, e1, e2) }
   | e1 = expr; LESSER_OR_EQUAL; e2 = expr   { BinOp (LesserEq, e1, e2) }
   | e1 = expr; GREATER_OR_EQUAL; e2 = expr  { BinOp (GreaterEq, e1, e2) }
+  | e1 = expr; NOT_EQUALS; e2 = expr        { BinOp (NotEquals, e1, e2) }
   | e1 = expr; AND; e2 = expr               { BinOp (And, e1, e2) }
   | e1 = expr; OR; e2 = expr                { BinOp (Or,  e1, e2) }
   | e1 = expr; XOR; e2 = expr               { BinOp (Xor, e1, e2) }
-  | e1 = expr; NOT_EQUALS; e2 = expr
-      { UnOp (Not, (BinOp (Equals, e1, e2))) }
 
 
 
   (* Unary operations *)
-  | NOT; e = expr %prec not
+  | NOT; e = expr
       { UnOp (Not, e) }
 
   | MINUS; e = expr %prec unary_minus
@@ -168,7 +167,11 @@ expr:
 
 
 assign: | BIND; EQUALS {}
-post_assign: | EQUALS; BIND {}
+num:
+  | MINUS; n = NUM
+      { Num (-.n)}
+  | n = NUM
+      { Num n }
 
 bin_op:
   | PLUS;         m = bin_op_mod { Add      m }
@@ -195,7 +198,7 @@ bin_op_mod:
   | BIND; MODULO; BIND; e = expr
       { ModTo e }
 
-  | BIND; n = NUM
-      { UpTo (Num n) }
+  | BIND; n = num
+      { UpTo n }
 
   | { NoMod }

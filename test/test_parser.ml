@@ -50,7 +50,7 @@ let tests = [
    [ExprStmt (Assign ("foo", BinOp (Mul NoMod, BinOp (Add NoMod, Num 1., Num 2.), Num 3.)))]);
   
   ("left associativity",
-   "foo := 10 - 5 - 2",
+   "foo := 10 - 5-2",
    [ExprStmt (Assign ("foo", BinOp (Sub NoMod, BinOp (Sub NoMod, Num 10., Num 5.), Num 2.)))]);
   
   ("print statement",
@@ -92,8 +92,8 @@ let tests = [
               Num 3.))))]);
 
   ("all of unary operators",
-   "3 * +- 7",
-   [ExprStmt (BinOp (Mul NoMod, Num 3., UnOp (Plus, UnOp (Minus, Num 7.))))]);
+   "3 * +- foo",
+   [ExprStmt (BinOp (Mul NoMod, Num 3., UnOp (Plus, UnOp (Minus, Var "foo"))))]);
 
   ("ExprStmt",
    "5 + 7",

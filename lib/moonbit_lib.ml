@@ -196,7 +196,7 @@ fn op_val_sub(mod: Mod, argv: Array[Value]) -> Value {
 }
 
 fn op_val_mul(mod: Mod, argv: Array[Value]) -> Value {
-  val_num_binop(mod, fn (x: Double, y:Double) -> Double {x-y}, "multiply", argv)
+  val_num_binop(mod, fn (x: Double, y:Double) -> Double {x*y}, "multiply", argv)
 }
 
 fn op_val_mod(mod: Mod, argv: Array[Value]) -> Value {
@@ -243,7 +243,7 @@ fn val_plus(arg: Value) -> Value {
 // logic binop functions
 
 // let's pray that it works
-fn op_val_equal(argv: Array[Value]) -> Value {
+fn val_equal(argv: Array[Value]) -> Value {
   if argv.length() != 2 {
     println("equal function expects exactly 2 arguments, got \{argv.length()}")
     panic()
@@ -260,7 +260,7 @@ fn op_val_equal(argv: Array[Value]) -> Value {
         let mut eq = true
         let len = x.length()
         for i = 0; i < len; i = i + 1 {
-          if !val_to_bool(op_val_equal([x[i], y[i]])) {
+          if !val_to_bool(val_equal([x[i], y[i]])) {
             eq = false
             break
           }
@@ -269,9 +269,13 @@ fn op_val_equal(argv: Array[Value]) -> Value {
       }
     }
     [Cons(x1, y1), Cons(x2, y2)] =>
-       val_to_bool(op_val_and([op_val_equal([x1, x2]), op_val_equal([y1, y2])]))
+       val_to_bool(val_and([val_equal([x1, x2]), val_equal([y1, y2])]))
     _ => false
   })
+}
+
+fn val_not_equal(argv: Array[Value]) -> Value {
+  val_not(val_equal(argv))
 }
 
 
@@ -279,36 +283,39 @@ fn val_not(arg: Value) -> Value {
   Boo(!val_to_bool(arg))
 }
 
+fn val_a_not(argv: Array[Value]) -> Value {
+  val_not(argv[0])
+}
 
-fn op_val_greater(argv: Array[Value]) -> Value {
+fn val_greater(argv: Array[Value]) -> Value {
   val_bool_num_binop(fn (x: Double, y: Double) -> Bool {x>y},
                      "greater than", argv)
 }
 
-fn op_val_less(argv: Array[Value]) -> Value {
+fn val_lower(argv: Array[Value]) -> Value {
   val_bool_num_binop(fn (x: Double, y: Double) -> Bool {x<y},
                      "less than", argv)
 }
 
-fn op_val_greater_eq(argv: Array[Value]) -> Value {
+fn val_greater_eq(argv: Array[Value]) -> Value {
   val_bool_num_binop(fn (x: Double, y: Double) -> Bool {x>=y},
                      "greater than or equal to", argv)
 }
 
-fn op_val_less_eq(argv: Array[Value]) -> Value {
+fn val_lower_eq(argv: Array[Value]) -> Value {
   val_bool_num_binop(fn (x: Double, y: Double) -> Bool {x<=y},
                      "less than or equal to", argv)
 }
 
-fn op_val_and(argv: Array[Value]) -> Value {
+fn val_and(argv: Array[Value]) -> Value {
   val_bool_binop(fn (x: Bool, y: Bool) -> Bool {x && y}, "and", argv)
 }
 
-fn op_val_or(argv: Array[Value]) -> Value {
+fn val_or(argv: Array[Value]) -> Value {
   val_bool_binop(fn (x: Bool, y: Bool) -> Bool {x || y}, "or", argv)
 }
 
-fn op_val_xor(argv: Array[Value]) -> Value {
+fn val_xor(argv: Array[Value]) -> Value {
   val_bool_binop(fn (x: Bool, y: Bool) -> Bool {x != y}, "xor", argv)
 }
 
