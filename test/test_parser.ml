@@ -119,7 +119,7 @@ let tests = [
    [ExprStmt (ValFunc (SpecVar "f+", [Var "bar"; Num 7.]))]);
 
   ("BinOp bind",
-   "4 +:<:-2*2 0\nfoo -:3 7",
+   "4 +:>:-2*2 0\nfoo -:3 7",
    [ExprStmt (BinOp (Add (DownTo (BinOp (Mul NoMod, Num (-2.), Num 2.))),
                          Num 4., Num 0.));
     ExprStmt (BinOp (Sub (UpTo (Num 3.)), Var "foo", Num 7.))]);
@@ -146,13 +146,15 @@ let tests = [
                       (Assign ("foo", (BinOp (Sub NoMod, Var "foo", Num 1.)))),
                       (Assign ("bar", (BinOp (Add NoMod, Var "bar", Num 1.))))))]);
 
-  (* ("Post Assignment", *)
-  (* "foo + ++:bar + baz", *)
-  (* [ExprStmt (BinOp (Add NoMod, *)
-  (*                    (BinOp (Add NoMod, *)
-  (*                      (Var "foo"), *)
-  (*                      (PostAssign ("bar", (BinOp (Add NoMod, Var "bar", Num 1.)))))), *)
-  (*                    (Var "baz")))]); *)
+  ("Post Assignment",
+  "foo + ++:80:bar + baz   --:foo   =:bar 3",
+  [ExprStmt (BinOp (Add NoMod,
+                     (BinOp (Add NoMod,
+                       (Var "foo"),
+                       (PostAssign ("bar", (BinOp (Add (UpTo (Num 80.)), Var "bar", Num 1.)))))),
+                     (Var "baz")));
+   ExprStmt (PostAssign ("foo", (BinOp (Sub NoMod, Var "foo", Num 1.))));
+   ExprStmt (PostAssign ("bar", Num 3.))]);
 ]
 
 

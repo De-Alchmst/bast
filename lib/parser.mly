@@ -28,7 +28,7 @@
 %left LESSER GREATER 
 %left PLUS MINUS
 %left TIMES DIVIDE WHOLE_DIVIDE MODULO
-%nonassoc unary_minus unary_plus
+%nonassoc unary_minus unary_plus prebind
 
 (* The start symbol - what the parser tries to parse.
    <Ast.program> is the type that this rule returns. *)
@@ -68,17 +68,27 @@ expr:
   | name = IDENT; BIND; DECREMENT; m = bin_op_mod
       { Assign (name, BinOp (Sub (m), Var (name), Num 1.)) }
 
+
   (* post assign binds *)
-  (* | EQUALS; e = expr; BIND; name = IDENT *)
-  (*     { PostAssign (name, e) } *)
+  (* for some mystical occult reason I'm too much of a quiche-eater to
+     understand, in this case, the bin_op_mod cannot properly handle empty
+     cases, so there needs to be some duplicity *)
+  | EQUALS; BIND; name = IDENT; e = expr
+      { PostAssign (name, e) }
 
-  (* | op = bin_op; e = expr; BIND; name = IDENT *)
-  (*     { PostAssign (name, BinOp (op, Var (name), e)) } *)
+  (** this still throws parsers errors though... *)
+  (* | PLUS; BIND; name = IDENT; e = expr *)
+  (*     { PostAssign (name, BinOp (Add NoMod, Var (name), e)) } *)
 
-  (* | INCREMENT; m = bin_op_mod; BIND; name = IDENT *)
-  (*     { PostAssign (name, BinOp (Add (m), Var (name), Num 1.)) } *)
-  (* | DECREMENT; m = bin_op_mod; BIND; name = IDENT *)
-  (*     { PostAssign (name, BinOp (Sub (m), Var (name), Num 1.)) } *)
+  | INCREMENT; BIND; name = IDENT
+      { PostAssign (name, BinOp (Add NoMod, Var (name), Num 1.)) }
+  | DECREMENT; BIND; name = IDENT
+      { PostAssign (name, BinOp (Sub NoMod, Var (name), Num 1.)) }
+
+  | INCREMENT; m = bin_op_mod; BIND; name = IDENT
+      { PostAssign (name, BinOp (Add (m), Var (name), Num 1.)) }
+  | DECREMENT; m = bin_op_mod; BIND; name = IDENT
+      { PostAssign (name, BinOp (Sub (m), Var (name), Num 1.)) }
 
 
   | n = NUM
@@ -135,7 +145,6 @@ expr:
   | INCREMENT; e = expr %prec unary_plus
   | DECREMENT; e = expr %prec unary_plus
       { UnOp (Plus, e) }
-
 
 bin_op:
   | PLUS;         m = bin_op_mod { Add      m }

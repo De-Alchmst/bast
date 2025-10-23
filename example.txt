@@ -6,3 +6,6 @@ foo := 1
 bar := 2
 
 print foo +:%:<:5:15:> bar
+print ++:bar
+print bar:++
+print bar
