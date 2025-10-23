@@ -19,10 +19,19 @@ and binop =
   | Div of opmod
   | Mod of opmod
   | WholeDiv of opmod
+  | Equals
+  | Greater
+  | Lesser
+  | GreaterEq
+  | LesserEq
+  | And
+  | Or
+  | Xor
 
 and unop =
   | Plus (* nop *)
   | Minus
+  | Not
 
 (* Expressions - things that evaluate to values *)
 and expr =

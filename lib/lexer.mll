@@ -23,8 +23,21 @@ rule tokenize = parse
   | "return"     { RETURN }
   | "do" | "blk" | "blck" | "block" { DO }
 
-  | "nil" | "n"  { SPECIAL_IDENT "nil" }
+  | "nil"   | "n" { SPECIAL_IDENT "nil" }
+  | "true"  | "t" { SPECIAL_IDENT "true" }
+  | "false" | "f" { SPECIAL_IDENT "false" }
   | 'f' ('+'|'-'|'*'|"//"|'/'|'%') { SPECIAL_IDENT (Lexing.lexeme lexbuf) }
+
+  | "inc" | "++"   { INCREMENT }
+  | "dec" | "--"   { DECREMENT }
+  | '!'   | "not"  { NOT }
+  | "&&"  | "and"  { AND }
+  | "||"  | "or"   { OR }
+  | "^^"  | "xor"  { XOR }
+  | "!="  | "<>"   { NOT_EQUALS }
+  | "<="           { LESSER_OR_EQUAL }
+  | ">="           { GREATER_OR_EQUAL }
+
 
   | '-'* letter (letter | '-' | digit)+
       { IDENT (Lexing.lexeme lexbuf) }
@@ -35,13 +48,6 @@ rule tokenize = parse
         NUM (float_of_string (Lexing.lexeme lexbuf)) 
       }
 
-
-  | "inc" | "++" { INCREMENT }
-  | "dec" | "--" { DECREMENT }
-  | '!'   | "not"  { NOT }
-  | "&&"  | "and"  { AND }
-  | "||"  | "or"   { OR }
-  | "^^"  | "xor"  { XOR }
 
   (* comments *)
   | ':'          { BIND }
@@ -57,6 +63,7 @@ rule tokenize = parse
   | '>'          { GREATER }
   | '<'          { LESSER }
   | '='          { EQUALS }
+  | '!'          { NOT }
   | '('          { LPAREN }
   | ')'          { RPAREN }
   | '['          { LSQUARE }

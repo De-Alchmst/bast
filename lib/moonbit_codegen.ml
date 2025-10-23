@@ -1,13 +1,13 @@
 open Ast
 
 let rec string_of_opmod = function
-  | NoMod -> "NoMod"
-  | UpTo   e -> Printf.sprintf "UpTo(%s)"   (string_of_expr e) 
-  | DownTo e -> Printf.sprintf "DownTo(%s)" (string_of_expr e) 
-  | ModTo  e -> Printf.sprintf "ModTo(%s)"  (string_of_expr e) 
-  | InRange (e1, e2) -> Printf.sprintf "InRange(%s, %s)"
+  | NoMod -> "NoMod,"
+  | UpTo   e -> Printf.sprintf "UpTo(%s),"   (string_of_expr e) 
+  | DownTo e -> Printf.sprintf "DownTo(%s)," (string_of_expr e) 
+  | ModTo  e -> Printf.sprintf "ModTo(%s),"  (string_of_expr e) 
+  | InRange (e1, e2) -> Printf.sprintf "InRange(%s, %s),"
       (string_of_expr e1) (string_of_expr e2)
-  | LoopInRange (e1, e2) -> Printf.sprintf "LoopInRange(%s, %s)"
+  | LoopInRange (e1, e2) -> Printf.sprintf "LoopInRange(%s, %s),"
       (string_of_expr e1) (string_of_expr e2)
 
 and string_of_binop = function
@@ -17,20 +17,32 @@ and string_of_binop = function
   | Div m -> "op_val_div(" ^ (string_of_opmod m)
   | Mod m -> "op_val_mod(" ^ (string_of_opmod m)
   | WholeDiv m -> "op_val_div_remles(" ^ (string_of_opmod m)
+  | Equals     -> "op_val_equal("
+  | Greater    -> "op_val_greater("
+  | Lesser     -> "op_val_less("
+  | GreaterEq  -> "op_val_greater_eq("
+  | LesserEq   -> "op_val_less_eq("
+  | And        -> "op_val_and("
+  | Or         -> "op_val_or("
+  | Xor        -> "op_val_xor("
+
 
 and string_of_unop = function
   | Plus  -> "val_plus"
   | Minus -> "val_minus"
+  | Not   -> "val_not"
 
 and string_of_specvar = function
-  | "nil" -> "Nil"
-  | "f+"  -> "Fun(val_add, 2)"
-  | "f-"  -> "Fun(val_sub, 2)"
-  | "f*"  -> "Fun(val_mul, 2)"
-  | "f//" -> "Fun(val_div_remles, 2)"
-  | "f/"  -> "Fun(val_div, 2)"
-  | "f%"  -> "Fun(val_mod, 2)"
-  | _     -> "Nil"
+  | "nil"   -> "Nil"
+  | "f+"    -> "Fun(val_add, 2)"
+  | "f-"    -> "Fun(val_sub, 2)"
+  | "f*"    -> "Fun(val_mul, 2)"
+  | "f//"   -> "Fun(val_div_remles, 2)"
+  | "f/"    -> "Fun(val_div, 2)"
+  | "f%"    -> "Fun(val_mod, 2)"
+  | "true"  -> "Boo(true)"
+  | "false" -> "Boo(false)"
+  | _       -> "Nil"
 
 and string_of_expr = function
   (* Ocaml ends whole floats in '.', not '.0' *)
@@ -54,7 +66,7 @@ and string_of_expr = function
       let op_str = string_of_binop op in
       let left   = string_of_expr  e1 in
       let right  = string_of_expr  e2 in
-      Printf.sprintf "%s,[%s,%s])" op_str left right
+      Printf.sprintf "%s[%s,%s])" op_str left right
 
   | UnOp (op, e) ->
       let op_str = string_of_unop op in

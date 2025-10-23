@@ -11,7 +11,8 @@
 %token INCREMENT DECREMENT
 %token BIND PIPE
 %token PLUS MINUS TIMES DIVIDE WHOLE_DIVIDE MODULO
-%token EQUALS LESSER GREATER OR AND XOR NOT
+%token EQUALS NOT_EQUALS LESSER LESSER_OR_EQUAL GREATER GREATER_OR_EQUAL
+%token NOT OR AND XOR
 %token CONS
 %token VAR
 %token LPAREN RPAREN LSQUARE RSQUARE LCURLY RCURLY
@@ -23,10 +24,12 @@
 %token RETURN (* lower declarations = lower precedence. *)
    
 %right CONS
-%left LESSER GREATER 
+%left AND OR XOR
+%left EQUALS NOT_EQUALS
+%left LESSER GREATER LESSER_OR_EQUAL GREATER_OR_EQUAL
 %left PLUS MINUS
 %left TIMES DIVIDE WHOLE_DIVIDE MODULO
-%nonassoc unary_minus unary_plus prebind
+%nonassoc unary_minus unary_plus not
 
 (* The start symbol - what the parser tries to parse.
    <Ast.program> is the type that this rule returns. *)
@@ -133,8 +136,23 @@ expr:
   | e1 = expr; WHOLE_DIVIDE; m=bin_op_mod ; e2 = expr
     { BinOp ((WholeDiv m), e1, e2) }
 
+  | e1 = expr; EQUALS; e2 = expr            { BinOp (Equals, e1, e2) }
+  | e1 = expr; LESSER; e2 = expr            { BinOp (Lesser, e1, e2) }
+  | e1 = expr; GREATER; e2 = expr           { BinOp (Greater, e1, e2) }
+  | e1 = expr; LESSER_OR_EQUAL; e2 = expr   { BinOp (LesserEq, e1, e2) }
+  | e1 = expr; GREATER_OR_EQUAL; e2 = expr  { BinOp (GreaterEq, e1, e2) }
+  | e1 = expr; AND; e2 = expr               { BinOp (And, e1, e2) }
+  | e1 = expr; OR; e2 = expr                { BinOp (Or, e1, e2) }
+  | e1 = expr; XOR; e2 = expr               { BinOp (Xor, e1, e2) }
+  | e1 = expr; NOT_EQUALS; e2 = expr
+      { UnOp (Not, (BinOp (Equals, e1, e2))) }
+
+
 
   (* Unary operations *)
+  | NOT; e = expr %prec not
+      { UnOp (Not, e) }
+
   | MINUS; e = expr %prec unary_minus
       { UnOp (Minus, e)  }
     
