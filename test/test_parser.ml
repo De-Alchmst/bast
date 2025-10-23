@@ -147,14 +147,33 @@ let tests = [
                       (Assign ("bar", (BinOp (Add NoMod, Var "bar", Num 1.))))))]);
 
   ("Post Assignment",
-  "foo + ++:80:bar + baz   --:foo   =:bar 3",
-  [ExprStmt (BinOp (Add NoMod,
-                     (BinOp (Add NoMod,
+   "foo + ++:80:bar + baz   --:foo   =:bar 3",
+   [ExprStmt (BinOp (Add NoMod,
+                      (BinOp (Add NoMod,
                        (Var "foo"),
                        (PostAssign ("bar", (BinOp (Add (UpTo (Num 80.)), Var "bar", Num 1.)))))),
                      (Var "baz")));
-   ExprStmt (PostAssign ("foo", (BinOp (Sub NoMod, Var "foo", Num 1.))));
-   ExprStmt (PostAssign ("bar", Num 3.))]);
+    ExprStmt (PostAssign ("foo", (BinOp (Sub NoMod, Var "foo", Num 1.))));
+    ExprStmt (PostAssign ("bar", Num 3.))]);
+
+  ("basic comparison operators",
+   "3 >= 7 xor 4 = 2 and 6 < 9",
+   [ExprStmt (BinOp (And,
+     BinOp (Xor,
+       BinOp (GreaterEq, Num 3., Num 7.),
+       BinOp (Equals, Num 4., Num 2.)),
+     BinOp (Lesser, Num 6., Num 9.)))]);
+
+  ("basic bool operators",
+   "foo := true && false || t ^^ f",
+   [ExprStmt (Assign ("foo",
+     BinOp (Xor,
+       BinOp (Or,
+         BinOp (And,
+           SpecVar "true",
+           SpecVar "false"),
+         SpecVar "true"),
+       SpecVar "false")))]);
 ]
 
 

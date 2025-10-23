@@ -10,6 +10,6 @@ PRINT ++:BAR
 print bar:++
 print bar
 
-print !(true = 3+7 < 9) 
+print !(true and 3+7 < 9) 
 
 print !!37 ; bool cast operator?

@@ -24,6 +24,7 @@
 %token RETURN (* lower declarations = lower precedence. *)
    
 %right CONS
+
 %left AND OR XOR
 %left EQUALS NOT_EQUALS
 %left LESSER GREATER LESSER_OR_EQUAL GREATER_OR_EQUAL
@@ -57,7 +58,8 @@ stmt:
 
 (* Expression grammar - builds up expression AST nodes *)
 expr:
-  | name = IDENT; BIND; EQUALS; e = expr
+  (* outsourcing := foxes issues with precedence, as this was considered infix *)
+  | name = IDENT; assign; e = expr
       { Assign (name, e) }
 
   (* assign binds *)
@@ -74,6 +76,8 @@ expr:
   (* for some mystical occult reason I'm too much of a quiche-eater to
      understand, in this case, the bin_op_mod cannot properly handle empty
      cases, so there needs to be some duplicity *)
+  (* same problem here now, it just does not like starting with stuff that has
+     precedence, except that unary +/- are fine...*)
   | EQUALS; BIND; name = IDENT; e = expr
       { PostAssign (name, e) }
 
@@ -142,7 +146,7 @@ expr:
   | e1 = expr; LESSER_OR_EQUAL; e2 = expr   { BinOp (LesserEq, e1, e2) }
   | e1 = expr; GREATER_OR_EQUAL; e2 = expr  { BinOp (GreaterEq, e1, e2) }
   | e1 = expr; AND; e2 = expr               { BinOp (And, e1, e2) }
-  | e1 = expr; OR; e2 = expr                { BinOp (Or, e1, e2) }
+  | e1 = expr; OR; e2 = expr                { BinOp (Or,  e1, e2) }
   | e1 = expr; XOR; e2 = expr               { BinOp (Xor, e1, e2) }
   | e1 = expr; NOT_EQUALS; e2 = expr
       { UnOp (Not, (BinOp (Equals, e1, e2))) }
@@ -161,6 +165,10 @@ expr:
   | INCREMENT; e = expr %prec unary_plus
   | DECREMENT; e = expr %prec unary_plus
       { UnOp (Plus, e) }
+
+
+assign: | BIND; EQUALS {}
+post_assign: | EQUALS; BIND {}
 
 bin_op:
   | PLUS;         m = bin_op_mod { Add      m }
