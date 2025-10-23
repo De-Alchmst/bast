@@ -23,9 +23,6 @@ rule tokenize = parse
   | "return"     { RETURN }
   | "do" | "blk" | "blck" | "block" { DO }
 
-  | "inc" | "++" { INCREMENT }
-  | "dec" | "--" { DECREMENT }
-
   | "nil" | "n"  { SPECIAL_IDENT "nil" }
   | 'f' ('+'|'-'|'*'|"//"|'/'|'%') { SPECIAL_IDENT (Lexing.lexeme lexbuf) }
 
@@ -37,6 +34,14 @@ rule tokenize = parse
         (* Extract the matched text and convert to integer *)
         NUM (float_of_string (Lexing.lexeme lexbuf)) 
       }
+
+
+  | "inc" | "++" { INCREMENT }
+  | "dec" | "--" { DECREMENT }
+  | '!'   | "not"  { NOT }
+  | "&&"  | "and"  { AND }
+  | "||"  | "or"   { OR }
+  | "^^"  | "xor"  { XOR }
 
   (* comments *)
   | ':'          { BIND }

@@ -11,18 +11,16 @@
 %token INCREMENT DECREMENT
 %token BIND PIPE
 %token PLUS MINUS TIMES DIVIDE WHOLE_DIVIDE MODULO
-%token LESSER GREATER
+%token EQUALS LESSER GREATER OR AND XOR NOT
 %token CONS
-%token EQUALS VAR
+%token VAR
 %token LPAREN RPAREN LSQUARE RSQUARE LCURLY RCURLY
 %token EOF
 
 %token DO
 
 %token PRINT
-%token RETURN
-
-(* lower declarations = lower precedence. *)
+%token RETURN (* lower declarations = lower precedence. *)
    
 %right CONS
 %left LESSER GREATER 

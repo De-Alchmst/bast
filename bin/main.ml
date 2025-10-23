@@ -5,7 +5,8 @@ open Bast_lib
 let compile input_channel =
   (* Create a lexer buffer from the input channel - defined outside try
      so it's accessible in the error handlers *)
-  let lexbuf = Lexing.from_channel input_channel in
+  let input_str = String.lowercase_ascii (In_channel.input_all input_channel) in
+  let lexbuf = Lexing.from_string input_str in
   
   (* Set the filename for error messages (optional but helpful) *)
   lexbuf.lex_curr_p <- { lexbuf.lex_curr_p with pos_fname = "input" };
