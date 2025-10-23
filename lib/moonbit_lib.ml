@@ -260,10 +260,7 @@ fn op_val_equal(argv: Array[Value]) -> Value {
         let mut eq = true
         let len = x.length()
         for i = 0; i < len; i = i + 1 {
-          if !(match op_val_equal([x[i], y[i]]) {
-            Boo(b) => b
-            _ => false
-          }) {
+          if !val_to_bool(op_val_equal([x[i], y[i]])) {
             eq = false
             break
           }
@@ -272,10 +269,7 @@ fn op_val_equal(argv: Array[Value]) -> Value {
       }
     }
     [Cons(x1, y1), Cons(x2, y2)] =>
-         match op_val_and([op_val_equal([x1, x2]), op_val_equal([y1, y2])]) {
-            Boo(b) => b
-            _ => false
-        }
+       val_to_bool(op_val_and([op_val_equal([x1, x2]), op_val_equal([y1, y2])]))
     _ => false
   })
 }
