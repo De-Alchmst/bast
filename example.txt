@@ -16,4 +16,4 @@ print !(true and 3+7 < 9)
 
 print !!37 ; bool cast operator?
 print 2-4 = -2
-print if [ 4 true]:[baz]
+print if [ 4 true]:[5  6 7 baz]
