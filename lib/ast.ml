@@ -48,6 +48,7 @@ and expr =
   | Assign of string * expr
   | PostAssign of string * expr (* assign, but return the old value *)
   | If of expr * expr * expr (* cont true false *)
+  | While of expr * stmt * expr (* condition, declaration, body *)
 
 (* Statements - things that do actions *)
 and stmt = (* 'and' for mutually recursive types *)

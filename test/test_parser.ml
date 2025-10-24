@@ -191,6 +191,16 @@ let tests = [
                     If (UnOp (Not, Block ([], Var "bar")),
                         Block ([], Num 4.),
                         Block ([], SpecVar "nil")))))]);
+
+  ("While loop",
+  "while [x]:[foo bar]:[until [baz]:[[bax]]]",
+  [ExprStmt (While (Block ([], Var "x"),
+                   (StmtList [
+                     Declare ("foo", SpecVar "nil");
+                     Declare ("bar", SpecVar "nil")]),
+                   Block ([], While (UnOp (Not, Block ([], Var "baz")),
+                                     StmtList [],
+                                     Block ([], ValFunc (SpecVar "bax", []))))))]);
 ]
 
 

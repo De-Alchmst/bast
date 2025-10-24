@@ -15,7 +15,7 @@
 %token NOT OR AND XOR
 %token CONS
 %token VAR
-%token DO IF UNLESS
+%token DO IF UNLESS WHILE UNTIL
 %token LPAREN RPAREN LSQUARE RSQUARE LCURLY RCURLY
 %token EOF
 
@@ -106,6 +106,7 @@ expr:
   | x = SPECIAL_IDENT
       { SpecVar x }
   
+
   (* Parenthesized expression - just returns the inner expression *)
   | LPAREN; e = expr; RPAREN
       { e }
@@ -129,6 +130,18 @@ expr:
         | []         -> Block ([], SpecVar "nil")(* how to raise error again? *)
         | Var h :: t -> VarFunc (h, t)
         | h :: t     -> ValFunc (h, t)}
+
+
+  | WHILE; cond = code_block; BIND; dec = declare_block; BIND; body = code_block
+      { While (cond, dec, body) }
+  | WHILE; cond = code_block; BIND; body = code_block
+      { While (cond, StmtList [], body) }
+
+  | UNTIL; cond = code_block; BIND; dec = declare_block; BIND; body = code_block
+      { While (UnOp (Not, cond), dec, body) }
+  | UNTIL; cond = code_block; BIND; body = code_block
+      { While (UnOp (Not, cond), StmtList [], body) }
+
   
   (* cannot be factored, because percedence *)
   | e1 = expr; PLUS; m=bin_op_mod ; e2 = expr

@@ -22,6 +22,8 @@ rule tokenize = parse
   | "var"        { VAR }
   | "if"         { IF }
   | "unless"     { UNLESS }
+  | "while"      { WHILE }
+  | "until"      { UNTIL }
   | "return"     { RETURN }
   | "do" | "blk" | "blck" | "block" { DO }
 
