@@ -102,7 +102,7 @@ and string_of_expr = function
         (string_of_expr cond) (string_of_expr t) (string_of_expr f)
 
   | While (cond, dec, body) ->
-      sprintf "{let _rval=Nil;while val_to_bool(%s){_rval={\n %s\n %s\n }};_rval}"
+      sprintf "{let mut _rval=Nil;while val_to_bool(%s){_rval={\n %s\n %s\n }};_rval}"
         (string_of_expr cond) (string_of_stmt dec) (string_of_expr body)
 
 and string_of_stmt = function

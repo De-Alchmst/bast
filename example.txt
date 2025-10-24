@@ -17,3 +17,10 @@ print !(true and 3+7 < 9)
 print !!37 ; bool cast operator?
 print 2-4 = -2
 print unless [ 4 true]:[5  6 7 baz]
+
+baz := 3
+print while [baz > 0]:[ ll:3 ]:[print baz --:baz]
+;print while [baz > 0]:[ ll pp ]:[print baz --:baz]
+;print while [baz > 0]:[ ll ]:[print baz --:baz]
+print while [baz > 0]:[ ll:9 pp]:[print baz --:baz]
+print while [baz > 0]:[print baz --:baz]

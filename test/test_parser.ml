@@ -193,8 +193,8 @@ let tests = [
                         Block ([], SpecVar "nil")))))]);
 
   ("While loop",
-  "while [x]:[foo bar]:[until [baz]:[[bax]]]",
-  [ExprStmt (While (Block ([], Var "x"),
+  "while [cnd]:[foo bar]:[until [baz]:[[bax]]]",
+  [ExprStmt (While (Block ([], Var "cnd"),
                    (StmtList [
                      Declare ("foo", SpecVar "nil");
                      Declare ("bar", SpecVar "nil")]),

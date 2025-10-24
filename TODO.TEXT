@@ -1,2 +1,3 @@
 fix operator prebinding
 separate words from minus and stuf...
+fix var block of loops

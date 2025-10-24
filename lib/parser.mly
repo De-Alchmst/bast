@@ -18,9 +18,6 @@
 %token DO IF UNLESS WHILE UNTIL
 %token LPAREN RPAREN LSQUARE RSQUARE LCURLY RCURLY
 %token EOF
-
-%token PRINT
-%token RETURN (* lower declarations = lower precedence. *)
    
 %right CONS
 
@@ -132,6 +129,9 @@ expr:
         | h :: t     -> ValFunc (h, t)}
 
 
+
+  (* | WHILE; cond = code_block; BIND; LSQUARE; dec = option(terminated(list(declare_var))); BIND; LSQUARE; body = list(stmt); RSQUARE; *)
+  (*     { While (cond, (StmtList dec), Block (body, SpecVar "nil")) } *)
   | WHILE; cond = code_block; BIND; dec = declare_block; BIND; body = code_block
       { While (cond, dec, body) }
   | WHILE; cond = code_block; BIND; body = code_block
@@ -141,7 +141,6 @@ expr:
       { While (UnOp (Not, cond), dec, body) }
   | UNTIL; cond = code_block; BIND; body = code_block
       { While (UnOp (Not, cond), StmtList [], body) }
-
   
   (* cannot be factored, because percedence *)
   | e1 = expr; PLUS; m=bin_op_mod ; e2 = expr
@@ -151,7 +150,6 @@ expr:
     { BinOp ((Sub m), e1, e2) }
 
   | e1 = expr; TIMES; m=bin_op_mod ; e2 = expr
-    { BinOp ((Mul m), e1, e2) }
 
   | e1 = expr; DIVIDE; m=bin_op_mod ; e2 = expr
     { BinOp ((Div m), e1, e2) }
@@ -234,7 +232,7 @@ code_block:
           | x -> Block (List.rev x, SpecVar "nil")}
 
 declare_block:
-  | LSQUARE; s = list(declare_var); RSQUARE
+  | LSQUARE; s = nonempty_list(declare_var); RSQUARE
       { StmtList s }
 
 declare_var:
@@ -244,3 +242,12 @@ declare_var:
   | name = IDENT
       { Declare (name, SpecVar "nil") }
 
+generic_block:
+  | LSQUARE; s = nonempty_list(generic_statement); RSQUARE
+      { match (List.rev s) with
+          | ExprStmt(e) :: t -> Block (List.rev t, e)
+          | x -> Block (List.rev x, SpecVar "nil")}
+
+generic_statement:
+  | d = declare_var { d }
+  | s = stmt { s }
