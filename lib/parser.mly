@@ -14,11 +14,9 @@
 %token EQUALS NOT_EQUALS LESSER LESSER_OR_EQUAL GREATER GREATER_OR_EQUAL
 %token NOT OR AND XOR
 %token CONS
-%token VAR
+%token VAR DO IF
 %token LPAREN RPAREN LSQUARE RSQUARE LCURLY RCURLY
 %token EOF
-
-%token DO
 
 %token PRINT
 %token RETURN (* lower declarations = lower precedence. *)
@@ -109,11 +107,13 @@ expr:
   | LPAREN; e = expr; RPAREN
       { e }
 
-  (* `s = list(stmt); e = expr` failed me, so we're doing this then I guess *)
-  | DO; LSQUARE; s = list(stmt); RSQUARE
-      { match (List.rev s) with
-          | ExprStmt(e) :: t -> Block (List.rev t, e)
-          | x -> Block (List.rev x, SpecVar "nil")}
+  | DO; blk = code_block
+      { blk }
+
+  | IF; cond = code_block; BIND; t = code_block; BIND; f = code_block
+      { If (cond, t, f) }
+  | IF; cond = code_block; BIND; t = code_block
+      { If (cond, t, Block ([], SpecVar "nil")) }
 
   | LSQUARE; e = list(expr); RSQUARE
       { match e with
@@ -172,6 +172,13 @@ num:
       { Num (-.n)}
   | n = NUM
       { Num n }
+
+(* `s = list(stmt); e = expr` failed me, so we're doing this then I guess *)
+code_block:
+  | LSQUARE; s = list(stmt); RSQUARE
+      { match (List.rev s) with
+          | ExprStmt(e) :: t -> Block (List.rev t, e)
+          | x -> Block (List.rev x, SpecVar "nil")}
 
 bin_op:
   | PLUS;         m = bin_op_mod { Add      m }

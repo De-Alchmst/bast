@@ -20,6 +20,7 @@ rule tokenize = parse
   | newline      { Lexing.new_line lexbuf; tokenize lexbuf }
   | "print"      { PRINT }
   | "var"        { VAR }
+  | "if"         { IF }
   | "return"     { RETURN }
   | "do" | "blk" | "blck" | "block" { DO }
 

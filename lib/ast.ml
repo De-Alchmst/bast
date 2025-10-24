@@ -47,6 +47,7 @@ and expr =
   | ValFunc of expr * expr list
   | Assign of string * expr
   | PostAssign of string * expr (* assign, but return the old value *)
+  | If of expr * expr * expr (* cont true false *)
 
 (* Statements - things that do actions *)
 and stmt = (* 'and' for mutually recursive types *)
