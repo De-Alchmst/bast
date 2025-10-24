@@ -319,4 +319,70 @@ fn val_xor(argv: Array[Value]) -> Value {
   val_bool_binop(fn (x: Bool, y: Bool) -> Bool {x != y}, "xor", argv)
 }
 
+
+// CONS
+
+
+fn val_cons(argv: Array[Value]) -> Value { Cons(argv[0], argv[1]) }
+fn val_car(arg: Array[Value]) -> Value {
+  match arg[0] {
+    Cons(h, _) => h
+    _ => {
+      println("car expects a cons cell, got \{arg}")
+      panic()
+    }
+  }
+}
+fn val_cdr(arg: Array[Value]) -> Value {
+  match arg[0] {
+    Cons(_, t) => t
+    _ => {
+      println("cdr expects a cons cell, got \{arg}")
+      panic()
+    }
+  }
+}
+
+
+// predicates
+
+fn val_nil_p(argv: Array[Value]) -> Value {
+  match argv[0] { Nil => Boo(true); _ => Boo(false) }
+}
+
+fn val_atom_p(argv: Array[Value]) -> Value {
+  match argv[0] { Arr(_) => Boo(false); Cons(_, _) => Boo(false); _ => Boo(true) }
+}
+
+fn val_bool_p(argv: Array[Value]) -> Value {
+  match argv[0] { Boo(_) => Boo(true); _ => Boo(false) }
+}
+
+fn val_num_p(argv: Array[Value]) -> Value {
+  match argv[0] { Num(_) => Boo(true); _ => Boo(false) }
+}
+
+fn val_string_p(argv: Array[Value]) -> Value {
+  match argv[0] { Str(_) => Boo(true); _ => Boo(false) }
+}
+
+fn val_array_p(argv: Array[Value]) -> Value {
+  match argv[0] { Arr(_) => Boo(true); _ => Boo(false) }
+}
+
+fn val_func_p(argv: Array[Value]) -> Value {
+  match argv[0] { Fun(_) => Boo(true); _ => Boo(false) }
+}
+
+fn val_cons_p(argv: Array[Value]) -> Value {
+  match argv[0] { Cons(_, _) => Boo(true); _ => Boo(false) }
+}
+
+fn val_list_p(argv: Array[Value]) -> Value {
+  match argv[0] {
+    Nil        => Boo(true)
+    Cons(_, x) => val_list_p([x])
+    _          => Boo(false)
+  }
+}
 |}

@@ -45,6 +45,13 @@ rule tokenize = parse
   | "<="           { LESSER_OR_EQUAL }
   | ">="           { GREATER_OR_EQUAL }
 
+  | "cons"  | "f\\"    { SPECIAL_IDENT "cons" }
+  | "car"   | "cdr"    { SPECIAL_IDENT (Lexing.lexeme lexbuf) }
+  | 'c' ('a'|'d')+ 'r' { CXR (Lexing.lexeme lexbuf) }
+
+  | "nil?" | "num?" | "atom?" | "bool?" | "func?" | "cons?" | "list?"
+  | "Array?" | "String?"
+      { SPECIAL_IDENT (Lexing.lexeme lexbuf) }
 
   | letter (letter | '-' | digit)+
       { IDENT (Lexing.lexeme lexbuf) }

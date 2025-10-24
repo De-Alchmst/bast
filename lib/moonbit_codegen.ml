@@ -35,26 +35,38 @@ and string_of_unop = function
   | Not   -> "val_not"
 
 and string_of_specvar = function
-  | "nil"   -> "Nil"
-  | "f+"    -> "Fun(val_add, 2)"
-  | "f-"    -> "Fun(val_sub, 2)"
-  | "f*"    -> "Fun(val_mul, 2)"
-  | "f//"   -> "Fun(val_div_remles, 2)"
-  | "f/"    -> "Fun(val_div, 2)"
-  | "f%"    -> "Fun(val_mod, 2)"
-  | "f&&"   -> "Fun(val_and, 2)"
-  | "f||"   -> "Fun(val_or , 2)"
-  | "f^^"   -> "Fun(val_xor, 2)"
-  | "f!"    -> "Fun(val_a not, 1)"
-  | "f<"    -> "Fun(val_lower, 2)"
-  | "f<="   -> "Fun(val_lower_eq, 2)"
-  | "f>"    -> "Fun(val_greater_eq, 2)"
-  | "f>="   -> "Fun(val_greater_eq, 2)"
-  | "f="    -> "Fun(val_equal, 2)"
-  | "f!="   -> "Fun(val_not_equal, 2)"
-  | "true"  -> "Boo(true)"
-  | "false" -> "Boo(false)"
-  | _       -> "Nil"
+  | "nil"     -> "Nil"
+  | "f+"      -> "Fun(val_add, 2)"
+  | "f-"      -> "Fun(val_sub, 2)"
+  | "f*"      -> "Fun(val_mul, 2)"
+  | "f//"     -> "Fun(val_div_remles, 2)"
+  | "f/"      -> "Fun(val_div, 2)"
+  | "f%"      -> "Fun(val_mod, 2)"
+  | "f&&"     -> "Fun(val_and, 2)"
+  | "f||"     -> "Fun(val_or , 2)"
+  | "f^^"     -> "Fun(val_xor, 2)"
+  | "f!"      -> "Fun(val_a not, 1)"
+  | "f<"      -> "Fun(val_lower, 2)"
+  | "f<="     -> "Fun(val_lower_eq, 2)"
+  | "f>"      -> "Fun(val_greater_eq, 2)"
+  | "f>="     -> "Fun(val_greater_eq, 2)"
+  | "f="      -> "Fun(val_equal, 2)"
+  | "f!="     -> "Fun(val_not_equal, 2)"
+  | "cons"    -> "Fun(val_cons, 2)"
+  | "car"     -> "Fun(val_car, 1)"
+  | "cdr"     -> "Fun(val_cdr, 1)"
+  | "true"    -> "Boo(true)"
+  | "false"   -> "Boo(false)"
+  | "nil?"    -> "Fun(val_nil_p, 1)"
+  | "num?"    -> "Fun(val_num_p, 1)"
+  | "atom?"   -> "Fun(val_atom_p, 1)"
+  | "bool?"   -> "Fun(val_bool_p, 1)"
+  | "func?"   -> "Fun(val_func_p, 1)"
+  | "cons?"   -> "Fun(val_cons_p, 1)"
+  | "list?"   -> "Fun(val_list_p, 1)"
+  | "Array?"  -> "Fun(val_array_p, 1)"
+  | "string?" -> "Fun(val_string_p, 1)"
+  | _         -> "Nil"
 
 and string_of_expr = function
   (* Ocaml ends whole floats in '.', not '.0' *)
@@ -96,6 +108,12 @@ and string_of_expr = function
   | ValFunc (e, b) ->
       sprintf "call_fun(%s,[%s])"
         (string_of_expr e) (String.concat "," (List.map string_of_expr b))
+
+  | Cons (h, t) ->
+      sprintf "Cons(%s,%s)" (string_of_expr h) (string_of_expr t)
+
+  | Cxr _ ->
+      sprintf "Fun(var_car, 1)"
 
   | If (cond, t, f) ->
       sprintf "if val_to_bool(%s) %s else %s"

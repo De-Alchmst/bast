@@ -8,13 +8,14 @@
 %token <float> NUM
 %token <string> IDENT
 %token <string> SPECIAL_IDENT
+%token <string> CXR
 %token INCREMENT DECREMENT
 %token BIND PIPE
 %token PLUS MINUS TIMES DIVIDE WHOLE_DIVIDE MODULO
 %token EQUALS NOT_EQUALS LESSER LESSER_OR_EQUAL GREATER GREATER_OR_EQUAL
 %token NOT OR AND XOR
 %token CONS
-%token VAR
+%token VAR PRINT RETURN
 %token DO IF UNLESS WHILE UNTIL
 %token LPAREN RPAREN LSQUARE RSQUARE LCURLY RCURLY
 %token EOF
@@ -185,6 +186,11 @@ expr:
   | DECREMENT; e = expr %prec unary_plus
       { UnOp (Plus, e) }
 
+
+
+  | cxr = CXR { Cxr cxr }
+  | e1 = expr; CONS; e2 = expr
+      { Cons (e1, e2) }
 
 assign: | BIND; EQUALS {}
 num:

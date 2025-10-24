@@ -192,6 +192,10 @@ let tests = [
                         Block ([], Num 4.),
                         Block ([], SpecVar "nil")))))]);
 
+  ("Cons cell",
+  "1\\2\\3\\n",
+  [ExprStmt (Cons (Num 1., Cons (Num 2., Cons (Num 3., SpecVar "nil"))))]);
+
   ("While loop",
   "while [cnd]:[foo bar]:[until [baz]:[[bax]]]",
   [ExprStmt (While (Block ([], Var "cnd"),
