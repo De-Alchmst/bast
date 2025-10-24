@@ -45,8 +45,10 @@ stmt:
   | PRINT; e = expr
       { Print e }
 
-  | VAR; name = IDENT
-      { Declare name }
+  | VAR; dec = declare_block
+      { dec }
+  | VAR; dec = declare_var
+      { dec }
 
   | RETURN; e = expr
       { Return e }
@@ -112,6 +114,7 @@ expr:
 
   | IF; cond = code_block; BIND; t = code_block; BIND; f = code_block
       { If (cond, t, f) }
+  (* we expect If to only have Blocks as it's values in codegen *)
   | IF; cond = code_block; BIND; t = code_block
       { If (cond, t, Block ([], SpecVar "nil")) }
 
@@ -173,13 +176,6 @@ num:
   | n = NUM
       { Num n }
 
-(* `s = list(stmt); e = expr` failed me, so we're doing this then I guess *)
-code_block:
-  | LSQUARE; s = list(stmt); RSQUARE
-      { match (List.rev s) with
-          | ExprStmt(e) :: t -> Block (List.rev t, e)
-          | x -> Block (List.rev x, SpecVar "nil")}
-
 bin_op:
   | PLUS;         m = bin_op_mod { Add      m }
   | MINUS;        m = bin_op_mod { Sub      m }
@@ -209,3 +205,23 @@ bin_op_mod:
       { UpTo n }
 
   | { NoMod }
+
+
+(* `s = list(stmt); e = expr` failed me, so we're doing this then I guess *)
+code_block:
+  | LSQUARE; s = list(stmt); RSQUARE
+      { match (List.rev s) with
+          | ExprStmt(e) :: t -> Block (List.rev t, e)
+          | x -> Block (List.rev x, SpecVar "nil")}
+
+declare_block:
+  | LSQUARE; s = list(declare_var); RSQUARE
+      { StmtList s }
+
+declare_var:
+  | name = IDENT; BIND; value = expr
+      { Declare (name, value) }
+
+  | name = IDENT
+      { Declare (name, SpecVar "nil") }
+

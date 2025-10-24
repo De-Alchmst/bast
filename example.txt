@@ -1,6 +1,8 @@
 var foo
-var bar
-var baz
+var [
+  bar
+  baz:(9)
+]
 
 foo := 1
 bar := 2
@@ -14,4 +16,4 @@ print !(true and 3+7 < 9)
 
 print !!37 ; bool cast operator?
 print 2-4 = -2
-print if [ 4 false]:[5]
+print if [ 4 true]:[baz]

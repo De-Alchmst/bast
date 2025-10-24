@@ -105,9 +105,12 @@ and string_of_stmt = function
   | Print expr ->
       sprintf "println(%s)" (string_of_expr expr)
 
-  | Declare name ->
-      sprintf "let %s=Var::{name:\"%s\",val:Nil}"
-        (Encoding.encode_prefix name) name
+  | Declare (name, e) ->
+      sprintf "let %s=Var::{name:\"%s\",val:%s}"
+        (Encoding.encode_prefix name) name (string_of_expr e)
+
+  | StmtList stmts ->
+      String.concat "\n " (List.map string_of_stmt stmts)
 
   | ExprStmt expr ->
       sprintf "let _=%s" (string_of_expr expr)

@@ -29,6 +29,14 @@ let run_test name input expected =
 
 
 let tests = [
+  ("variable declaration",
+  "var foo : 42 var [bar baz:foo]",
+   [Declare ("foo", Num 42.);
+    StmtList [
+      Declare ("bar", SpecVar "nil");
+      Declare ("baz", Var "foo")
+    ]]);
+
   ("simple assignment",
    "foo := 42",
    [ExprStmt (Assign ("foo", Num 42.))]);

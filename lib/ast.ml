@@ -52,9 +52,11 @@ and expr =
 (* Statements - things that do actions *)
 and stmt = (* 'and' for mutually recursive types *)
   | Print of expr
-  | Declare of string
+  | Declare of string * expr 
+  | StmtList of stmt list
   | ExprStmt of expr
   | Return of expr
+
 
 (* A program is a list of statements *)
 type program = stmt list
