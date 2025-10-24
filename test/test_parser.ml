@@ -184,11 +184,11 @@ let tests = [
        SpecVar "false")))]);
 
   ("If statement (actually an expression)",
-   "if [true]:[foo]:[if [bar]:[4]]",
+   "if [true]:[foo]:[unless [bar]:[4]]",
    [ExprStmt (If (Block ([], SpecVar "true"),
                   Block ([], Var "foo"),
                   Block ([],
-                    If (Block ([], Var "bar"),
+                    If (UnOp (Not, Block ([], Var "bar")),
                         Block ([], Num 4.),
                         Block ([], SpecVar "nil")))))]);
 ]

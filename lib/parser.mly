@@ -14,7 +14,8 @@
 %token EQUALS NOT_EQUALS LESSER LESSER_OR_EQUAL GREATER GREATER_OR_EQUAL
 %token NOT OR AND XOR
 %token CONS
-%token VAR DO IF
+%token VAR
+%token DO IF UNLESS
 %token LPAREN RPAREN LSQUARE RSQUARE LCURLY RCURLY
 %token EOF
 
@@ -112,11 +113,16 @@ expr:
   | DO; blk = code_block
       { blk }
 
+  (* we expect If to only have Blocks as it's values in codegen *)
   | IF; cond = code_block; BIND; t = code_block; BIND; f = code_block
       { If (cond, t, f) }
-  (* we expect If to only have Blocks as it's values in codegen *)
   | IF; cond = code_block; BIND; t = code_block
       { If (cond, t, Block ([], SpecVar "nil")) }
+
+  | UNLESS; cond = code_block; BIND; t = code_block; BIND; f = code_block
+      { If (UnOp(Not, cond), t, f) }
+  | UNLESS; cond = code_block; BIND; t = code_block
+      { If (UnOp(Not, cond), t, Block ([], SpecVar "nil")) }
 
   | LSQUARE; e = list(expr); RSQUARE
       { match e with

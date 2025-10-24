@@ -21,6 +21,7 @@ rule tokenize = parse
   | "print"      { PRINT }
   | "var"        { VAR }
   | "if"         { IF }
+  | "unless"     { UNLESS }
   | "return"     { RETURN }
   | "do" | "blk" | "blck" | "block" { DO }
 
