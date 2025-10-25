@@ -18,7 +18,6 @@ let letter = ['a'-'z' 'A'-'Z']
 rule tokenize = parse
   | whitespace+  { tokenize lexbuf }
   | newline      { Lexing.new_line lexbuf; tokenize lexbuf }
-  | "print"      { PRINT }
   | "var"        { VAR }
   | "if"         { IF }
   | "unless"     { UNLESS }
@@ -29,6 +28,7 @@ rule tokenize = parse
   | "lambda" | "lamb" | "λ" { LAMBDA }
   | "do" | "blk" | "blck" | "block" { DO }
 
+  | "println"     { SPECIAL_IDENT "println" }
   | "nil"   | "n" { SPECIAL_IDENT "nil" }
   | "true"  | "t" { SPECIAL_IDENT "true" }
   | "false" | "f" { SPECIAL_IDENT "false" }

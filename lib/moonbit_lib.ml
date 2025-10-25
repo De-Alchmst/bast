@@ -379,4 +379,11 @@ fn val_list_p(argv: Array[Value]) -> Value {
     _          => Boo(false)
   }
 }
+
+// print 
+fn val_println(argv: Array[Value]) -> Value {
+  println(argv[0])
+  Nil
+}
+
 |}

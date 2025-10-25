@@ -61,20 +61,12 @@ let tests = [
    "foo := 10 - 5-2",
    [ExprStmt (Assign ("foo", BinOp (Sub NoMod, BinOp (Sub NoMod, Num 10., Num 5.), Num 2.)))]);
   
-  ("print statement",
-   "print 42",
-   [Print (Num 42.)]);
-  
-  ("print expression",
-   "print foo + 5",
-   [Print (BinOp (Add NoMod, Var "foo", Num 5.))]);
-  
   ("multiple statements",
-   "foo := 10\nbar := 20\nprint foo + bar",
+   "foo := 10\nbar := 20\nfoo + bar",
    [
      ExprStmt (Assign ("foo", Num 10.));
      ExprStmt (Assign ("bar", Num 20.));
-     Print (BinOp (Add NoMod, Var "foo", Var "bar"))
+     ExprStmt (BinOp (Add NoMod, Var "foo", Var "bar"))
    ]);
   
   ("complex expression",
@@ -111,10 +103,10 @@ let tests = [
    [ExprStmt (BinOp (Add NoMod, Num 5., Num 7.))]);
 
   ("Nil block",
-   "do [3+2 print 69]",
+   "do [3+2 var LoL]",
    [ExprStmt (Block
                ([ExprStmt (BinOp (Add NoMod, Num 3., Num 2.));
-                 Print (Num 69.)],
+                 Declare ("LoL", SpecVar "nil")],
                SpecVar "nil"))]);
 
   ("Value block",

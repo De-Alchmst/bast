@@ -17,7 +17,7 @@
 %token NOT OR AND XOR
 %token CONS
 %token FUNC LAMBDA
-%token VAR PRINT RETURN
+%token VAR RETURN
 %token DO IF UNLESS WHILE UNTIL
 %token LPAREN RPAREN LSQUARE RSQUARE LCURLY RCURLY
 %token EOF
@@ -43,9 +43,6 @@ prog:
 
 
 stmt:
-  | PRINT; e = expr
-      { Print e }
-
   | VAR; dec = declare_block
       { dec }
   | VAR; dec = declare_var

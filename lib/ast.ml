@@ -57,7 +57,6 @@ and expr =
 
 (* Statements - things that do actions *)
 and stmt = (* 'and' for mutually recursive types *)
-  | Print of expr
   | Declare of string * expr 
   | StmtList of stmt list
   | ExprStmt of expr

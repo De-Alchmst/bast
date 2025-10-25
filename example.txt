@@ -8,4 +8,4 @@ func [fact num]:[
   [aux 1 num]
 ]
 
-print [fact 5]
+[println [fact 5]]

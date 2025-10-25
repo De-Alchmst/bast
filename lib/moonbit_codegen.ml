@@ -59,6 +59,7 @@ and string_of_specvar = function
   | "f>="     -> "Fun(val_greater_eq, 2)"
   | "f="      -> "Fun(val_equal, 2)"
   | "f!="     -> "Fun(val_not_equal, 2)"
+  | "println" -> "Fun(val_println, 1)"
   | "cons"    -> "Fun(val_cons, 2)"
   | "car"     -> "Fun(val_car, 1)"
   | "cdr"     -> "Fun(val_cdr, 1)"
@@ -138,9 +139,6 @@ and string_of_expr = function
         (List.length args)
 
 and string_of_stmt = function
-  | Print expr ->
-      sprintf "println(%s)" (string_of_expr expr)
-
   | Declare (name, e) ->
       let pref_name = Encoding.encode_prefix name in
       if e = Nil then
