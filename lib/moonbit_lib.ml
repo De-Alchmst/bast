@@ -231,13 +231,12 @@ fn val_div_remles(argv: Array[Value]) -> Value { op_val_div_remles(NoMod, argv) 
 
 // unops
 
-fn val_minus(arg: Value) -> Value {
+fn val_neg(arg: Value) -> Value {
   val_num_unop(fn (x: Double) -> Double {-x}, "negate", arg)
 }
 
-fn val_plus(arg: Value) -> Value {
-  // ah yes, usefulness
-  val_num_unop(fn (x: Double) -> Double {x}, "nop?", arg)
+fn val_not(arg: Value) -> Value {
+  Boo(!val_to_bool(arg))
 }
 
 // logic binop functions
@@ -276,11 +275,6 @@ fn val_equal(argv: Array[Value]) -> Value {
 
 fn val_not_equal(argv: Array[Value]) -> Value {
   val_not(val_equal(argv))
-}
-
-
-fn val_not(arg: Value) -> Value {
-  Boo(!val_to_bool(arg))
 }
 
 fn val_a_not(argv: Array[Value]) -> Value {

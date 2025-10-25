@@ -38,9 +38,8 @@ and string_of_args args =
   in aux "" 0 args
 
 and string_of_unop = function
-  | Plus  -> "val_plus"
-  | Minus -> "val_minus"
-  | Not   -> "val_not"
+  | Not    -> "val_not"
+  | Negate -> "val_neg"
 
 and string_of_specvar = function
   | "nil"     -> "Nil"
@@ -143,8 +142,12 @@ and string_of_stmt = function
       sprintf "println(%s)" (string_of_expr expr)
 
   | Declare (name, e) ->
-      sprintf "let %s=Var::{name:\"%s\",val:%s}"
-        (Encoding.encode_prefix name) name (string_of_expr e)
+      let pref_name = Encoding.encode_prefix name in
+      if e = Nil then
+        sprintf "let %s=Var::{name:\"%s\",val:Nil}" pref_name name
+      else
+        sprintf "let %s=Var::{name:\"%s\",val:Nil}; %s.val=%s"
+        pref_name name pref_name (string_of_expr e)
 
   | StmtList stmts ->
       String.concat "\n " (List.map string_of_stmt stmts)

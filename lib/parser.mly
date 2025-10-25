@@ -13,6 +13,7 @@
 %token BIND PIPE
 %token PLUS MINUS TIMES DIVIDE WHOLE_DIVIDE MODULO
 %token EQUALS NOT_EQUALS LESSER LESSER_OR_EQUAL GREATER GREATER_OR_EQUAL
+%token NEGATE
 %token NOT OR AND XOR
 %token CONS
 %token FUNC LAMBDA
@@ -23,14 +24,12 @@
    
 %right CONS
 
-%left ass
-
-%nonassoc unary_minus unary_plus
 %left AND OR XOR
 %left EQUALS NOT_EQUALS
 %left LESSER GREATER LESSER_OR_EQUAL GREATER_OR_EQUAL
 %left PLUS MINUS
 %left TIMES DIVIDE WHOLE_DIVIDE MODULO
+%nonassoc unary
 
 (* The start symbol - what the parser tries to parse.
    <Ast.program> is the type that this rule returns. *)
@@ -103,16 +102,6 @@ expr:
       { PostAssign (name, BinOp (Add (m), Var (name), Num 1.)) }
   | DECREMENT; m = bin_op_mod; BIND; name = IDENT
       { PostAssign (name, BinOp (Sub (m), Var (name), Num 1.)) }
-
-
-  | n = num
-      { n }
-  
-  | x = IDENT
-      { Var x }
-
-  | x = SPECIAL_IDENT
-      { SpecVar x }
   
 
   (* Parenthesized expression - just returns the inner expression *)
@@ -158,20 +147,21 @@ expr:
   | LAMBDA; args = arg_block; BIND; body = code_block
       { Lambda (args, StmtList [], body) }
   
+
   (* cannot be factored, because percedence *)
-  | e1 = expr; PLUS; m=bin_op_mod ; e2 = expr
+  | e1 = expr; PLUS; m=bin_op_mod; e2 = expr
     { BinOp ((Add m), e1, e2) }
 
-  | e1 = expr; MINUS; m=bin_op_mod ; e2 = expr
+  | e1 = expr; MINUS; m=bin_op_mod; e2 = expr
     { BinOp ((Sub m), e1, e2) }
 
-  | e1 = expr; TIMES; m=bin_op_mod ; e2 = expr
+  | e1 = expr; TIMES; m=bin_op_mod; e2 = expr
     { BinOp ((Mul m), e1, e2) }
 
-  | e1 = expr; DIVIDE; m=bin_op_mod ; e2 = expr
+  | e1 = expr; DIVIDE; m=bin_op_mod; e2 = expr
     { BinOp ((Div m), e1, e2) }
 
-  | e1 = expr; MODULO; m=bin_op_mod ; e2 = expr
+  | e1 = expr; MODULO; m=bin_op_mod; e2 = expr
     { BinOp ((Mod m), e1, e2) }
 
   | e1 = expr; WHOLE_DIVIDE; m=bin_op_mod ; e2 = expr
@@ -190,27 +180,29 @@ expr:
 
 
   (* Unary operations *)
-  | NOT; e = expr
+  | NOT; e = expr %prec unary
       { UnOp (Not, e) }
-
-  | MINUS; e = expr %prec unary_minus
-      { UnOp (Minus, e)  }
-    
-  (* to allow -++--foo, since it's fun*)
-  | PLUS     ; e = expr %prec unary_plus
-  | INCREMENT; e = expr %prec unary_plus
-  | DECREMENT; e = expr %prec unary_plus
-      { UnOp (Plus, e) }
-
+  | NEGATE; e = expr %prec unary
+      { UnOp (Negate, e)  }
 
 
   | cxr = CXR { Cxr cxr }
   | e1 = expr; CONS; e2 = expr
       { Cons (e1, e2) }
 
+
+  | n = num
+      { n }
+  
+  | x = IDENT
+      { Var x }
+
+  | x = SPECIAL_IDENT
+      { SpecVar x }
+
 assign: | BIND; EQUALS {}
 num:
-  | MINUS; n = NUM
+  | NEGATE; n = NUM
       { Num (-.n)}
   | n = NUM
       { Num n }

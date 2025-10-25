@@ -30,8 +30,7 @@ and binop =
   | Xor
 
 and unop =
-  | Plus (* nop *)
-  | Minus
+  | Negate
   | Not
 
 and arg =

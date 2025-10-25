@@ -100,8 +100,11 @@ let tests = [
               Num 3.))))]);
 
   ("all of unary operators",
-   "3 * +- foo",
-   [ExprStmt (BinOp (Mul NoMod, Num 3., UnOp (Plus, UnOp (Minus, Var "foo"))))]);
+   "!(3 * `foo)",
+   [ExprStmt (UnOp (Not,
+                   BinOp (Mul NoMod,
+                     Num 3.,
+                     UnOp (Negate, Var "foo"))))]);
 
   ("ExprStmt",
    "5 + 7",
@@ -127,8 +130,8 @@ let tests = [
    [ExprStmt (ValFunc (SpecVar "f+", [Var "bar"; Num 7.]))]);
 
   ("BinOp bind",
-   "4 +:>:-2*2 0\nfoo -:3 7",
-   [ExprStmt (BinOp (Add (DownTo (BinOp (Mul NoMod, Num (-2.), Num 2.))),
+   "4 +:>:`2*2 0\nfoo -:3 7",
+   [ExprStmt (BinOp (Add (DownTo (BinOp (Mul NoMod, Num (-.2.), Num 2.))),
                          Num 4., Num 0.));
     ExprStmt (BinOp (Sub (UpTo (Num 3.)), Var "foo", Num 7.))]);
 

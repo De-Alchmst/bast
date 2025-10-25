@@ -66,26 +66,26 @@ rule tokenize = parse
 
 
   (* comments *)
-  | ':'          { BIND }
-  | '|'          { PIPE }
   | ';' ([^'\n'])+ { tokenize lexbuf }
-
-  | '+'          { PLUS }
-  | '-'          { MINUS }
-  | '*'          { TIMES }
-  | "//"         { WHOLE_DIVIDE }
-  | '/'          { DIVIDE }
-  | '%'          { MODULO }
-  | '>'          { GREATER }
-  | '<'          { LESSER }
-  | '='          { EQUALS }
-  | '!'          { NOT }
-  | '('          { LPAREN }
-  | ')'          { RPAREN }
-  | '['          { LSQUARE }
-  | ']'          { RSQUARE }
-  | '{'          { LCURLY }
-  | '}'          { RCURLY }
+  | ':'            { BIND }
+  | '|'            { PIPE }
+  | '`'            { NEGATE }
+  | '+'            { PLUS }
+  | '-'            { MINUS }
+  | '*'            { TIMES }
+  | "//"           { WHOLE_DIVIDE }
+  | '/'            { DIVIDE }
+  | '%'            { MODULO }
+  | '>'            { GREATER }
+  | '<'            { LESSER }
+  | '='            { EQUALS }
+  | '!'            { NOT }
+  | '('            { LPAREN }
+  | ')'            { RPAREN }
+  | '['            { LSQUARE }
+  | ']'            { RSQUARE }
+  | '{'            { LCURLY }
+  | '}'            { RCURLY }
 
   | '\\'         { CONS }
   
