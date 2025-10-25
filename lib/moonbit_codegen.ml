@@ -28,6 +28,14 @@ and string_of_binop = function
   | Or         -> "val_or("
   | Xor        -> "val_xor("
 
+and string_of_args args =
+  let rec aux acc n = function
+    | [] -> acc
+    | SimpleArg s :: rest ->
+        let line = sprintf "let %s=Var::{name:\"%s\",val:argv[%d]}"
+            (Encoding.encode_prefix s) s n in
+        aux (acc ^ "\n " ^ line) (n + 1) rest
+  in aux "" 0 args
 
 and string_of_unop = function
   | Plus  -> "val_plus"
@@ -122,6 +130,13 @@ and string_of_expr = function
   | While (cond, dec, body) ->
       sprintf "{let mut _rval=Nil;while val_to_bool(%s){_rval={\n %s\n %s\n }};_rval}"
         (string_of_expr cond) (string_of_stmt dec) (string_of_expr body)
+
+  | Lambda (args, dec, body) ->
+      sprintf "Fun(fn (argv: Array[Value]) -> Value {%s\n %s\n %s}, %d)"
+        (string_of_args args) 
+        (string_of_stmt dec)
+        (string_of_expr body)
+        (List.length args)
 
 and string_of_stmt = function
   | Print expr ->

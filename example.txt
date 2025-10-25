@@ -19,7 +19,7 @@ print 2-4 = -2
 print unless [ 4 true]:[5  6 7 baz]
 
 baz := 3
-print while [baz > 0]:[ ll:3 ]:[print baz --:baz ]
+print while [baz > 0]:[ ll:3 ]:[ print ll print baz --:baz ]
 ;print while [baz > 0]:[ ll pp ]:[print baz --:baz]
 ;print while [baz > 0]:[ ll ]:[print baz --:baz]
 print while [baz > 0]:[ ll:9 pp]:[print baz --:baz]
@@ -29,3 +29,7 @@ print baz := 1\2\N
 print [car [cdr baz]]
 print [list? baz]
 print [list? bar]
+
+var bach
+bach := lamb [aa bb]:[vv:4]:[print vv print aa print bb ]
+[bach 33 44]

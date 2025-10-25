@@ -25,6 +25,8 @@ rule tokenize = parse
   | "while"      { WHILE }
   | "until"      { UNTIL }
   | "return"     { RETURN }
+  | "func"       { FUNC }
+  | "lambda" | "lamb" | "λ" { LAMBDA }
   | "do" | "blk" | "blck" | "block" { DO }
 
   | "nil"   | "n" { SPECIAL_IDENT "nil" }

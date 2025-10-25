@@ -34,6 +34,9 @@ and unop =
   | Minus
   | Not
 
+and arg =
+  | SimpleArg of string
+
 (* Expressions - things that evaluate to values *)
 and expr =
   | Nil
@@ -51,6 +54,7 @@ and expr =
   | While of expr * stmt * expr (* condition, declaration, body *)
   | Cons of expr * expr (* head, tail *)
   | Cxr of string
+  | Lambda of arg list * stmt * expr (* args, declaration, body*)
 
 (* Statements - things that do actions *)
 and stmt = (* 'and' for mutually recursive types *)

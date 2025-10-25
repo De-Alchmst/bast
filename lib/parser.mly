@@ -15,6 +15,7 @@
 %token EQUALS NOT_EQUALS LESSER LESSER_OR_EQUAL GREATER GREATER_OR_EQUAL
 %token NOT OR AND XOR
 %token CONS
+%token FUNC LAMBDA
 %token VAR PRINT RETURN
 %token DO IF UNLESS WHILE UNTIL
 %token LPAREN RPAREN LSQUARE RSQUARE LCURLY RCURLY
@@ -142,6 +143,11 @@ expr:
       { While (UnOp (Not, cond), dec, body) }
   | UNTIL; cond = code_block; BIND; body = code_block
       { While (UnOp (Not, cond), StmtList [], body) }
+
+  | LAMBDA; args = arg_block; BIND; dec = declare_block; BIND; body = code_block
+      { Lambda (args, dec, body) }
+  | LAMBDA; args = arg_block; BIND; body = code_block
+      { Lambda (args, StmtList [], body) }
   
   (* cannot be factored, because percedence *)
   | e1 = expr; PLUS; m=bin_op_mod ; e2 = expr
@@ -248,12 +254,10 @@ declare_var:
   | name = IDENT
       { Declare (name, SpecVar "nil") }
 
-generic_block:
-  | LSQUARE; s = nonempty_list(generic_statement); RSQUARE
-      { match (List.rev s) with
-          | ExprStmt(e) :: t -> Block (List.rev t, e)
-          | x -> Block (List.rev x, SpecVar "nil")}
+arg_block:
+  | LSQUARE; params = list(argument); RSQUARE
+      { params }
 
-generic_statement:
-  | d = declare_var { d }
-  | s = stmt { s }
+argument:
+  | name = IDENT
+      { SimpleArg name }
