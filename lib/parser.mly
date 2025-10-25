@@ -23,6 +23,8 @@
    
 %right CONS
 
+%left ass
+
 %nonassoc unary_minus unary_plus
 %left AND OR XOR
 %left EQUALS NOT_EQUALS
@@ -157,6 +159,7 @@ expr:
     { BinOp ((Sub m), e1, e2) }
 
   | e1 = expr; TIMES; m=bin_op_mod ; e2 = expr
+    { BinOp ((Mul m), e1, e2) }
 
   | e1 = expr; DIVIDE; m=bin_op_mod ; e2 = expr
     { BinOp ((Div m), e1, e2) }

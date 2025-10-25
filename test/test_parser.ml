@@ -197,14 +197,26 @@ let tests = [
   [ExprStmt (Cons (Num 1., Cons (Num 2., Cons (Num 3., SpecVar "nil"))))]);
 
   ("While loop",
-  "while [cnd]:[foo bar]:[until [baz]:[[bax]]]",
-  [ExprStmt (While (Block ([], Var "cnd"),
-                   (StmtList [
-                     Declare ("foo", SpecVar "nil");
-                     Declare ("bar", SpecVar "nil")]),
-                   Block ([], While (UnOp (Not, Block ([], Var "baz")),
-                                     StmtList [],
-                                     Block ([], ValFunc (SpecVar "bax", []))))))]);
+   "while [cnd]:[foo bar]:[until [baz]:[[bax]]]",
+   [ExprStmt (While (Block ([], Var "cnd"),
+                    (StmtList [
+                      Declare ("foo", SpecVar "nil");
+                      Declare ("bar", SpecVar "nil")]),
+                     Block ([], While (UnOp (Not, Block ([], Var "baz")),
+                                       StmtList [],
+                                      Block ([], ValFunc (SpecVar "bax", []))))))]);
+
+  ("lambdas with declaration",
+   "lamb [a1]:[v1:42]:[a1 + v1]",
+   [ExprStmt (Lambda ([SimpleArg "a1"],
+                       (StmtList [Declare ("v1", Num 42.)]),
+                       (Block ([] ,BinOp (Add NoMod, Var "a1", Var "v1")))))]);
+
+  ("lambdas without declaration",
+   "lamb [a1 a2]:[a1 + a2]",
+   [ExprStmt (Lambda ([SimpleArg "a1"; SimpleArg "a2"],
+                       (StmtList []),
+                       (Block ([] ,BinOp (Add NoMod, Var "a1", Var "a2")))))]);
 ]
 
 
