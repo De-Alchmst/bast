@@ -52,6 +52,13 @@ stmt:
   | VAR; dec = declare_var
       { dec }
 
+  | FUNC; LSQUARE; name = IDENT; args = list(argument); RSQUARE;
+          BIND; dec = declare_block; BIND; body = code_block
+      { Declare (name, Lambda (args, dec, body)) }
+  | FUNC; LSQUARE; name = IDENT; args = list(argument); RSQUARE;
+          BIND; body = code_block
+      { Declare (name, Lambda (args, StmtList [], body)) }
+
   | RETURN; e = expr
       { Return e }
 

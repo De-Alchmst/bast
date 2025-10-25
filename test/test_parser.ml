@@ -202,9 +202,9 @@ let tests = [
                     (StmtList [
                       Declare ("foo", SpecVar "nil");
                       Declare ("bar", SpecVar "nil")]),
-                     Block ([], While (UnOp (Not, Block ([], Var "baz")),
-                                       StmtList [],
-                                      Block ([], ValFunc (SpecVar "bax", []))))))]);
+                      Block ([], While (UnOp (Not, Block ([], Var "baz")),
+                                        StmtList [],
+                                        Block ([], ValFunc (Var "bax", []))))))]);
 
   ("lambdas with declaration",
    "lamb [a1]:[v1:42]:[a1 + v1]",
@@ -217,6 +217,14 @@ let tests = [
    [ExprStmt (Lambda ([SimpleArg "a1"; SimpleArg "a2"],
                        (StmtList []),
                        (Block ([] ,BinOp (Add NoMod, Var "a1", Var "a2")))))]);
+
+  ("function",
+   "func [foo a1]:[a1 * 2 a1]",
+   [Declare ("foo", Lambda ([SimpleArg "a1"],
+                            (StmtList []),
+                            (Block
+                              ([ExprStmt (BinOp (Mul NoMod, Var "a1", Num 2.))],
+                               Var "a1"))))]);
 ]
 
 
