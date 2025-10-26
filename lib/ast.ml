@@ -61,6 +61,7 @@ and stmt = (* 'and' for mutually recursive types *)
   | StmtList of stmt list
   | ExprStmt of expr
   | Return of expr
+  | ToplevelDeclare of string * expr
 
 
 (* A program is a list of statements *)

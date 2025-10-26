@@ -3,7 +3,7 @@ open Ast
 
 let parse_string str =
   let lexbuf = Lexing.from_string str in
-  Parser.prog Lexer.tokenize lexbuf
+  Parser.prog_debug Lexer.tokenize lexbuf
 
 
 let run_test name input expected =
@@ -200,6 +200,13 @@ let tests = [
                       Block ([], While (UnOp (Not, Block ([], Var "baz")),
                                         StmtList [],
                                         Block ([], ValFunc (Var "bax", []))))))]);
+
+  ("loop",
+   "loop [ind:0]:[ind := ind + 1]",
+   [ExprStmt (While (SpecVar "true",
+                    (StmtList [Declare ("ind", Num 0.)]),
+                    Block ([],
+                      (Assign ("ind", BinOp (Add NoMod, Var "ind", Num 1.))))))]);
 
   ("lambdas with declaration",
    "lamb [a1]:[v1:42]:[a1 + v1]",

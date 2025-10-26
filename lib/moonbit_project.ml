@@ -16,24 +16,26 @@ let gen_moon_pkg () =
 }|}
 
 
+let gen_moon_main () =
+  Files.create_file_string (basedir ^ "main.mbt")
+{|fn main{
+ let _=call_var_func(_bast_main,[])
+}|}
+
+
 let gen_moon_lib () =
   Files.create_file_string (basedir ^ "bast-lib.mbt") Moonbit_lib.src
 
 
 let gen_skelet () =
   Files.mkdir  basedir;
-  gen_moon_lib ();
-  gen_moon_mod ();
-  gen_moon_pkg ()
+  gen_moon_lib  ();
+  gen_moon_mod  ();
+  gen_moon_pkg  ();
+  gen_moon_main ()
 
 
-
-let file_of_ast ast =
-{|fn main {
-|}
-^ string_of_ast ast ^
-{|
-}|}
+let file_of_ast ast = string_of_ast ast
 
 let write_file_ast name ast =
   Files.write_file_string (basedir ^ name) (file_of_ast ast)

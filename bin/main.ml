@@ -10,18 +10,15 @@ let is_bast str =
       if String.ends_with ~suffix:suffix name then true else aux rest
   in aux [".bast"; ".bat"; ".☥"; ".𓋹"]
 
-let compile_file input_filename =
-  (* Create a lexer buffer from the input channel - defined outside try
-     so it's accessible in the error handlers *)
-  let output_filename = Encoding.output_filename input_filename in
-
+let compile_file input_filename output_filename =
   let input_channel = In_channel.open_text input_filename in
   let input_str = String.lowercase_ascii (In_channel.input_all input_channel) in
   In_channel.close input_channel;
+
   let lexbuf = Lexing.from_string input_str in
   
   (* Set the filename for error messages (optional but helpful) *)
-  lexbuf.lex_curr_p <- { lexbuf.lex_curr_p with pos_fname = "input" };
+  lexbuf.lex_curr_p <- { lexbuf.lex_curr_p with pos_fname = input_filename };
   
   try
     let ast = Parser.prog Lexer.tokenize lexbuf in
@@ -55,10 +52,18 @@ let build () =
 let () =
   (* Read from standard input and compile *)
   Moonbit_project.gen_skelet ();
-  Sys.readdir "./" |> Array.iter (fun file ->
-    if is_bast file then
-      let return_code = compile_file file in
-        if return_code != 0 then exit return_code);
+  let registered_filenames = ref ["main.mbt"] in
+
+  (* compile all BAST files in current directory and store their moonbit 
+     counterparts to registered_filenames *)
+  Sys.readdir "./" |> Array.iter (fun filename ->
+    if is_bast filename then
+      let out_filename = Encoding.output_filename filename in
+        registered_filenames := filename :: !registered_filenames;
+        let return_code = compile_file filename out_filename in
+          if return_code != 0 then exit return_code);
+
+
 
   build ();
   exit 0

@@ -18,7 +18,7 @@
 %token CONS
 %token FUNC LAMBDA
 %token VAR RETURN
-%token DO IF UNLESS WHILE UNTIL
+%token DO IF UNLESS WHILE UNTIL LOOP
 %token LPAREN RPAREN LSQUARE RSQUARE LCURLY RCURLY
 %token EOF
    
@@ -34,13 +34,33 @@
 (* The start symbol - what the parser tries to parse.
    <Ast.program> is the type that this rule returns. *)
 %start <Ast.program> prog
+%start <Ast.program> prog_debug
 
 %%
 
+(* only specific statements at toplevel *)
 prog:
-  | stmts = list(stmt); EOF
-      { stmts }  (* Just return the list of statements *)
+  | stmts = list(toplevel_stmt); EOF
+      { stmts }
 
+(* just compile the statements *)
+prog_debug:
+  | stmts = list(stmt); EOF
+      { stmts }
+
+toplevel_stmt:
+  | VAR; dec = declare_toplevel_block
+      { dec }
+
+  | VAR; dec = declare_toplevel_var
+      { dec }
+
+  | FUNC; LSQUARE; name = IDENT; args = list(argument); RSQUARE;
+          BIND; dec = declare_block; BIND; body = code_block
+      { ToplevelDeclare (name, Lambda (args, dec, body)) }
+  | FUNC; LSQUARE; name = IDENT; args = list(argument); RSQUARE;
+          BIND; body = code_block
+      { ToplevelDeclare (name, Lambda (args, StmtList [], body)) }
 
 stmt:
   | VAR; dec = declare_block
@@ -133,6 +153,11 @@ expr:
       { While (cond, dec, body) }
   | WHILE; cond = code_block; BIND; body = code_block
       { While (cond, StmtList [], body) }
+
+  | LOOP; dec = declare_block; BIND; body = code_block
+      { While (SpecVar "true", dec, body) }
+  | LOOP; body = code_block
+      { While (SpecVar "true", StmtList [], body) }
 
   | UNTIL; cond = code_block; BIND; dec = declare_block; BIND; body = code_block
       { While (UnOp (Not, cond), dec, body) }
@@ -252,6 +277,17 @@ declare_var:
 
   | name = IDENT
       { Declare (name, SpecVar "nil") }
+
+declare_toplevel_block:
+  | LSQUARE; s = nonempty_list(declare_toplevel_var); RSQUARE
+      { StmtList s }
+
+declare_toplevel_var:
+  | name = IDENT; BIND; value = expr
+      { ToplevelDeclare (name, value) }
+
+  | name = IDENT
+      { ToplevelDeclare (name, SpecVar "nil") }
 
 arg_block:
   | LSQUARE; params = list(argument); RSQUARE

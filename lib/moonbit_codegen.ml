@@ -1,6 +1,8 @@
 open Ast
 open Printf
 
+let toplevel_declare = ref ""
+
 let rec string_of_opmod = function
   | NoMod    -> "NoMod,"
   | UpTo   e -> sprintf "UpTo(%s),"   (string_of_expr e) 
@@ -143,9 +145,17 @@ and string_of_stmt = function
       let pref_name = Encoding.encode_prefix name in
       if e = Nil then
         sprintf "let %s=Var::{name:\"%s\",val:Nil}" pref_name name
-      else
+      else (* lambdas cannot refer to the variable if declared within *)
         sprintf "let %s=Var::{name:\"%s\",val:Nil}; %s.val=%s"
         pref_name name pref_name (string_of_expr e)
+
+  | ToplevelDeclare (name, e) ->
+      let pref_name = Encoding.encode_prefix name in
+      toplevel_declare :=
+        !toplevel_declare ^ sprintf "let %s:Var={name:\"%s\", val:Nil}\n"
+          pref_name name;
+
+      sprintf "%s.val = %s" pref_name (string_of_expr e)
 
   | StmtList stmts ->
       String.concat "\n " (List.map string_of_stmt stmts)
@@ -158,4 +168,6 @@ and string_of_stmt = function
 
 
 and string_of_ast ast =
-  " " ^ String.concat "\n " (List.map string_of_stmt ast)
+  toplevel_declare := "";
+  let body = List.map string_of_stmt ast in
+  "" ^ !toplevel_declare ^ "fn init {" ^ String.concat "\n " body ^ "\n} "
