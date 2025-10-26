@@ -227,6 +227,14 @@ let tests = [
                             (Block
                               ([ExprStmt (BinOp (Mul NoMod, Var "a1", Num 2.))],
                                Var "a1"))))]);
+
+  ("return statement with values",
+   "return 42 + foo",
+   [Return (BinOp (Add NoMod, Num 42., Var "foo"))]);
+
+  ("return statement without values",
+   "return",
+   [Return (SpecVar "nil")]);
 ]
 
 

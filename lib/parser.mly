@@ -78,6 +78,9 @@ stmt:
   | RETURN; e = expr
       { Return e }
 
+  | RETURN
+      { Return (SpecVar "nil") }
+
   | e = expr
       { ExprStmt e }
 
