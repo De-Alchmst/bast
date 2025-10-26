@@ -2,10 +2,22 @@
 
 open Bast_lib
 
-let compile input_channel =
+let is_bast str =
+  let name = String.lowercase_ascii str in
+  let rec aux = function
+    | [] -> false
+    | suffix :: rest ->
+      if String.ends_with ~suffix:suffix name then true else aux rest
+  in aux [".bast"; ".bat"; ".☥"; ".𓋹"]
+
+let compile_file input_filename =
   (* Create a lexer buffer from the input channel - defined outside try
      so it's accessible in the error handlers *)
+  let output_filename = Encoding.output_filename input_filename in
+
+  let input_channel = In_channel.open_text input_filename in
   let input_str = String.lowercase_ascii (In_channel.input_all input_channel) in
+  In_channel.close input_channel;
   let lexbuf = Lexing.from_string input_str in
   
   (* Set the filename for error messages (optional but helpful) *)
@@ -13,11 +25,9 @@ let compile input_channel =
   
   try
     let ast = Parser.prog Lexer.tokenize lexbuf in
-    Moonbit_project.gen_skelet ();
-    Moonbit_project.write_file_ast "main.mbt" ast;
-    Moonbit_project.run ();
-    0 (* Return success *)
-    
+    Moonbit_project.write_file_ast output_filename ast;
+    0
+
   with
   (* Handle lexer errors *)
   | Lexer.LexError msg ->
@@ -38,8 +48,17 @@ let compile input_channel =
       Printf.eprintf "Unexpected error: %s\n" (Printexc.to_string e);
       1
 
+let build () =
+    Moonbit_project.run ()
+
 (* Entry point *)
 let () =
   (* Read from standard input and compile *)
-  let exit_code = compile stdin in
-  exit exit_code
+  Moonbit_project.gen_skelet ();
+  Sys.readdir "./" |> Array.iter (fun file ->
+    if is_bast file then
+      let return_code = compile_file file in
+        if return_code != 0 then exit return_code);
+
+  build ();
+  exit 0
