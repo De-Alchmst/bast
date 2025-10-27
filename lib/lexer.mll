@@ -54,8 +54,8 @@ rule tokenize = parse
   | ">="           { GREATER_OR_EQUAL }
 
   | "cons"  | "f\\"    { SPECIAL_IDENT "cons" }
-  | 'c' ad ad? ad? ad? 'r' { CXR (Lexing.lexeme lexbuf) }
-  | 'r' ad ad? ad? ad? 'c' { CXR (Encoding.string_rev (Lexing.lexeme lexbuf)) }
+  | 'c' ad+ 'r' { CXR (Lexing.lexeme lexbuf) }
+  | 'r' ad+ 'c' { CXR (Encoding.string_rev (Lexing.lexeme lexbuf)) }
 
   | "nil?" | "num?" | "atom?" | "bool?" | "func?" | "cons?" | "list?"
   | "Array?" | "String?"
