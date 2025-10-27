@@ -26,6 +26,7 @@ rule tokenize = parse
   | "loop"       { LOOP }
   | "return"     { RETURN }
   | "func"       { FUNC }
+  | "list"       { LIST }
   | "lambda" | "lamb" | "λ" { LAMBDA }
   | "do" | "blk" | "blck" | "block" { DO }
 

@@ -2,6 +2,5 @@ fix operator prebinding
 separate words from minus and stuf...
 fix var block of loops and functions
 add UTF-8
-add ocnfig (somehow)
-files?
+add config (somehow)
 add exponents

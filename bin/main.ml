@@ -8,7 +8,7 @@ let is_bast str =
     | [] -> false
     | suffix :: rest ->
       if String.ends_with ~suffix:suffix name then true else aux rest
-  in aux [".bast"; ".bat"; ".☥"; ".𓋹"]
+  in aux [".bast"; ".bst"; ".☥"; ".𓋹"]
 
 let compile_file input_filename output_filename =
   let input_channel = In_channel.open_text input_filename in
@@ -28,14 +28,15 @@ let compile_file input_filename output_filename =
   with
   (* Handle lexer errors *)
   | Lexer.LexError msg ->
-      Printf.eprintf "Lexical error: %s\n" msg;
+      Printf.eprintf "Lexical error in file %s: %s\n" input_filename msg;
       1
   
   (* Handle parser errors - Menhir raises this *)
   | Parser.Error ->
       (* Get position information for better error messages *)
       let pos = Lexing.lexeme_start_p lexbuf in
-      Printf.eprintf "Parse error at line %d, column %d\n"
+      Printf.eprintf "Parse error at %s:%d:%d\n"
+        input_filename
         pos.pos_lnum
         (pos.pos_cnum - pos.pos_bol);
       1
@@ -52,18 +53,22 @@ let build () =
 let () =
   (* Read from standard input and compile *)
   Moonbit_project.gen_skelet ();
-  let registered_filenames = ref ["main.mbt"] in
+  let registered_filenames = ref ["main.mbt"; "bast-lib.mbt"] in
 
   (* compile all BAST files in current directory and store their moonbit 
      counterparts to registered_filenames *)
   Sys.readdir "./" |> Array.iter (fun filename ->
     if is_bast filename then
       let out_filename = Encoding.output_filename filename in
-        registered_filenames := filename :: !registered_filenames;
+        registered_filenames := out_filename :: !registered_filenames;
         let return_code = compile_file filename out_filename in
           if return_code != 0 then exit return_code);
 
-
+  (* remove untracked moonbit files *)
+  Sys.readdir Moonbit_project.basedir |> Array.iter (fun filename ->
+    if String.ends_with ~suffix:".mbt" filename then
+      if not (List.mem filename !registered_filenames) then
+        Sys.remove (Moonbit_project.basedir ^ filename));
 
   build ();
   exit 0

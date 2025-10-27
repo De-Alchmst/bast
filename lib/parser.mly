@@ -15,7 +15,7 @@
 %token EQUALS NOT_EQUALS LESSER LESSER_OR_EQUAL GREATER GREATER_OR_EQUAL
 %token NEGATE
 %token NOT OR AND XOR
-%token CONS
+%token CONS LIST
 %token FUNC LAMBDA
 %token VAR RETURN
 %token DO IF UNLESS WHILE UNTIL LOOP
@@ -150,8 +150,6 @@ expr:
 
 
 
-  (* | WHILE; cond = code_block; BIND; LSQUARE; dec = option(terminated(list(declare_var))); BIND; LSQUARE; body = list(stmt); RSQUARE; *)
-  (*     { While (cond, (StmtList dec), Block (body, SpecVar "nil")) } *)
   | WHILE; cond = code_block; BIND; dec = declare_block; BIND; body = code_block
       { While (cond, dec, body) }
   | WHILE; cond = code_block; BIND; body = code_block
@@ -214,6 +212,12 @@ expr:
   | cxr = CXR { Cxr cxr }
   | e1 = expr; CONS; e2 = expr
       { Cons (e1, e2) }
+
+  | LIST; LSQUARE; e = list(expr); RSQUARE
+      { let rec aux = function
+          | [] -> SpecVar "nil"
+          | h :: t -> Cons (h, aux t)
+        in aux e }
 
 
   | n = num
@@ -289,8 +293,8 @@ declare_toplevel_var:
   | name = IDENT; BIND; value = expr
       { ToplevelDeclare (name, value) }
 
-  | name = IDENT
-      { ToplevelDeclare (name, SpecVar "nil") }
+  (* | name = IDENT *)
+  (*     { ToplevelDeclare (name, SpecVar "nil") } *)
 
 arg_block:
   | LSQUARE; params = list(argument); RSQUARE

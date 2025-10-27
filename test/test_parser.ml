@@ -188,18 +188,25 @@ let tests = [
                         Block ([], SpecVar "nil")))))]);
 
   ("Cons cell",
-  "1\\2\\3\\n",
-  [ExprStmt (Cons (Num 1., Cons (Num 2., Cons (Num 3., SpecVar "nil"))))]);
+   "1\\2\\3\\n",
+   [ExprStmt (Cons (Num 1., Cons (Num 2., Cons (Num 3., SpecVar "nil"))))]);
+
+  ("List",
+   "list [1 2 3 4]",
+   [ExprStmt (Cons (Num 1.,
+                    Cons (Num 2.,
+                      Cons (Num 3.,
+                        Cons (Num 4., SpecVar "nil")))))]);
 
   ("While loop",
-   "while [cnd]:[foo bar]:[until [baz]:[[bax]]]",
+   "while [cnd]:[foo:n bar:n]:[until [baz]:[[bax]]]",
    [ExprStmt (While (Block ([], Var "cnd"),
                     (StmtList [
                       Declare ("foo", SpecVar "nil");
                       Declare ("bar", SpecVar "nil")]),
                       Block ([], While (UnOp (Not, Block ([], Var "baz")),
                                         StmtList [],
-                                        Block ([], ValFunc (Var "bax", []))))))]);
+                                        Block ([], VarFunc ("bax", []))))))]);
 
   ("loop",
    "loop [ind:0]:[ind := ind + 1]",

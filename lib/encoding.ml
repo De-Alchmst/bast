@@ -8,5 +8,6 @@ let strip_ext filename =
     String.sub filename 0 idx
   with _ -> filename
 
+(* keep extension so tahat both file.bast and file.bst can coexist *)
 let output_filename name =
-  "_bast_" ^ (strip_ext name) ^ ".mbt"
+  "_bast_" ^ name ^ ".mbt"

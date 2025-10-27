@@ -1,8 +1,8 @@
 var [
-  foo:10
+  fact-arg : 5
 ]
 
-func [fact num]:[
+func [fact-fun num]:[
   var aux : lamb [acc num]:[
     if [num > 0]:[
       [aux  acc * num  num - 1]
@@ -11,3 +11,19 @@ func [fact num]:[
 
   [aux 1 num]
 ]
+
+func [test]:[
+  name:N
+]:[
+  37
+]
+
+
+func [fact-loop num]:[
+  acc : 1
+]:[
+  while [num > 0]:[
+    acc:* --:num
+  ]
+]
+
