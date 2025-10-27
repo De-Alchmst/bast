@@ -51,6 +51,7 @@ and expr =
   | PostAssign of string * expr (* assign, but return the old value *)
   | If of expr * expr * expr (* cont true false *)
   | While of expr * stmt * expr (* condition, declaration, body *)
+  | DoWhile of expr * stmt * expr (* condition, declaration, body *)
   | Cons of expr * expr (* head, tail *)
   | Cxr of string
   | Lambda of arg list * stmt * expr (* args, declaration, body*)

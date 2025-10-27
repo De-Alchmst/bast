@@ -1,6 +1,8 @@
 fix operator prebinding
 separate words from minus and stuf...
-fix var block of loops and functions
 add UTF-8
 add config (somehow)
 add exponents
+
+
+fix var block of loops and functions -- can do without...

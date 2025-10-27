@@ -18,7 +18,7 @@
 %token CONS LIST
 %token FUNC LAMBDA
 %token VAR RETURN
-%token DO IF UNLESS WHILE UNTIL LOOP
+%token DO IF UNLESS WHILE UNTIL DO_WHILE DO_UNTIL LOOP
 %token LPAREN RPAREN LSQUARE RSQUARE LCURLY RCURLY
 %token EOF
    
@@ -155,15 +155,25 @@ expr:
   | WHILE; cond = code_block; BIND; body = code_block
       { While (cond, StmtList [], body) }
 
-  | LOOP; dec = declare_block; BIND; body = code_block
-      { While (SpecVar "true", dec, body) }
-  | LOOP; body = code_block
-      { While (SpecVar "true", StmtList [], body) }
-
   | UNTIL; cond = code_block; BIND; dec = declare_block; BIND; body = code_block
       { While (UnOp (Not, cond), dec, body) }
   | UNTIL; cond = code_block; BIND; body = code_block
       { While (UnOp (Not, cond), StmtList [], body) }
+
+  | DO_WHILE; cond = code_block; BIND; dec = declare_block; BIND; body = code_block
+      { DoWhile (cond, dec, body) }
+  | DO_WHILE; cond = code_block; BIND; body = code_block
+      { DoWhile (cond, StmtList [], body) }
+
+  | DO_UNTIL; cond = code_block; BIND; dec = declare_block; BIND; body = code_block
+      { DoWhile (UnOp (Not, cond), dec, body) }
+  | DO_UNTIL; cond = code_block; BIND; body = code_block
+      { DoWhile (UnOp (Not, cond), StmtList [], body) }
+
+  | LOOP; dec = declare_block; BIND; body = code_block
+      { While (SpecVar "true", dec, body) }
+  | LOOP; body = code_block
+      { While (SpecVar "true", StmtList [], body) }
 
   | LAMBDA; args = arg_block; BIND; dec = declare_block; BIND; body = code_block
       { Lambda (args, dec, body) }

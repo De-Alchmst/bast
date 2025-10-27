@@ -23,6 +23,8 @@ rule tokenize = parse
   | "unless"     { UNLESS }
   | "while"      { WHILE }
   | "until"      { UNTIL }
+  | "do-while"   { DO_WHILE }
+  | "do-until"   { DO_UNTIL }
   | "loop"       { LOOP }
   | "return"     { RETURN }
   | "func"       { FUNC }

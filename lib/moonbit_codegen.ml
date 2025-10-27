@@ -133,6 +133,10 @@ and string_of_expr = function
       sprintf "{let mut _rval=Nil;while val_to_bool(%s){_rval={\n %s\n %s\n }};_rval}"
         (string_of_expr cond) (string_of_stmt dec) (string_of_expr body)
 
+  | DoWhile (cond, dec, body) ->
+      sprintf "{let mut _rval=Nil;while true{_rval={\n %s\n %s\n };if !val_to_bool(%s){break}};_rval}"
+        (string_of_stmt dec) (string_of_expr body) (string_of_expr cond)
+
   | Lambda (args, dec, body) ->
       sprintf "Fun(fn (argv: Array[Value]) -> Value {%s\n %s\n %s}, %d)"
         (string_of_args args) 
