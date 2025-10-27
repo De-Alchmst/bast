@@ -338,6 +338,23 @@ fn val_cdr(arg: Array[Value]) -> Value {
 }
 
 
+fn cxr_to_func(cxr: String) -> (Array[Value]) -> Value {
+  fn (argv: Array[Value]) -> Value {
+    let mut ret = argv[0]
+    for ch in cxr {
+      if ch == 'a' {
+        ret = val_car([ret])
+      } else if ch == 'd' {
+        ret = val_cdr([ret])
+      } else {
+        println("invalid cxr operation: \{cxr}")
+        panic()
+      }
+    }
+    ret
+  }
+}
+
 // predicates
 
 fn val_nil_p(argv: Array[Value]) -> Value {

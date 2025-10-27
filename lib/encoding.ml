@@ -11,3 +11,11 @@ let strip_ext filename =
 (* keep extension so tahat both file.bast and file.bst can coexist *)
 let output_filename name =
   "_bast_" ^ name ^ ".mbt"
+
+let string_rev str =
+  let rec aux n acc =
+    if n >= String.length str
+    then acc
+    else aux (n+1) ((String.make 1 str.[n]) :: acc)
+  in
+  aux 0 [] |> String.concat ""

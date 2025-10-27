@@ -122,8 +122,8 @@ and string_of_expr = function
   | Cons (h, t) ->
       sprintf "Cons(%s,%s)" (string_of_expr h) (string_of_expr t)
 
-  | Cxr _ ->
-      sprintf "Fun(var_car, 1)"
+  | Cxr s ->
+      sprintf "Fun(cxr_to_func(\"%s\"), 1)" (Encoding.string_rev s) 
 
   | If (cond, t, f) ->
       sprintf "if val_to_bool(%s) %s else %s"

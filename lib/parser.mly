@@ -219,7 +219,8 @@ expr:
       { UnOp (Negate, e)  }
 
 
-  | cxr = CXR { Cxr cxr }
+  | cxr = CXR;
+      { Cxr (String.sub cxr 1 ((String.length cxr)-2)) }
   | e1 = expr; CONS; e2 = expr
       { Cons (e1, e2) }
 

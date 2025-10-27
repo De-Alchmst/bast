@@ -8,10 +8,12 @@
   exception LexError of string
 }
 
+
 let whitespace = [' ' '\t' '\r']
 let newline = '\n'
 let digit = ['0'-'9']
 let letter = ['a'-'z' 'A'-'Z']
+let ad = ['a' 'd']
 
 (* The main lexing rule. This is a function that takes a lexbuf and returns tokens.
    'parse' is a keyword that means we're pattern matching on the input characters. *)
@@ -52,8 +54,8 @@ rule tokenize = parse
   | ">="           { GREATER_OR_EQUAL }
 
   | "cons"  | "f\\"    { SPECIAL_IDENT "cons" }
-  | "car"   | "cdr"    { SPECIAL_IDENT (Lexing.lexeme lexbuf) }
-  | 'c' ('a'|'d')+ 'r' { CXR (Lexing.lexeme lexbuf) }
+  | 'c' ad ad? ad? ad? 'r' { CXR (Lexing.lexeme lexbuf) }
+  | 'r' ad ad? ad? ad? 'c' { CXR (Encoding.string_rev (Lexing.lexeme lexbuf)) }
 
   | "nil?" | "num?" | "atom?" | "bool?" | "func?" | "cons?" | "list?"
   | "Array?" | "String?"

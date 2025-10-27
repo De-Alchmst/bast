@@ -10,14 +10,6 @@ func [main]:[
     l1: 1\2\3\4\n
     l2: list [1 2 3 4]
   ]
-  [println l1 = l2]
-
-  while [false]:[
-    [println 1\2]
-  ]
-
-  do-while [false]:[
-    [println 1\3]
-  ]
+  [println [caddr l1]]
 ]
 

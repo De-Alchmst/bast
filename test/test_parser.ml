@@ -211,8 +211,8 @@ let tests = [
   ("Do-while loop",
    "do-until [baz]:[bar]",
     [ExprStmt (DoWhile (UnOp (Not, Block ([], Var "baz")),
-                     StmtList [],
-                     Block ([], Var "bar")))]);
+                       StmtList [],
+                       Block ([], Var "bar")))]);
 
   ("loop",
    "loop [ind:0]:[ind := ind + 1]",
