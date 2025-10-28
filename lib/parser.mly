@@ -19,7 +19,7 @@
 %token FUNC LAMBDA
 %token VAR RETURN
 %token ARROW_LEFT  ARROW_RIGHT FAT_ARROW_LEFT FAT_ARROW_RIGHT
-%token DO IF UNLESS WHILE UNTIL DO_WHILE DO_UNTIL LOOP FOR
+%token DO IF COND UNLESS WHILE UNTIL DO_WHILE DO_UNTIL LOOP FOR
 %token LPAREN RPAREN LSQUARE RSQUARE LCURLY RCURLY
 %token EOF
    
@@ -139,6 +139,9 @@ expr:
       { If (cond, t, f) }
   | IF; cond = code_block; BIND; t = code_block
       { If (cond, t, Block ([], SpecVar "nil")) }
+
+  | COND; first = cond_branch; rest = list(bind_cond_branch)
+      { Cond (first :: rest) }
 
   | UNLESS; cond = code_block; BIND; t = code_block; BIND; f = code_block
       { If (UnOp(Not, cond), t, f) }
@@ -336,3 +339,11 @@ for_loop_head:
       { (Descending, ind, up, (BinOp ((Add NoMod), down, Num 1.)))}
   | LSQUARE; ind = IDENT; down = expr; FAT_ARROW_RIGHT; up = expr; RSQUARE
       { (Ascending, ind, down, (BinOp ((Sub NoMod), up, Num 1.))) }
+
+cond_branch:
+  | cond = code_block; BIND; body = code_block
+      { (cond, body) }
+
+bind_cond_branch:
+  | BIND; branch = cond_branch
+      { branch }

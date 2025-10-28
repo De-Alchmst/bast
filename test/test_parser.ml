@@ -193,6 +193,18 @@ let tests = [
                         Block ([], Num 4.),
                         Block ([], SpecVar "nil")))))]);
 
+  ("Cond single",
+   "cond [foo = bar]:[37]",
+   [ExprStmt (Cond [((Block ([], (BinOp (Equals, Var "foo", Var "bar")))),
+                     (Block ([], Num 37.)))])]);
+
+  ("Cond multiple",
+   "con [false]:[2]:[true]:[nil]",
+   [ExprStmt (Cond [((Block ([], SpecVar "false")),
+                     (Block ([], Num 2.)));
+                    ((Block ([], SpecVar "true")),
+                     (Block ([], SpecVar "nil")))])]);
+
   ("Cons cell",
    "1\\2\\3\\n",
    [ExprStmt (Cons (Num 1., Cons (Num 2., Cons (Num 3., SpecVar "nil"))))]);
@@ -247,6 +259,7 @@ let tests = [
    [ExprStmt (Lambda ([SimpleArg "a1"],
                        (StmtList [Declare ("v1", Num 42.)]),
                        (Block ([] ,BinOp (Add NoMod, Var "a1", Var "v1")))))]);
+
 
   ("lambdas without declaration",
    "lamb [a1 a2]:[a1 + a2]",

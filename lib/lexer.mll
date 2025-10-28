@@ -32,6 +32,7 @@ rule tokenize = parse
   | "return"     { RETURN }
   | "func"       { FUNC }
   | "list"       { LIST }
+  | "cond" | "con" { COND }
   | "lambda" | "lamb" | "λ" { LAMBDA }
   | "do" | "blk" | "blck" | "block" { DO }
 

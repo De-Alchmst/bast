@@ -129,6 +129,8 @@ and string_of_expr = function
       sprintf "if val_to_bool(%s) %s else %s"
         (string_of_expr cond) (string_of_expr t) (string_of_expr f)
 
+  | Cond _ -> ""
+
   | While (cond, dec, body) ->
       sprintf "{let mut _rval=Nil;while val_to_bool(%s){_rval={\n %s\n %s\n }};_rval}"
         (string_of_expr cond) (string_of_stmt dec) (string_of_expr body)
