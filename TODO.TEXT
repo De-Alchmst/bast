@@ -3,6 +3,6 @@ separate words from minus and stuf...
 add UTF-8
 add config (somehow)
 add exponents
-
+var section for blocks
 
 fix var block of loops and functions -- can do without...

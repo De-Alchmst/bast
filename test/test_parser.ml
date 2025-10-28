@@ -113,6 +113,12 @@ let tests = [
    "foo:=blk[7]",
    [ExprStmt (Assign ("foo", Block ([], Num 7.)))]);
 
+  ("Block with declaration",
+   "block [foo:69]:[foo]",
+   [ExprStmt (Block
+                ([Declare ("foo", Num 69.)],
+                 (Block ([], Var "foo"))))]);
+
   ("VarFunc",
    "[foo bar 7]",
    [ExprStmt (VarFunc ("foo", [Var "bar"; Num 7.]))]);

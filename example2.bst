@@ -21,5 +21,13 @@ func [main]:[
   ]:[
     [println foo]
   ]
+
+  do [
+    [println foo]
+  ]
+
+  do [foo:7]:[
+    [println foo]
+  ]
 ]
 

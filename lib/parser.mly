@@ -129,6 +129,8 @@ expr:
   | LPAREN; e = expr; RPAREN
       { e }
 
+  | DO; dec = declare_block; BIND; body = code_block
+      { match dec with | StmtList (stmts) -> Block (stmts, body) | _ -> Block ([], body) }
   | DO; blk = code_block
       { blk }
 
