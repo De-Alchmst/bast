@@ -177,9 +177,11 @@ expr:
       { While (SpecVar "true", StmtList [], body) }
 
   | FOR head = for_loop_head; BIND; dec = declare_block; BIND; body = code_block
-      { match head with | (ftype, ind, down, up) -> For (ftype, ind, down, up, dec, body) }
+      { match head with | (ftype, ind, from, upto) ->
+        For (ftype, ind, from, upto, dec, body) }
   | FOR head = for_loop_head; BIND; body = code_block
-      { match head with | (ftype, ind, down, up) -> For (ftype, ind, down, up, StmtList [], body) }
+      { match head with | (ftype, ind, from, upto) ->
+        For (ftype, ind, from, upto, StmtList [], body) }
 
 
   | LAMBDA; args = arg_block; BIND; dec = declare_block; BIND; body = code_block
@@ -324,11 +326,11 @@ argument:
 
 for_loop_head:
   | LSQUARE; ind = IDENT; down = expr; ARROW_LEFT; up = expr; RSQUARE
-      { (Descending, ind, down, up) }
+      { (Descending, ind, up, down) }
   | LSQUARE; ind = IDENT; down = expr; ARROW_RIGHT; up = expr; RSQUARE
       { (Ascending, ind, down, up) }
 
   | LSQUARE; ind = IDENT; down = expr; FAT_ARROW_LEFT; up = expr; RSQUARE
-      { (Descending, ind, (BinOp ((Add NoMod), down, Num 1.)), up) }
+      { (Descending, ind, up, (BinOp ((Add NoMod), down, Num 1.)))}
   | LSQUARE; ind = IDENT; down = expr; FAT_ARROW_RIGHT; up = expr; RSQUARE
       { (Ascending, ind, down, (BinOp ((Sub NoMod), up, Num 1.))) }

@@ -137,13 +137,17 @@ and string_of_expr = function
       sprintf "{let mut _rval=Nil;while true{_rval={\n %s\n %s\n };if !val_to_bool(%s){break}};_rval}"
         (string_of_stmt dec) (string_of_expr body) (string_of_expr cond)
 
-  | For (_, ind, down, up, dec, body) ->
+  | For (ftype, ind, from, upto, dec, body) ->
       let pref_ind = Encoding.encode_prefix ind in
-      sprintf "{let mut _rval=Nil;for %s=%s;val_to_bool(val_lower_eq(%s,%s));%s.val=val_add([%s.val, 1]){_rval={\n %s\n %s\n }};_rval}"
-        pref_ind (string_of_expr down)
-        pref_ind (string_of_expr up)
-        pref_ind pref_ind
+      (* sprintf "{let mut _rval=Nil;for %s=Var::{name:\"%s\",val:%s};val_to_bool(%s([%s.val,%s]));%s.val=%s([%s.val, Num(1.0)]){_rval={\n %s\n %s\n }};_rval}" *)
+      sprintf "{let mut _rval=Nil;let %s:Var={name:\"%s\",val:%s};while val_to_bool(%s([%s.val,%s])){_rval={\n %s\n %s\n };%s.val=%s([%s.val, Num(1.0)])};_rval}"
+        pref_ind ind (string_of_expr from)
+        (match ftype with | Ascending -> "val_lower_eq" | Descending -> "val_greater_eq")
+        pref_ind (string_of_expr upto)
         (string_of_stmt dec) (string_of_expr body)
+        pref_ind
+        (match ftype with | Ascending -> "val_add" | Descending -> "val_sub")
+        pref_ind
 
   | Lambda (args, dec, body) ->
       sprintf "Fun(fn (argv: Array[Value]) -> Value {%s\n %s\n %s}, %d)"
@@ -156,9 +160,9 @@ and string_of_stmt = function
   | Declare (name, e) ->
       let pref_name = Encoding.encode_prefix name in
       if e = Nil then
-        sprintf "let %s=Var::{name:\"%s\",val:Nil}" pref_name name
+        sprintf "let %s:Var={name:\"%s\",val:Nil}" pref_name name
       else (* lambdas cannot refer to the variable if declared within *)
-        sprintf "let %s=Var::{name:\"%s\",val:Nil}; %s.val=%s"
+        sprintf "let %s:Var={name:\"%s\",val:Nil}; %s.val=%s"
         pref_name name pref_name (string_of_expr e)
 
   | ToplevelDeclare (name, e) ->
