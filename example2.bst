@@ -7,5 +7,5 @@ func [main]:[
   [println [ fact-loop fact-arg ]]
 
   [println
-    cond [F]:[ 1 ]]
+    cond [F]:[ 1 ]:[T]:[ 2 ]]
 ]
