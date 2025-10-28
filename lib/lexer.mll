@@ -28,6 +28,7 @@ rule tokenize = parse
   | "do-while"   { DO_WHILE }
   | "do-until"   { DO_UNTIL }
   | "loop"       { LOOP }
+  | "for"        { FOR }
   | "return"     { RETURN }
   | "func"       { FUNC }
   | "list"       { LIST }
@@ -43,6 +44,11 @@ rule tokenize = parse
       { SPECIAL_IDENT (Lexing.lexeme lexbuf) }
   | "f!=" | "f<>" { SPECIAL_IDENT "f!=" }
 
+  | "<-"           { ARROW_LEFT }
+  | "->"           { ARROW_RIGHT }
+  | "<="           { FAT_ARROW_LEFT }
+  | "=>"           { FAT_ARROW_RIGHT }
+
   | "inc" | "++"   { INCREMENT }
   | "dec" | "--"   { DECREMENT }
   | "not" | '!'    { NOT }
@@ -54,8 +60,8 @@ rule tokenize = parse
   | ">="           { GREATER_OR_EQUAL }
 
   | "cons"  | "f\\"    { SPECIAL_IDENT "cons" }
-  | 'c' ad+ 'r' { CXR (Lexing.lexeme lexbuf) }
-  | 'r' ad+ 'c' { CXR (Encoding.string_rev (Lexing.lexeme lexbuf)) }
+  | 'c' ad+ 'r'        { CXR (Lexing.lexeme lexbuf) }
+  | 'r' ad+ 'c'        { CXR (Encoding.string_rev (Lexing.lexeme lexbuf)) }
 
   | "nil?" | "num?" | "atom?" | "bool?" | "func?" | "cons?" | "list?"
   | "Array?" | "String?"

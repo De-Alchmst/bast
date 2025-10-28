@@ -36,6 +36,10 @@ and unop =
 and arg =
   | SimpleArg of string
 
+and for_type =
+  | Ascending
+  | Descending
+
 (* Expressions - things that evaluate to values *)
 and expr =
   | Nil
@@ -55,6 +59,7 @@ and expr =
   | Cons of expr * expr (* head, tail *)
   | Cxr of string
   | Lambda of arg list * stmt * expr (* args, declaration, body*)
+  | For of for_type * string * expr * expr * stmt * expr  (* var, start, end, declaration, body *)
 
 (* Statements - things that do actions *)
 and stmt = (* 'and' for mutually recursive types *)

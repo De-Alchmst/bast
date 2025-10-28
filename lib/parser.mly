@@ -18,7 +18,8 @@
 %token CONS LIST
 %token FUNC LAMBDA
 %token VAR RETURN
-%token DO IF UNLESS WHILE UNTIL DO_WHILE DO_UNTIL LOOP
+%token ARROW_LEFT  ARROW_RIGHT FAT_ARROW_LEFT FAT_ARROW_RIGHT
+%token DO IF UNLESS WHILE UNTIL DO_WHILE DO_UNTIL LOOP FOR
 %token LPAREN RPAREN LSQUARE RSQUARE LCURLY RCURLY
 %token EOF
    
@@ -175,6 +176,12 @@ expr:
   | LOOP; body = code_block
       { While (SpecVar "true", StmtList [], body) }
 
+  | FOR head = for_loop_head; BIND; dec = declare_block; BIND; body = code_block
+      { match head with | (ftype, ind, down, up) -> For (ftype, ind, down, up, dec, body) }
+  | FOR head = for_loop_head; BIND; body = code_block
+      { match head with | (ftype, ind, down, up) -> For (ftype, ind, down, up, StmtList [], body) }
+
+
   | LAMBDA; args = arg_block; BIND; dec = declare_block; BIND; body = code_block
       { Lambda (args, dec, body) }
   | LAMBDA; args = arg_block; BIND; body = code_block
@@ -314,3 +321,14 @@ arg_block:
 argument:
   | name = IDENT
       { SimpleArg name }
+
+for_loop_head:
+  | LSQUARE; ind = IDENT; down = expr; ARROW_LEFT; up = expr; RSQUARE
+      { (Descending, ind, down, up) }
+  | LSQUARE; ind = IDENT; down = expr; ARROW_RIGHT; up = expr; RSQUARE
+      { (Ascending, ind, down, up) }
+
+  | LSQUARE; ind = IDENT; down = expr; FAT_ARROW_LEFT; up = expr; RSQUARE
+      { (Descending, ind, (BinOp ((Add NoMod), down, Num 1.)), up) }
+  | LSQUARE; ind = IDENT; down = expr; FAT_ARROW_RIGHT; up = expr; RSQUARE
+      { (Ascending, ind, down, (BinOp ((Sub NoMod), up, Num 1.))) }

@@ -221,6 +221,21 @@ let tests = [
                     Block ([],
                       (Assign ("ind", BinOp (Add NoMod, Var "ind", Num 1.))))))]);
 
+
+  ("for loops simple",
+   "for [ind 3 -> 7]:[ind+1]",
+   [ExprStmt (For (Ascending, "ind", Num 3., Num 7.,
+                   StmtList [],
+                   Block ([], BinOp (Add NoMod, Var "ind", Num 1.))))]);
+
+  ("for loop complex",
+   "for [ind 5+6 <= 7-6]:[foo:666]:[foo+ind]",
+    [ExprStmt (For (Descending, "ind",
+                    BinOp (Add NoMod, BinOp (Add NoMod, Num 5., Num 6.), Num 1.),
+                    BinOp (Sub NoMod, Num 7., Num 6.),
+                    StmtList [Declare ("foo", Num 666.)],
+                    Block ([], BinOp (Add NoMod, Var "foo", Var "ind"))))]);
+
   ("lambdas with declaration",
    "lamb [a1]:[v1:42]:[a1 + v1]",
    [ExprStmt (Lambda ([SimpleArg "a1"],

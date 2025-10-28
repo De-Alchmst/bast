@@ -137,6 +137,14 @@ and string_of_expr = function
       sprintf "{let mut _rval=Nil;while true{_rval={\n %s\n %s\n };if !val_to_bool(%s){break}};_rval}"
         (string_of_stmt dec) (string_of_expr body) (string_of_expr cond)
 
+  | For (_, ind, down, up, dec, body) ->
+      let pref_ind = Encoding.encode_prefix ind in
+      sprintf "{let mut _rval=Nil;for %s=%s;val_to_bool(val_lower_eq(%s,%s));%s.val=val_add([%s.val, 1]){_rval={\n %s\n %s\n }};_rval}"
+        pref_ind (string_of_expr down)
+        pref_ind (string_of_expr up)
+        pref_ind pref_ind
+        (string_of_stmt dec) (string_of_expr body)
+
   | Lambda (args, dec, body) ->
       sprintf "Fun(fn (argv: Array[Value]) -> Value {%s\n %s\n %s}, %d)"
         (string_of_args args) 
