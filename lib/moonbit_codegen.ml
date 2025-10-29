@@ -166,10 +166,16 @@ and string_of_expr = function
       sprintf "Arr([%s])"
         (String.concat "," (List.map string_of_expr e))
 
-  | ArrayAccess (arr, ind) ->
-      sprintf "arr_access([%s,%s])"
-        (string_of_expr arr)
-        (string_of_expr ind)
+  | Read (src, ind) ->
+      sprintf "val_read(%s, [%s])"
+        (string_of_expr src)
+        (String.concat "," (List.map string_of_expr ind)) 
+
+  | Write (src, ind, n) ->
+      sprintf "val_write(%s, [%s], %s)"
+        (string_of_expr src)
+        (String.concat "," (List.map string_of_expr ind)) 
+        (string_of_expr n)
 
 and string_of_stmt = function
   | Declare (name, e) ->

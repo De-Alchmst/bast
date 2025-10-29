@@ -292,10 +292,13 @@ let tests = [
    [ExprStmt (Assign ("arr",
                      Array [Num 1.; Num 2.; BinOp (Add NoMod, Num 3., Num 4.)]))]);
 
-  ("Array access",
-   "foo|1 foo|3|4",
-   [ExprStmt (ArrayAccess (Var "foo", Num 1.));
-    ExprStmt (ArrayAccess ((ArrayAccess (Var "foo", Num 3.)), Num 4.))]);
+  ("Iterable access",
+   "r [foo 1 2 3]",
+   [ExprStmt (Read (Var "foo", [Num 1.; Num 2.; Num 3.]))]);
+
+   ("Iterable write",
+   "w [foo 3 7 42]",
+   [ExprStmt (Write (Var "foo", [Num 3.; Num 7.], Num 42.))]);
 ]
 
 

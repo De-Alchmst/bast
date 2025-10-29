@@ -37,6 +37,20 @@ fn pos_ass_var(ass: Var, new: Value) -> Value {
   old
 }
 
+fn values_to_idexes(inds: Array[Value]) -> Array[Int] {
+  let new : Array[Int] = []
+  for ind in inds {
+    match ind {
+      Num(n) => new.push(n.to_int())
+      _ => {
+        println("read indices must be numbers, got \{inds}")
+        panic()
+      }
+    }
+  }
+  new
+}
+
 fn min(n1: Double, n2:Double) -> Double { if n1 < n2 { n1 } else { n2 } }
 fn max(n1: Double, n2:Double) -> Double { if n1 > n2 { n1 } else { n2 } }
 
@@ -404,23 +418,69 @@ fn val_println(argv: Array[Value]) -> Value {
 }
 
 
-fn arr_access(argv: Array[Value]) -> Value {
-  match argv {
-    [Arr(arr), Num(idx)] => {
-      let i = idx.to_int()
-      if i < 0 || i >= arr.length() {
-        println("Array index out of bounds: \{i} for array of length \{arr.length()}")
+fn arr_read(src: Value, indexs: Array[Int], offset: Int) -> Value {
+  if indexs.length() <= offset {
+    return src
+  }
+  let cur = indexs[offset]
+
+  match src {
+    Arr(arr) => {
+      if cur < 0 || cur >= arr.length() {
+        println("array index \{cur} out of bounds for array of length \{arr.length()}")
         panic()
-      } else {
-        arr[i]
       }
-    }
-    [x, y] => {
-      println("cannot access \{x} with \{y}")
-      panic()
+      arr_read(arr[cur], indexs, offset + 1)
     }
     _ => {
-      println("invalid number of arguments for array access, expected 2, got \{argv.length()}")
+      println("read not implemented for type \{src}")
+      panic()
+    }
+  }
+}
+
+
+fn arr_write(src: Value, indexs: Array[Int], offset: Int, new: Value) -> Value {
+  if indexs.length() <= offset {
+    return new
+  }
+  let cur = indexs[offset]
+
+  match src {
+    Arr(arr) => {
+      if cur < 0 || cur >= arr.length() {
+        println("array index \{cur} out of bounds for array of length \{arr.length()}")
+        panic()
+      }
+      arr[cur] = arr_write(arr[cur], indexs, offset + 1, new)
+      src
+    }
+    _ => {
+      println("read not implemented for type \{src}")
+      panic()
+    }
+  }
+}
+
+
+fn val_read(src: Value, indexs: Array[Value]) -> Value {
+  let inds = values_to_idexes(indexs)
+  match src {
+    Arr(_) => { arr_read(src, inds, 0) }
+    _ => {
+      println("read not implemented for type \{src}")
+      panic()
+    }
+  }
+}
+
+
+fn val_write(src: Value, indexs: Array[Value], new: Value) -> Value {
+  let inds = values_to_idexes(indexs)
+  match src {
+    Arr(_) => { arr_write(src, inds, 0, new) }
+    _ => {
+      println("read not implemented for type \{src}")
       panic()
     }
   }

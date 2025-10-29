@@ -15,7 +15,8 @@
 %token EQUALS NOT_EQUALS LESSER LESSER_OR_EQUAL GREATER GREATER_OR_EQUAL
 %token NEGATE
 %token NOT OR AND XOR
-%token CONS LIST
+%token CONS LIST ARRAY
+%token READ WRITE
 %token FUNC LAMBDA
 %token VAR RETURN
 %token ARROW_LEFT  ARROW_RIGHT FAT_ARROW_LEFT FAT_ARROW_RIGHT
@@ -249,8 +250,15 @@ expr:
   | LCURLY; e = list(expr); RCURLY
       { Array e }
 
-  | e = expr; PIPE; i = expr
-      { ArrayAccess (e, i) }
+  (* | e = expr; PIPE; i = expr *)
+  (*     { ArrayAccess (e, i) } *)
+  | READ; LSQUARE; s = expr; i = nonempty_list(expr); RSQUARE
+      { Read (s, i) }
+  | WRITE; LSQUARE; s = expr; ih = expr; it = nonempty_list(expr); RSQUARE
+      { match List.rev (ih :: it) with
+        | h :: t -> Write (s, (List.rev t), h)
+        | _ -> failwith "unreachable" }
+
 
   | n = num
       { n }

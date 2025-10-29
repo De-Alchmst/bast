@@ -32,6 +32,8 @@ rule tokenize = parse
   | "return"     { RETURN }
   | "func"       { FUNC }
   | "list"       { LIST }
+  | "read" | "r" { READ }
+  | "write" | "w" { WRITE }
   | "cond" | "con" { COND }
   | "lambda" | "lamb" | "λ" { LAMBDA }
   | "do" | "blk" | "blck" | "block" { DO }
@@ -41,7 +43,7 @@ rule tokenize = parse
   | "true"  | "t" { SPECIAL_IDENT "true" }
   | "false" | "f" { SPECIAL_IDENT "false" }
   | 'f' ('+'|'-'|'*'|"//"|'/'|'%'
-        |"!"|"&&"|"||"|"^^"|"<="|">="|"="|"<"|">")
+        |'!'|"&&"|"||"|"^^"|"<="|">="|'='|'<'|'>')
       { SPECIAL_IDENT (Lexing.lexeme lexbuf) }
   | "f!=" | "f<>" { SPECIAL_IDENT "f!=" }
 
