@@ -62,6 +62,7 @@ and expr =
   | Lambda of arg list * stmt * expr (* args, declaration, body*)
   | For of for_type * string * expr * expr * stmt * expr  (* var, start, end, declaration, body *)
   | Array of expr list
+  | ArrayAccess of expr * expr (* array, index *)
 
 (* Statements - things that do actions *)
 and stmt = (* 'and' for mutually recursive types *)

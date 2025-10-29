@@ -44,6 +44,10 @@ let tests = [
   ("variable assignment",
    "foo := bar",
    [ExprStmt (Assign ("foo", Var "bar"))]);
+
+  ("Decimal numbers",
+   "3.7",
+   [ExprStmt (Num 3.7)]);
   
   ("addition",
    "foo := 1 + 2",
@@ -287,6 +291,11 @@ let tests = [
    "arr := { 1 2 3+4 }",
    [ExprStmt (Assign ("arr",
                      Array [Num 1.; Num 2.; BinOp (Add NoMod, Num 3., Num 4.)]))]);
+
+  ("Array access",
+   "foo|1 foo|3|4",
+   [ExprStmt (ArrayAccess (Var "foo", Num 1.));
+    ExprStmt (ArrayAccess ((ArrayAccess (Var "foo", Num 3.)), Num 4.))]);
 ]
 
 

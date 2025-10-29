@@ -100,9 +100,9 @@ rule tokenize = parse
   | '{'            { LCURLY }
   | '}'            { RCURLY }
 
-  | '\\'         { CONS }
+  | '\\'           { CONS }
   
-  | eof          { EOF }
+  | eof            { EOF }
   
   (* If we encounter any other character, raise an error *)
   | _ as c       

@@ -30,6 +30,7 @@
 %left LESSER GREATER LESSER_OR_EQUAL GREATER_OR_EQUAL
 %left PLUS MINUS
 %left TIMES DIVIDE WHOLE_DIVIDE MODULO
+%left PIPE
 %nonassoc unary
 
 (* The start symbol - what the parser tries to parse.
@@ -248,6 +249,8 @@ expr:
   | LCURLY; e = list(expr); RCURLY
       { Array e }
 
+  | e = expr; PIPE; i = expr
+      { ArrayAccess (e, i) }
 
   | n = num
       { n }

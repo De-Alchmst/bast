@@ -166,6 +166,11 @@ and string_of_expr = function
       sprintf "Arr([%s])"
         (String.concat "," (List.map string_of_expr e))
 
+  | ArrayAccess (arr, ind) ->
+      sprintf "arr_access([%s,%s])"
+        (string_of_expr arr)
+        (string_of_expr ind)
+
 and string_of_stmt = function
   | Declare (name, e) ->
       let pref_name = Encoding.encode_prefix name in

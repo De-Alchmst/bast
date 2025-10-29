@@ -403,4 +403,27 @@ fn val_println(argv: Array[Value]) -> Value {
   Nil
 }
 
+
+fn arr_access(argv: Array[Value]) -> Value {
+  match argv {
+    [Arr(arr), Num(idx)] => {
+      let i = idx.to_int()
+      if i < 0 || i >= arr.length() {
+        println("Array index out of bounds: \{i} for array of length \{arr.length()}")
+        panic()
+      } else {
+        arr[i]
+      }
+    }
+    [x, y] => {
+      println("cannot access \{x} with \{y}")
+      panic()
+    }
+    _ => {
+      println("invalid number of arguments for array access, expected 2, got \{argv.length()}")
+      panic()
+    }
+  }
+}
+
 |}
