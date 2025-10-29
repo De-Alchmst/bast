@@ -45,11 +45,13 @@ let build () =
   Sys.chdir basedir;
   (* So this is where moonbit got the idea... *)
   (* I hate you OCaml! *)
-  ignore (Sys.command "moon build --release");
-  Sys.rename "target/wasm-gc/release/build/bast-program.wasm" "../out.wasm";
+  ignore (Sys.command "moon build --release --target wasm --strip");
+  Sys.rename "target/wasm/release/build/bast-program.wasm" "../out.wasm";
   Sys.chdir ".."
+  (* ignore (Sys.command "wasm-opt -Oz --zero-filled-memory --strip-producers --enable-sign-ext --enable-threads --enable-mutable-globals --enable-nontrapping-float-to-int --enable-simd --enable-bulk-memory --enable-bulk-memory-opt --enable-call-indirect-overlong --enable-exception-handling --enable-tail-call --enable-reference-types --enable-multivalue --enable-relaxed-simd --enable-extended-const --enable-strings --enable-multimemory --enable-stack-switching --enable-shared-everything --enable-fp16 --enable-custom-descriptors ./out.wasm -o out.wasm") *)
 
 let run () =
   build ();
-  ignore (Sys.command "moonrun out.wasm");
+  ignore (Sys.command "moonrun out.wasm")
+  (* ignore (Sys.command "ls -lh out.wasm") *)
 
