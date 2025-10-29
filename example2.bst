@@ -8,4 +8,6 @@ func [main]:[
 
   [println
     cond [F]:[ 1 ]:[T]:[ 2 ]]
+
+  [println {1 2 3+4}]
 ]

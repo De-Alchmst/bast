@@ -282,6 +282,11 @@ let tests = [
   ("return statement without values",
    "return",
    [Return (SpecVar "nil")]);
+
+  ("Array creatin",
+   "arr := { 1 2 3+4 }",
+   [ExprStmt (Assign ("arr",
+                     Array [Num 1.; Num 2.; BinOp (Add NoMod, Num 3., Num 4.)]))]);
 ]
 
 

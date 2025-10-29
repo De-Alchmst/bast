@@ -107,8 +107,8 @@ expr:
      cases, so there needs to be some duplicity *)
   (* same problem here now, it just does not like starting with stuff that has
      precedence, except that unary +/- are fine...*)
-  | EQUALS; BIND; name = IDENT; e = expr
-      { PostAssign (name, e) }
+  (* | EQUALS; BIND; name = IDENT; e = expr *)
+  (*     { PostAssign (name, e) } *)
 
   (** this still throws parsers errors though... *)
   (* | PLUS; BIND; name = IDENT; e = expr *)
@@ -243,6 +243,10 @@ expr:
           | [] -> SpecVar "nil"
           | h :: t -> Cons (h, aux t)
         in aux e }
+
+
+  | LCURLY; e = list(expr); RCURLY
+      { Array e }
 
 
   | n = num
