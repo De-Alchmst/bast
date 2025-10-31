@@ -6,7 +6,28 @@
   open Parser
   
   exception LexError of string
+
+  let token_queue = Queue.create ()
+  let queue_token tok = Queue.add tok token_queue
+
+  let closing_block_stack = Stack.create ()
+
+  let new_block () = Stack.push 0 closing_block_stack
+
+  let add_to_block () =
+    if Stack.is_empty closing_block_stack then new_block ();
+    Stack.push ((Stack.pop closing_block_stack) + 1) closing_block_stack
+
+  let close_block () =
+    if not (Stack.is_empty closing_block_stack) then
+      let count = Stack.pop closing_block_stack in
+      for _ = 1 to count do
+        queue_token RSQUARE
+      done
+
+  (* another block after tokenize *)
 }
+
 
 
 let whitespace = [' ' '\t' '\r']
@@ -46,6 +67,8 @@ rule tokenize = parse
         |'!'|"&&"|"||"|"^^"|"<="|">="|'='|'<'|'>')
       { SPECIAL_IDENT (Lexing.lexeme lexbuf) }
   | "f!=" | "f<>" { SPECIAL_IDENT "f!=" }
+
+  | "+>"           { add_to_block (); LSQUARE }
 
   | "<-"           { ARROW_LEFT }
   | "->"           { ARROW_RIGHT }
@@ -97,17 +120,32 @@ rule tokenize = parse
   | '!'            { NOT }
   | '('            { LPAREN }
   | ')'            { RPAREN }
-  | '['            { LSQUARE }
-  | ']'            { RSQUARE }
+  | '['            { new_block   (); LSQUARE }
+  | ']'            { close_block (); RSQUARE }
   | '{'            { LCURLY }
   | '}'            { RCURLY }
 
   | '\\'           { CONS }
   
-  | eof            { EOF }
+  | eof            { 
+      if not (Stack.is_empty closing_block_stack) then
+        add_to_block ();
+        while not (Stack.is_empty closing_block_stack) do
+          close_block ()
+        done;
+    EOF }
   
   (* If we encounter any other character, raise an error *)
   | _ as c       
       { 
         raise (LexError (Printf.sprintf "Unexpected character: %c" c)) 
-      }
+}
+
+
+{
+  let next_token lexbuf =
+    if Queue.is_empty token_queue then
+      tokenize lexbuf
+    else
+      Queue.take token_queue
+}

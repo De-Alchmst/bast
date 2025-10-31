@@ -21,7 +21,7 @@ let compile_file input_filename output_filename =
   lexbuf.lex_curr_p <- { lexbuf.lex_curr_p with pos_fname = input_filename };
   
   try
-    let ast = Parser.prog Lexer.tokenize lexbuf in
+    let ast = Parser.prog Lexer.next_token lexbuf in
     Moonbit_project.write_file_ast output_filename ast;
     0
 

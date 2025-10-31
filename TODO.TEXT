@@ -1,8 +1,10 @@
-fix operator prebinding
 separate words from minus and stuf...
 add UTF-8
 add config (somehow)
 add exponents
-var section for blocks
+make negative numbers great again!
+make read/write work for lists as well
 
-fix var block of loops and functions -- can do without...
+can do without:
+  fix operator prebinding
+  fix var block of loops and functions

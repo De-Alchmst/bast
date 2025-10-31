@@ -14,5 +14,5 @@ func [main]:[
   var mat : { {1 2 3} {4 5 6} {7 8 9}}
   w [mat 1 2 37]
   [println r [mat 1 2]] ; should be 6
-  [println mat]
+  +> println mat
 ]

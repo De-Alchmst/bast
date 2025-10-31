@@ -3,7 +3,7 @@ open Ast
 
 let parse_string str =
   let lexbuf = Lexing.from_string str in
-  Parser.prog_debug Lexer.tokenize lexbuf
+  Parser.prog_debug Lexer.next_token lexbuf
 
 
 let run_test name input expected =
@@ -296,9 +296,13 @@ let tests = [
    "r [foo 1 2 3]",
    [ExprStmt (Read (Var "foo", [Num 1.; Num 2.; Num 3.]))]);
 
-   ("Iterable write",
+  ("Iterable write",
    "w [foo 3 7 42]",
    [ExprStmt (Write (Var "foo", [Num 3.; Num 7.], Num 42.))]);
+
+  ("+> block syntax",
+   "block [+> foo +> bar 3]",
+   [ExprStmt (Block ([], (VarFunc ("foo", [VarFunc ("bar", [Num 3.])]))))]);
 ]
 
 
