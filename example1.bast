@@ -21,9 +21,7 @@ func [test]:[
 
 func [fact-loop num]:[
   acc : 1
-]:[
-  while [num > 0]:[
+]:+>
+  while [num > 0]:+>
     acc:* --:num
-  ]
-]
 

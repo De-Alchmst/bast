@@ -93,7 +93,7 @@ rule tokenize = parse
   | "Array?" | "String?"
       { SPECIAL_IDENT (Lexing.lexeme lexbuf) }
 
-  | letter (letter | '-' | digit)+
+  | letter (letter | '-' | digit)* (letter | digit)
       { IDENT (Lexing.lexeme lexbuf) }
   
   | digit+ '.'? (digit)*
@@ -127,13 +127,18 @@ rule tokenize = parse
 
   | '\\'           { CONS }
   
-  | eof            { 
-      if not (Stack.is_empty closing_block_stack) then
-        add_to_block ();
-        while not (Stack.is_empty closing_block_stack) do
-          close_block ()
-        done;
-    EOF }
+  | eof
+  {
+    if (not (Stack.is_empty closing_block_stack)) then
+      (while (not (Stack.is_empty closing_block_stack)) do
+         close_block ();
+       done;
+       ignore (Queue.take token_queue); (* first one is returned directly *)
+       queue_token EOF; (* EOF must come after parens *)
+       RSQUARE)
+    else
+      EOF
+  }
   
   (* If we encounter any other character, raise an error *)
   | _ as c       
