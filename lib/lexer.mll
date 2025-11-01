@@ -103,6 +103,10 @@ rule tokenize = parse
       }
 
 
+  | "i32" | "i64" | "u32" | "u64" | "f32" | "f64" | "str" | "bool"
+      { TYPE (Lexing.lexeme lexbuf) }
+
+
   (* comments *)
   | ';' ([^'\n'])+ { tokenize lexbuf }
   | ':'            { BIND }

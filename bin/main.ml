@@ -11,9 +11,10 @@ let is_bast str =
   in aux [".bast"; ".bst"; ".☥"; ".𓋹"]
 
 let compile_file input_filename output_filename =
-  let input_channel = In_channel.open_text input_filename in
-  let input_str = String.lowercase_ascii (In_channel.input_all input_channel) in
-  In_channel.close input_channel;
+  (* let input_channel = In_channel.open_text input_filename in *)
+  (* let input_str = String.lowercase_ascii (In_channel.input_all input_channel) in *)
+  (* In_channel.close input_channel; *)
+  let input_str = String.lowercase_ascii @@ Files.read_file input_filename in
 
   let lexbuf = Lexing.from_string input_str in
   

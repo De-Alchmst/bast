@@ -1,5 +1,7 @@
 open Moonbit_codegen
 let basedir = "_BAST_work_dir/"
+let version = "moonbit-t.1"
+let version_file_name = basedir ^ "compiler.version"
 
 let gen_moon_mod () =
   Files.create_file_string (basedir ^ "moon.mod.json") 
@@ -27,12 +29,22 @@ let gen_moon_lib () =
   Files.create_file_string (basedir ^ "bast-lib.mbt") Moonbit_lib.src
 
 
+let gen_version_file () =
+  Files.create_file_string version_file_name version
+
+
 let gen_skelet () =
+  if Sys.file_exists version_file_name then
+    if not (version = Files.read_file version_file_name) then
+      print_endline "re-creating build dir";
+      Files.rmrf basedir;
+  
   Files.mkdir  basedir;
-  gen_moon_lib  ();
-  gen_moon_mod  ();
-  gen_moon_pkg  ();
-  gen_moon_main ()
+  gen_version_file ();
+  gen_moon_lib     ();
+  gen_moon_mod     ();
+  gen_moon_pkg     ();
+  gen_moon_main    ()
 
 
 let file_of_ast ast = string_of_ast ast
