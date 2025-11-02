@@ -12,17 +12,25 @@ let gen_moon_mod () =
 
 let gen_moon_pkg () =
   Files.create_file_string (basedir ^ "moon.pkg.json")
+  ((if !Moonbit_conf.entrypoint = "" then "false" else "true")
+  |> Printf.sprintf
 {|{
   "warn-list": "-1-2-3-4-5-6-7-8-9",
-  "is-main": true
-}|}
+  "is-main": %s
+}|})
 
 
 let gen_moon_main () =
-  Files.create_file_string (basedir ^ "main.mbt")
+  let main_filename = basedir ^ "main.mbt" in
+  if !Moonbit_conf.entrypoint = "" then
+    Files.rmrf main_filename
+  else
+    Files.create_file_string main_filename
+    ((Encoding.encode_prefix !Moonbit_conf.entrypoint)
+    |> Printf.sprintf
 {|fn main{
- let _=call_var_func(_bast_main,[])
-}|}
+ let _=call_var_func(%s,[])
+}|})
 
 
 let gen_moon_lib () =

@@ -52,7 +52,8 @@ let build () =
 
 (* Entry point *)
 let () =
-  (* Read from standard input and compile *)
+  Moonbit_conf.parse_config ();
+
   Moonbit_project.gen_skelet ();
   let registered_filenames = ref ["main.mbt"; "bast-lib.mbt"] in
 

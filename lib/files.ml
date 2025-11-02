@@ -15,17 +15,21 @@ let create_file_string name str =
 
 
 let read_file name =
-  let ic = In_channel.open_text name in
-  let str = In_channel.input_all ic in
-  In_channel.close ic;
-  str
+  In_channel.with_open_text name In_channel.input_all
+
+let read_file_lines name =
+  In_channel.with_open_text name In_channel.input_lines
 
 
 (* https://stackoverflow.com/questions/56327912/how-to-remove-a-non-empty-directory-with-ocaml *)
-let rec rmrf path = match Sys.is_directory path with
-  | true ->
-    Sys.readdir path |>
-      Array.iter (fun name -> rmrf (Filename.concat path name));
-    Unix.rmdir path
-  | false -> Sys.remove path
+let rmrf path =
+  if Sys.file_exists path then
+    let rec aux path =
+      match Sys.is_directory path with
+      | true ->
+        Sys.readdir path |>
+          Array.iter (fun name -> aux (Filename.concat path name));
+        Unix.rmdir path
+      | false -> Sys.remove path
+    in aux path
 
