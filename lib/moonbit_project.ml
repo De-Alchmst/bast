@@ -12,12 +12,17 @@ let gen_moon_mod () =
 
 let gen_moon_pkg () =
   Files.create_file_string (basedir ^ "moon.pkg.json")
-  ((if !Moonbit_conf.entrypoint = "" then "false" else "true")
-  |> Printf.sprintf
+  (Printf.sprintf
 {|{
   "warn-list": "-1-2-3-4-5-6-7-8-9",
-  "is-main": %s
-}|})
+  "is-main": %s,
+  "link": {
+    %s
+  }
+}|}
+  (if !Moonbit_conf.entrypoint = "" then "false" else "true") 
+  (if !Moonbit_conf.heap_start = "" then "" else
+    "\"heap-start-address\": " ^ !Moonbit_conf.heap_start)) 
 
 
 let gen_moon_main () =
