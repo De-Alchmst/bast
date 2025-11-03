@@ -1,4 +1,4 @@
-external [test foo:i32 bar:f64]:i32:[
+external [ext-test foo:i32 bar:f64]:i32:[
   env testing
 ]
 

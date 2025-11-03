@@ -1,6 +1,8 @@
 open Moonbit_codegen
+open Ast
+
 let basedir = "_BAST_work_dir/"
-let version = "moonbit-t.1"
+let version = "moonbit-t.2"
 let version_file_name = basedir ^ "compiler.version"
 
 let gen_moon_mod () =
@@ -17,7 +19,13 @@ let gen_moon_pkg () =
   "warn-list": "-1-2-3-4-5-6-7-8-9",
   "is-main": %s,
   "link": {
-    %s
+    "wasm": {
+      "import-memory": {
+        "module": "env",
+        "name": "memory"
+      },
+      %s
+    }
   }
 }|}
   (if !Moonbit_conf.entrypoint = "" then "false" else "true") 
@@ -37,6 +45,34 @@ let gen_moon_main () =
  let _=call_var_func(%s,[])
 }|})
 
+
+let string_of_type = function
+  | NoType -> "Unit"
+  | I32    -> "Int"
+  | I64    -> "Int64"
+  | U32    -> "UInt"
+  | U64    -> "UInt64"
+  | F32    -> "Float"
+  | F64    -> "Double"
+
+let string_of_func_args args =
+  String.concat ", " (List.map (function
+    | (str, typ) -> Printf.sprintf "%s: %s"
+        (Encoding.encode_prefix str)
+        (string_of_type typ))
+  args)
+
+
+let gen_external_functions_file () =
+  Files.create_file_string (basedir ^ "extern.mbt")
+  (String.concat "\n" (!Moonbit_conf.extern_functions
+    |> (List.map (function
+        | (ext_name, args, ret_type, extern_ident) ->
+            Printf.sprintf "fn %s(%s) -> %s = \"%s\""
+              ext_name
+              (string_of_func_args args)
+              (string_of_type ret_type)
+              (String.concat "\" \"" extern_ident)))))
 
 let gen_moon_lib () =
   Files.create_file_string (basedir ^ "bast-lib.mbt") Moonbit_lib.src
@@ -60,7 +96,8 @@ let gen_skelet () =
 
 
 let gen_extern () =
-  gen_moon_pkg ()
+  gen_moon_pkg ();
+  gen_external_functions_file ()
 
 
 let file_of_ast ast = string_of_ast ast
