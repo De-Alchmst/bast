@@ -8,4 +8,4 @@ let parse_config () =
       match String.split_on_char ':' line |> List.map String.trim with
         | ["entry"; value] ->
             entrypoint := value
-        | _ -> failwith @@ "cannot parse config : " ^ line)
+        | _ -> failwith @@ "cannot parse config: " ^ line)
