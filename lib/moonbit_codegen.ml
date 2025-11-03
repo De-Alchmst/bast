@@ -54,17 +54,31 @@ and string_of_type = function
 
 and value_of_type str = function
   | NoType -> str^";Nil"
-  | I32 | I64 | U32 | U64 | F32 | F64 -> "Num("^str^")"
+  | I32 | I64 | U32 | U64 | F32 | F64 -> "Num("^str^".to_double())"
 
-and string_of_func_args args =
-  String.concat ", " (List.map (function
-    | (str, typ) -> sprintf "%s: %s"
-        (Encoding.encode_prefix str) (string_of_type typ))
-    args)
+(* and string_of_func_args args = *)
+(*   String.concat ", " (List.map (function *)
+(*     | (str, _) -> sprintf "%s: Value" *)
+(*         (Encoding.encode_prefix str)) *)
+(*     args) *)
 
 and pass_args_of_args args =
+  let rec aux count = function
+    | [] -> []
+    | (_, ht) :: t -> (count, ht) :: (aux (count + 1) t)
+  in
   String.concat ", " (List.map (function
-    | (str, _) -> str) args)
+    | (cnt, typ) ->
+        sprintf "{match argv[%d] { Num(x) => x%s\n _ => panic()}}" cnt
+        (match typ with
+          | NoType -> "XXX"
+          | I32    -> ".to_int()"
+          | I64    -> ".to_int64()"
+          | U32    -> ".to_uint()"
+          | U64    -> ".to_uint64()"
+          | F32    -> ".to_float()"
+          | F64    -> ""))
+  (aux 0 args))
 
 and string_of_specvar = function
   | "nil"     -> "Nil"
@@ -232,14 +246,14 @@ and string_of_stmt = function
         !toplevel_declare ^ sprintf "let %s:Var={name:\"%s\", val:Nil}\n"
           pref_name name;
 
-      sprintf "%s.val = Fun(fn (%s) -> Value {%s})"
+      sprintf "%s.val = Fun(fn (argv: Array[Value]) -> Value {%s}, %d)"
       pref_name
-      (string_of_func_args args)
       (value_of_type
         (sprintf "%s(%s)"
           (Encoding.encode_external_prefix name)
           (pass_args_of_args args))
         ret)
+      (List.length args)
 
 
 and string_of_ast ast =

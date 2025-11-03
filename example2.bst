@@ -1,4 +1,8 @@
-func [main]:[
+external [test foo:i32 bar:f64]:i32:[
+  env testing
+]
+
+func [entry]:[
   foo:N
 ]:[
   foo := [ fact-fun fact-arg ]

@@ -95,6 +95,10 @@ rule tokenize = parse
   | "Array?" | "String?"
       { SPECIAL_IDENT (Lexing.lexeme lexbuf) }
 
+  | "i32" | "i64" | "u32" | "u64" | "f32" | "f64" | "str" | "bool"
+      { TYPE (Lexing.lexeme lexbuf) }
+
+
   | letter (letter | '-' | digit)* (letter | digit)
       { IDENT (Lexing.lexeme lexbuf) }
   
@@ -103,10 +107,6 @@ rule tokenize = parse
         (* Extract the matched text and convert to integer *)
         NUM (float_of_string (Lexing.lexeme lexbuf)) 
       }
-
-
-  | "i32" | "i64" | "u32" | "u64" | "f32" | "f64" | "str" | "bool"
-      { TYPE (Lexing.lexeme lexbuf) }
 
 
   (* comments *)
