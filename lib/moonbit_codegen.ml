@@ -43,6 +43,29 @@ and string_of_unop = function
   | Not    -> "val_not"
   | Negate -> "val_neg"
 
+and string_of_type = function
+  | NoType -> "Unit"
+  | I32    -> "Int"
+  | I64    -> "Int64"
+  | U32    -> "UInt"
+  | U64    -> "UInt64"
+  | F32    -> "Float"
+  | F64    -> "Double"
+
+and value_of_type str = function
+  | NoType -> str^";Nil"
+  | I32 | I64 | U32 | U64 | F32 | F64 -> "Num("^str^")"
+
+and string_of_func_args args =
+  String.concat ", " (List.map (function
+    | (str, typ) -> sprintf "%s: %s"
+        (Encoding.encode_prefix str) (string_of_type typ))
+    args)
+
+and pass_args_of_args args =
+  String.concat ", " (List.map (function
+    | (str, _) -> str) args)
+
 and string_of_specvar = function
   | "nil"     -> "Nil"
   | "f+"      -> "Fun(val_add, 2)"
@@ -202,6 +225,21 @@ and string_of_stmt = function
 
   | Return expr ->
       sprintf "return %s" (string_of_expr expr)
+
+  | ExternalFuncDeclare (name, args, ret, _) ->
+      let pref_name = Encoding.encode_prefix name in
+      toplevel_declare :=
+        !toplevel_declare ^ sprintf "let %s:Var={name:\"%s\", val:Nil}\n"
+          pref_name name;
+
+      sprintf "%s.val = Fun(fn (%s) -> Value {%s})"
+      pref_name
+      (string_of_func_args args)
+      (value_of_type
+        (sprintf "%s(%s)"
+          (Encoding.encode_external_prefix name)
+          (pass_args_of_args args))
+        ret)
 
 
 and string_of_ast ast =

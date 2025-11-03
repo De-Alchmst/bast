@@ -56,8 +56,11 @@ let gen_skelet () =
   gen_version_file ();
   gen_moon_lib     ();
   gen_moon_mod     ();
-  gen_moon_pkg     ();
   gen_moon_main    ()
+
+
+let gen_extern () =
+  gen_moon_pkg ()
 
 
 let file_of_ast ast = string_of_ast ast

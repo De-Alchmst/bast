@@ -3,6 +3,15 @@
 (* This header section contains OCaml code included in the generated parser *)
 %{
   open Ast  (* We need the AST types we defined *)
+
+  let type_of_string = function
+    | "i32" -> I32
+    | "i64" -> I64
+    | "u32" -> U32
+    | "u64" -> U64
+    | "f32" -> F32
+    | "f64" -> F64
+    | _     -> NoType
 %}
 
 %token <float> NUM
@@ -23,6 +32,7 @@
 %token ARROW_LEFT  ARROW_RIGHT FAT_ARROW_LEFT FAT_ARROW_RIGHT
 %token DO IF COND UNLESS WHILE UNTIL DO_WHILE DO_UNTIL LOOP FOR
 %token LPAREN RPAREN LSQUARE RSQUARE LCURLY RCURLY
+%token EXTERNAL EXPORT
 %token EOF
    
 %right CONS
@@ -65,6 +75,15 @@ toplevel_stmt:
   | FUNC; LSQUARE; name = IDENT; args = list(argument); RSQUARE;
           BIND; body = code_block
       { ToplevelDeclare (name, Lambda (args, StmtList [], body)) }
+
+  | EXTERNAL; LSQUARE; name = IDENT; args = list(external_argument); RSQUARE;
+          BIND; ret = TYPE
+          BIND; LSQUARE; ext = nonempty_list(IDENT); RSQUARE
+      { ExternalFuncDeclare (name, args, type_of_string(ret), ext) }
+
+  | EXTERNAL; LSQUARE; name = IDENT; args = list(external_argument); RSQUARE;
+          BIND; LSQUARE; ext = nonempty_list(IDENT); RSQUARE
+      { ExternalFuncDeclare (name, args, NoType, ext) }
 
 stmt:
   | VAR; dec = declare_block
@@ -363,3 +382,7 @@ cond_branch:
 bind_cond_branch:
   | BIND; branch = cond_branch
       { branch }
+
+external_argument:
+  | name = IDENT; BIND; t = TYPE
+      { (name, type_of_string(t)) }

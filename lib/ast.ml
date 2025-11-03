@@ -40,6 +40,9 @@ and for_type =
   | Ascending
   | Descending
 
+and func_type =
+  | NoType | I32 | I64 | U32 | U64 | F32 | F64
+
 (* Expressions - things that evaluate to values *)
 and expr =
   | Nil
@@ -72,6 +75,7 @@ and stmt = (* 'and' for mutually recursive types *)
   | ExprStmt of expr
   | Return of expr
   | ToplevelDeclare of string * expr
+  | ExternalFuncDeclare of string * (string * func_type) list * func_type * string list
 
 
 (* A program is a list of statements *)

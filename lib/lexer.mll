@@ -53,9 +53,11 @@ rule tokenize = parse
   | "return"     { RETURN }
   | "func"       { FUNC }
   | "list"       { LIST }
+  | "export"     { EXPORT }
   | "read" | "r" { READ }
   | "write" | "w" { WRITE }
   | "cond" | "con" { COND }
+  | "external" | "extern" { EXTERNAL }
   | "lambda" | "lamb" | "λ" { LAMBDA }
   | "do" | "blk" | "blck" | "block" { DO }
 
