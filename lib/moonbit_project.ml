@@ -1,8 +1,9 @@
+open Moonbit_conf
 open Moonbit_codegen
 open Ast
 
 let basedir = "_BAST_work_dir/"
-let version = "moonbit-t.2"
+let version = "moonbit-t.3"
 let version_file_name = basedir ^ "compiler.version"
 
 let gen_moon_mod () =
@@ -20,26 +21,28 @@ let gen_moon_pkg () =
   "is-main": %s,
   "link": {
     "wasm": {
-      "import-memory": {
-        "module": "env",
-        "name": "memory"
-      },
+      %s
       %s
     }
   }
 }|}
-  (if !Moonbit_conf.entrypoint = "" then "false" else "true") 
-  (if !Moonbit_conf.heap_start = "" then "" else
-    "\"heap-start-address\": " ^ !Moonbit_conf.heap_start)) 
+  (if !entrypoint = "" then "false" else "true") 
+  (if !heap_start = "" then "" else
+    "\"heap-start-address\": " ^ !heap_start ^ ",")
+  (if !import_memory = ("", "") then "" else
+    match !import_memory with | (modul, name) ->
+      Printf.sprintf "\"import-memory\": {\"module\":\"%s\", \"name\":\"%s\"}" 
+        modul name))
+      
 
 
 let gen_moon_main () =
   let main_filename = basedir ^ "main.mbt" in
-  if !Moonbit_conf.entrypoint = "" then
+  if !entrypoint = "" then
     Files.rmrf main_filename
   else
     Files.create_file_string main_filename
-    ((Encoding.encode_prefix !Moonbit_conf.entrypoint)
+    ((Encoding.encode_prefix !entrypoint)
     |> Printf.sprintf
 {|fn main{
  let _=call_var_func(%s,[])
@@ -65,7 +68,7 @@ let string_of_func_args args =
 
 let gen_external_functions_file () =
   Files.create_file_string (basedir ^ "extern.mbt")
-  (String.concat "\n" (!Moonbit_conf.extern_functions
+  (String.concat "\n" (!extern_functions
     |> (List.map (function
         | (ext_name, args, ret_type, extern_ident) ->
             Printf.sprintf "fn %s(%s) -> %s = \"%s\""
@@ -111,7 +114,7 @@ let build () =
   (* So this is where moonbit got the idea... *)
   (* I hate you OCaml! *)
   ignore (Sys.command "moon build --release --target wasm --strip");
-  if !Moonbit_conf.entrypoint = "" then
+  if !entrypoint = "" then
     Sys.rename "target/wasm/release/build/build.output" "../out.wasm"
   else
     Sys.rename "target/wasm/release/build/bast-program.wasm" "../out.wasm";
@@ -120,5 +123,5 @@ let build () =
 
 let run () =
   build ();
-  (if !Moonbit_conf.entrypoint <> "" then ignore (Sys.command "moonrun out.wasm"))
+  (if !entrypoint <> "" then ignore (Sys.command "moonrun out.wasm"))
 
