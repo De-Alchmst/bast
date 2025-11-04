@@ -13,8 +13,26 @@ func [start]:[
   var baz : [mapl bar lamb [fn]:[[fn fact-arg]]]
   [println baz]
   [println 0 = [reducel baz f+ `240]]
-  [println [sum-arr {1 2 3 4 5}]]
+
+  bar := {1 2 3 4 6}
+  w [bar 4 5]
+  [println [sum-arr bar]]
+
+  for [ind 0 <- 6]:[
+    inter:N
+  ]:[
+    inter := ind + 0.37
+    [println inter]
+  ]
+
+  [println [compare 24 42]]
+
+  [println 3 +:<:9 12]
+  [println 3 +:>:9 1]
+  [println 3 +:  <:1:9:> 12]
+  [println 3 +:%:<:1:9:> 12]
 ]
+
 
 func [mapl lst fn]:[
   if [+> nil? lst]:[
@@ -61,4 +79,11 @@ func [sum-arr arr]:[
   for [ind 0 => [len arr]]:[
     sum:+ r [arr ind]
   ]
+]
+
+
+func [compare aa bb]:[
+  cond [aa > bb]:[ 1]
+    :  [bb > aa]:[`1]
+    :  [   T   ]:[ 0]
 ]

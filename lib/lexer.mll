@@ -93,7 +93,7 @@ rule tokenize = parse
   | 'r' ad+ 'c'        { CXR (Encoding.string_rev (Lexing.lexeme lexbuf)) }
 
   | "nil?" | "num?" | "atom?" | "bool?" | "func?" | "cons?" | "list?"
-  | "Array?" | "String?"
+  | "array?" | "string?"
       { SPECIAL_IDENT (Lexing.lexeme lexbuf) }
 
   | "i32" | "i64" | "u32" | "u64" | "f32" | "f64" | "str" | "bool"
