@@ -486,4 +486,28 @@ fn val_write(src: Value, indexs: Array[Value], new: Value) -> Value {
   }
 }
 
+fn cons_len(cons: Value) -> Value {
+  fn aux(acc: Double, cell: Value) -> Double {
+    match cell {
+      Nil        => acc
+      Cons(_, x) => aux(acc + 1.0, x)
+      _          => -1.0
+    }
+  }
+  Num(aux(0.0, cons))
+}
+
+fn val_len(argv: Array[Value]) -> Value {
+  match argv[0] {
+    Nil        => Num(0.0)
+    Str(s)     => Num(s.length().to_double())
+    Arr(arr)   => Num(arr.length().to_double())
+    Cons(_, _) => cons_len(argv[0])
+    _ => {
+      println("len not implemented for \{argv[0]}")
+      panic()
+    }
+  }
+}
+
 |}

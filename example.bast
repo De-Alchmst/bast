@@ -1,0 +1,64 @@
+var [
+  fact-arg : 5
+]
+
+
+func [start]:[
+  foo:N
+  bar:N
+]:[
+  foo := fact-fun
+  bar := foo\fact-imp\N
+
+  var baz : [mapl bar lamb [fn]:[[fn fact-arg]]]
+  [println baz]
+  [println 0 = [reducel baz f+ `240]]
+  [println [sum-arr {1 2 3 4 5}]]
+]
+
+func [mapl lst fn]:[
+  if [+> nil? lst]:[
+    Nil
+  ]:[
+    [cons [fn   [car lst]]
+          [mapl [cdr lst] fn]]
+  ]
+]
+
+
+func [reducel lst fn init]:[
+  aux : lamb [acc lst]:+>
+    if [+> nil? lst]:[
+      acc
+    ]:+>
+      +> aux  [fn acc +> car lst]  [cdr lst]
+]:[
+  +> aux init lst
+]
+
+
+func [fact-fun num]:[
+  var aux : lamb [acc num]:[
+    if [num > 0]:[
+      [aux  acc * num  num - 1]
+    ]:[ acc ]
+  ]
+
+  [aux 1 num]
+]
+
+
+func [fact-imp num]:[
+  acc : 1
+]:[
+  while [num > 0] :+> acc:* --:num
+]
+
+
+func [sum-arr arr]:[
+  sum:0
+]:[
+  for [ind 0 => [len arr]]:[
+    sum:+ r [arr ind]
+  ]
+]

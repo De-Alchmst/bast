@@ -98,6 +98,7 @@ and string_of_specvar = function
   | "list?"   -> "Fun(val_list_p, 1)"
   | "Array?"  -> "Fun(val_array_p, 1)"
   | "string?" -> "Fun(val_string_p, 1)"
+  | "len"     -> "Fun(val_len, 1)"
   | _         -> "Nil"
 
 and string_of_expr = function

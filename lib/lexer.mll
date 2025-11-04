@@ -62,6 +62,7 @@ rule tokenize = parse
   | "do" | "blk" | "blck" | "block" { DO }
 
   | "println"     { SPECIAL_IDENT "println" }
+  | "len"         { SPECIAL_IDENT "len" }
   | "nil"   | "n" { SPECIAL_IDENT "nil" }
   | "true"  | "t" { SPECIAL_IDENT "true" }
   | "false" | "f" { SPECIAL_IDENT "false" }
