@@ -139,3 +139,13 @@ func [compare aa bb]:[
     :  [bb > aa]:[`1]
     :  [   T   ]:[ 0]
 ]
+
+;;; DALŠÍ NEZMÍNĚNÉ ASPEKTY ;;;
+; k 'if' existuje intertní podmínka 'unless'
+; k 'while' existuje invertní cyklus 'until'
+; také existuje 'do-while' a 'do-until', které se píší stejně, ale podmínku
+; sledují až od druhé iterace
+; z funkce se dá předčasně navrátit pomocí 'return'
+; existuje cyklus bez podmínky 'loop'
+; existuje blok 'do', který se jednou spustí a navrátí poslední hodnotu
+; existují běžné logické a aritmetické operátory, včetně pythonového '//'
