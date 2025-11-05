@@ -412,24 +412,31 @@ fn val_list_p(argv: Array[Value]) -> Value {
 
 // print 
 
-fn value_to_string(arg: Value) -> String {
+fn value_to_print_string(arg: Value) -> String {
   match arg {
     Nil        => "nil"
     Num(n)     => n.to_string()
-    Str(s)     => s
+    Str(s)     => "\"" + s + "\""
     Boo(b)     => b.to_string()
-    Cons(h, t) => "(" + value_to_string(h) + " \\ " + value_to_string(t) + ")"
+    Cons(h, t) => "(" + value_to_print_string(h) + " \\ " + value_to_print_string(t) + ")"
     Fun(_, _)  => "<function>"
     Arr(arr)   => {
       let mut s = "{"
       for i = 0; i < arr.length(); i = i + 1 {
-        s += value_to_string(arr[i])
+        s += value_to_print_string(arr[i])
         if i < arr.length() - 1 {
           s += ", "
         }
       }
       s + "}"
     }
+  }
+}
+
+fn value_to_string(arg: Value) -> String {
+  match arg {
+    Str(s)     => s
+    _          => value_to_print_string(arg)
   }
 }
 
@@ -738,6 +745,22 @@ fn val_remove(argv: Array[Value]) -> Value {
     _ => {
       println("Can remove only from arrays, got \{argv[0]}")
       panic()
+    }
+  }
+}
+
+
+// strings
+
+fn val_split(argv: Array[Value]) -> Value {
+  match argv {
+    [Str(s), Str(sep)] =>
+      Arr(s.split(sep).to_array()
+                      .map(fn (x: StringView) -> Value { Str(x.to_string()) }))
+    _ => {
+      println("split expects two strings, got \{argv}")
+      panic()
+    
     }
   }
 }

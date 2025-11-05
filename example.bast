@@ -32,4 +32,7 @@ func [main]:[
   [println hi-arr]
   [println [remove! hi-arr 2]]
   [println hi-arr]
+
+  [println "-------------------"]
+  [println [split "hello, world, how are you?" ", "]]
 ]

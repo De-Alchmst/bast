@@ -111,6 +111,7 @@ and string_of_specvar = function
   | "insert!"    -> "Fun(val_insert_dest, 3)"
   | "remove"     -> "Fun(val_remove, 2)"
   | "remove!"    -> "Fun(val_remove_dest, 2)"
+  | "split"      -> "Fun(val_split, 2)"
   | _            -> "Nil"
 
 and string_of_expr = function
