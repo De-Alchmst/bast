@@ -498,7 +498,7 @@ fn arr_write(src: Value, indexs: Array[Int], offset: Int, new: Value) -> Value {
 fn val_read(src: Value, indexs: Array[Value]) -> Value {
   let inds = values_to_idexes(indexs)
   match src {
-    Arr(_) => { arr_read(src, inds, 0) }
+    Arr(_) => arr_read(src, inds, 0)
     _ => {
       println("read not implemented for type \{src}")
       panic()
@@ -761,6 +761,18 @@ fn val_split(argv: Array[Value]) -> Value {
       println("split expects two strings, got \{argv}")
       panic()
     
+    }
+  }
+}
+
+
+fn val_chars(argv: Array[Value]) -> Value {
+  match argv[0] {
+    Str(s) =>
+      Arr(s.to_array().map(fn (x: Char) -> Value { Str(x.to_string()) }))
+    _ => {
+      println("chars expects a string, got \{argv}")
+      panic()
     }
   }
 }
