@@ -85,6 +85,11 @@ toplevel_stmt:
           BIND; LSQUARE; ext = nonempty_list(IDENT); RSQUARE
       { ExternalFuncDeclare (name, args, NoType, ext) }
 
+  (* only without params/return for now *)
+  (* enough for WASM-$ *)
+  | EXPORT; LSQUARE; name = IDENT; RSQUARE; BIND; body = code_block
+      { ExportDeclareFunc (name, body) }
+
 stmt:
   | VAR; dec = declare_block
       { dec }

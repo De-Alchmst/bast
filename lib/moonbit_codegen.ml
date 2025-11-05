@@ -226,6 +226,18 @@ and string_of_stmt = function
   | Return expr ->
       sprintf "return %s" (string_of_expr expr)
 
+  | ExportDeclareFunc (name, body) ->
+      let pref_name = Encoding.encode_prefix name in
+      let exp_name  = Encoding.encode_export_prefix name in
+      toplevel_declare :=
+        !toplevel_declare ^ sprintf "let %s:Var={name:\"%s\", val:Nil}\n"
+          pref_name name;
+
+      Moonbit_conf.export_functions :=
+        (exp_name, pref_name) :: !Moonbit_conf.export_functions;
+
+      sprintf "%s.val = %s" pref_name (string_of_expr body)
+
   | ExternalFuncDeclare (name, args, ret, ext) ->
       let pref_name = Encoding.encode_prefix name in
       let ext_name = Encoding.encode_external_prefix name in

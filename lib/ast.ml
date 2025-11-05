@@ -62,7 +62,7 @@ and expr =
   | DoWhile of expr * stmt * expr (* condition, declaration, body *)
   | Cons of expr * expr (* head, tail *)
   | Cxr of string
-  | Lambda of arg list * stmt * expr (* args, declaration, body*)
+  | Lambda of arg list * stmt * expr (* args, declaration, body *)
   | For of for_type * string * expr * expr * stmt * expr  (* var, start, end, declaration, body *)
   | Array of expr list
   | Read of expr * expr list (* source, index *)
@@ -76,6 +76,7 @@ and stmt = (* 'and' for mutually recursive types *)
   | Return of expr
   | ToplevelDeclare of string * expr
   | ExternalFuncDeclare of string * (string * func_type) list * func_type * string list
+  | ExportDeclareFunc of string * expr
 
 
 (* A program is a list of statements *)

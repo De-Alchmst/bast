@@ -4,6 +4,7 @@ let conf_filename = "bast.conf"
 let entrypoint = ref ""
 let heap_start = ref ""
 let import_memory = ref ("", "")
+let export_functions : (string * string) list ref = ref []
 let extern_functions
   : (string * (string * func_type) list * func_type * string list) list ref
   = ref []

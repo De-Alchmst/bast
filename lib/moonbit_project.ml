@@ -23,12 +23,20 @@ let gen_moon_pkg () =
     "wasm": {
       %s
       %s
+      %s
     }
   }
 }|}
   (if !entrypoint = "" then "false" else "true") 
+
   (if !heap_start = "" then "" else
     "\"heap-start-address\": " ^ !heap_start ^ ",")
+
+  (if !export_functions = [] then "" else
+    Printf.sprintf "\"exports\": [%s],"
+      (String.concat "," (!export_functions |> List.map (function
+        | (exp_name, _) -> Printf.sprintf "\"%s\"" exp_name))))
+
   (if !import_memory = ("", "") then "" else
     match !import_memory with | (modul, name) ->
       Printf.sprintf "\"import-memory\": {\"module\":\"%s\", \"name\":\"%s\"}" 
@@ -68,14 +76,22 @@ let string_of_func_args args =
 
 let gen_external_functions_file () =
   Files.create_file_string (basedir ^ "extern.mbt")
-  (String.concat "\n" (!extern_functions
-    |> (List.map (function
-        | (ext_name, args, ret_type, extern_ident) ->
-            Printf.sprintf "fn %s(%s) -> %s = \"%s\""
-              ext_name
-              (string_of_func_args args)
-              (string_of_type ret_type)
-              (String.concat "\" \"" extern_ident)))))
+  (String.concat "\n"
+    [(String.concat "\n" ((!extern_functions
+      |> (List.map (function
+          | (ext_name, args, ret_type, extern_ident) ->
+              Printf.sprintf "fn %s(%s) -> %s = \"%s\""
+                ext_name
+                (string_of_func_args args)
+                (string_of_type ret_type)
+          (String.concat "\" \"" extern_ident))))));
+
+    (String.concat "\n" ((!export_functions
+      |> (List.map (function
+          | (exp_name, pref_name) ->
+              Printf.sprintf "pub fn %s() -> Unit {ignore(call_var_func(%s, []))}"
+                exp_name
+                pref_name)))))])
 
 let gen_moon_lib () =
   Files.create_file_string (basedir ^ "bast-lib.mbt") Moonbit_lib.src
