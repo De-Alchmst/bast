@@ -590,4 +590,72 @@ fn val_array_make(argv: Array[Value]) -> Value {
   }
 }
 
+
+fn val_push_dest(argv: Array[Value]) -> Value {
+  match argv[0] {
+    Arr(arr) => {
+      arr.push(argv[1])
+      argv[1]
+    }
+    _ => {
+      println("push expects an array as first argument, got \{argv[0]}")
+      panic()
+    }
+  }
+}
+
+
+fn val_push(argv: Array[Value]) -> Value {
+  match argv[0] {
+    Arr(arr) => {
+      let new = arr.copy()
+      new.push(argv[1])
+      Arr(new)
+    }
+    _ => {
+      println("push expects an array as first argument, got \{argv[0]}")
+      panic()
+    }
+  }
+}
+
+
+fn val_pop_dest(argv: Array[Value]) -> Value {
+  match argv[0] {
+    Arr(arr) =>
+      match arr.pop() {
+        Some(v) => v
+        None    => {
+          println("Cannot pop from empty array")
+          panic()
+        }
+      }
+    _ => {
+      println("Pop expects an array as first argument, got \{argv[0]}")
+      panic()
+    }
+  }
+}
+
+
+fn val_pop(argv: Array[Value]) -> Value {
+  match argv[0] {
+    Arr(arr) => {
+      let new = arr.copy()
+      match new.pop() {
+        Some(_) => ()
+        None    => {
+          println("Cannot pop from empty array")
+          panic()
+        }
+      }
+      Arr(new)
+    }
+    _ => {
+      println("Pop expects an array as first argument, got \{argv[0]}")
+      panic()
+    }
+  }
+}
+
 |}

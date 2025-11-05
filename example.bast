@@ -5,6 +5,19 @@ func [main]:[
   [println {1 2 3} ~ {4 5 6}]
   [println list [ 1 2 ] ~ list [ 3 4 ]]
   [println "the sum of " ~ 2 ~ " and " ~ 3 ~ " is " ~ (2 + 3)]
+
   [println "-------------------"]
-  [println [array-make 6 "HI~"]]
+
+  var hi-arr:[array-make 6 "HI~"]
+  [println hi-arr]
+  [println [push hi-arr "BYE~"]]
+  [println hi-arr]
+  [println [push! hi-arr "BYE~"]]
+  [println hi-arr]
+
+  [println "-------------------"]
+  [println [pop hi-arr]]
+  [println hi-arr]
+  [println [pop! hi-arr]]
+  [println hi-arr]
 ]

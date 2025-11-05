@@ -103,6 +103,10 @@ and string_of_specvar = function
   | "len"        -> "Fun(val_len, 1)"
   | "to-string"  -> "Fun(val_to_string, 1)"
   | "array-make" -> "Fun(val_array_make, 2)"
+  | "push"       -> "Fun(val_push, 2)"
+  | "push!"      -> "Fun(val_push_dest, 2)"
+  | "pop"        -> "Fun(val_pop, 1)"
+  | "pop!"       -> "Fun(val_pop_dest, 1)"
   | _            -> "Nil"
 
 and string_of_expr = function
