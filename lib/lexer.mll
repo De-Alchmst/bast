@@ -70,6 +70,7 @@ rule tokenize = parse
         |'!'|"&&"|"||"|"^^"|"<="|">="|'='|'<'|'>')
       { SPECIAL_IDENT (Lexing.lexeme lexbuf) }
   | "f!=" | "f<>" { SPECIAL_IDENT "f!=" }
+  | "to-strig" | "2string" { SPECIAL_IDENT "to-strig" }
 
   | "+>"           { add_to_block (); LSQUARE }
 

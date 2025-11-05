@@ -9,7 +9,6 @@ enum Value {
   Arr(Array[Value])
   Fun((Array[Value]) -> Value, Int) // func, arity
   Cons(Value, Value)
-  Err
 } derive(Show)
 
 struct Var {
@@ -412,8 +411,34 @@ fn val_list_p(argv: Array[Value]) -> Value {
 }
 
 // print 
+
+fn value_to_string(arg: Value) -> String {
+  match arg {
+    Nil        => "nil"
+    Num(n)     => n.to_string()
+    Str(s)     => s
+    Boo(b)     => b.to_string()
+    Cons(h, t) => "(" + value_to_string(h) + " \\ " + value_to_string(t) + ")"
+    Fun(_, _)  => "<function>"
+    Arr(arr)   => {
+      let mut s = "{"
+      for i = 0; i < arr.length(); i = i + 1 {
+        s += value_to_string(arr[i])
+        if i < arr.length() - 1 {
+          s += ", "
+        }
+      }
+      s + "}"
+    }
+  }
+}
+
+fn val_to_string(argv: Array[Value]) -> Value {
+  Str(value_to_string(argv[0]))
+}
+
 fn val_println(argv: Array[Value]) -> Value {
-  println(argv[0])
+  println(value_to_string(argv[0]))
   Nil
 }
 
@@ -496,6 +521,8 @@ fn cons_len(cons: Value) -> Value {
   }
   Num(aux(0.0, cons))
 }
+
+// ARRAYS //
 
 fn val_len(argv: Array[Value]) -> Value {
   match argv[0] {
