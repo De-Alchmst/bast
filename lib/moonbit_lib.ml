@@ -537,4 +537,47 @@ fn val_len(argv: Array[Value]) -> Value {
   }
 }
 
+
+fn list_join(l1: Value, l2: Value) -> Value {
+  match l1 {
+    Nil => l2
+    Cons(h, t) => Cons(h, list_join(t, l2))
+    _ => {
+      println("Cannot join to CONS ending in \{l1}")
+      panic()
+    }
+  }
+}
+
+
+// JOIN //
+fn val_join(argv: Array[Value]) -> Value {
+  match argv[0] {
+    Str(s) => Str(s + value_to_string(argv[1]))
+    Cons(_, _) | Nil =>
+      match argv[1] {
+        Cons(_, _) | Nil => list_join(argv[0], argv[1])
+        _ => {
+          println("Cannot join CONS with \{argv[1]}")
+          panic()
+        }
+      }
+
+    Arr(arr1) => 
+      match argv[1] {
+        Arr(arr2) => Arr(arr1.add(arr2))
+        _ => {
+          println("Cannot join ARRAY with \{argv[1]}")
+          panic()
+        }
+      }
+
+      _ => {
+        println("Cannot join to \{argv[0]}")
+        panic()
+      }
+    
+  }
+}
+
 |}

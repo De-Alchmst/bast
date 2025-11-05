@@ -28,6 +28,7 @@ and binop =
   | And
   | Or
   | Xor
+  | Join
 
 and unop =
   | Negate

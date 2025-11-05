@@ -29,6 +29,7 @@ and string_of_binop = function
   | And        -> "val_and("
   | Or         -> "val_or("
   | Xor        -> "val_xor("
+  | Join       -> "val_join("
 
 and string_of_args args =
   let rec aux acc n = function
@@ -83,6 +84,7 @@ and string_of_specvar = function
   | "f>="       -> "Fun(val_greater_eq, 2)"
   | "f="        -> "Fun(val_equal, 2)"
   | "f!="       -> "Fun(val_not_equal, 2)"
+  | "f~="       -> "Fun(val_join, 2)"
   | "println"   -> "Fun(val_println, 1)"
   | "cons"      -> "Fun(val_cons, 2)"
   | "car"       -> "Fun(val_car, 1)"

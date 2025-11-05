@@ -34,6 +34,7 @@
 %token DO IF COND UNLESS WHILE UNTIL DO_WHILE DO_UNTIL LOOP FOR
 %token LPAREN RPAREN LSQUARE RSQUARE LCURLY RCURLY
 %token EXTERNAL EXPORT
+%token TILDE
 %token EOF
    
 %right CONS
@@ -41,9 +42,9 @@
 %left AND OR XOR
 %left EQUALS NOT_EQUALS
 %left LESSER GREATER LESSER_OR_EQUAL GREATER_OR_EQUAL
+%left TILDE
 %left PLUS MINUS
 %left TIMES DIVIDE WHOLE_DIVIDE MODULO
-%left PIPE
 %nonassoc unary
 
 (* The start symbol - what the parser tries to parse.
@@ -251,6 +252,8 @@ expr:
   | e1 = expr; AND; e2 = expr               { BinOp (And, e1, e2) }
   | e1 = expr; OR; e2 = expr                { BinOp (Or,  e1, e2) }
   | e1 = expr; XOR; e2 = expr               { BinOp (Xor, e1, e2) }
+  
+  | e1 = expr; TILDE; e2 = expr             { BinOp (Join, e1, e2) }
 
 
   (* Unary operations *)
@@ -275,8 +278,6 @@ expr:
   | LCURLY; e = list(expr); RCURLY
       { Array e }
 
-  (* | e = expr; PIPE; i = expr *)
-  (*     { ArrayAccess (e, i) } *)
   | READ; LSQUARE; s = expr; i = nonempty_list(expr); RSQUARE
       { Read (s, i) }
   | WRITE; LSQUARE; s = expr; ih = expr; it = nonempty_list(expr); RSQUARE
