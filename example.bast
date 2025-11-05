@@ -1,5 +1,3 @@
-external [rect xx:I32 yy:I32 width:I32 height:I32]:[env rect]
-
-export [update]:[
-  4 + 5
+func [main]:[
+  [println "Hello, Worl\"d!"]
 ]

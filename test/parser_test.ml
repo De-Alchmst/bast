@@ -303,6 +303,11 @@ let tests = [
   ("+> block syntax",
    "block [+> foo +> bar 3]",
    [ExprStmt (Block ([], (VarFunc ("foo", [VarFunc ("bar", [Num 3.])]))))]);
+
+  ("strings",
+   "\"hello, world!\" \"escaped\\\"quote\"",
+   [ExprStmt (Str "\"hello, world!\"");
+    ExprStmt (Str "\"escaped\\\"quote\"")]);
 ]
 
 

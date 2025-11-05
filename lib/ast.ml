@@ -47,6 +47,7 @@ and func_type =
 and expr =
   | Nil
   | Num of float
+  | Str of string
   | Var of string
   | SpecVar of string
   | BinOp of binop * expr * expr

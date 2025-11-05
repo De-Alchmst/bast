@@ -99,6 +99,9 @@ rule tokenize = parse
   | "i32" | "i64" | "u32" | "u64" | "f32" | "f64" | "str" | "bool"
       { TYPE (Lexing.lexeme lexbuf) }
 
+  (* strings are all converted to lower-case, because the entire source code is *)
+  | '"' ([^'"'] | "\\\"" )* '"' 
+      { STRING (Lexing.lexeme lexbuf) }
 
   | letter (letter | '-' | digit)* (letter | digit)
       { IDENT (Lexing.lexeme lexbuf) }

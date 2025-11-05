@@ -19,6 +19,7 @@
 %token <string> SPECIAL_IDENT
 %token <string> CXR
 %token <string> TYPE
+%token <string> STRING
 %token INCREMENT DECREMENT
 %token BIND PIPE
 %token PLUS MINUS TIMES DIVIDE WHOLE_DIVIDE MODULO
@@ -252,7 +253,6 @@ expr:
   | e1 = expr; XOR; e2 = expr               { BinOp (Xor, e1, e2) }
 
 
-
   (* Unary operations *)
   | NOT; e = expr %prec unary
       { UnOp (Not, e) }
@@ -293,6 +293,9 @@ expr:
 
   | x = SPECIAL_IDENT
       { SpecVar x }
+
+  | s = STRING
+      { Str s }
 
 assign: | BIND; EQUALS {}
 num:

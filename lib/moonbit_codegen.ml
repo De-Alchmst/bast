@@ -107,6 +107,7 @@ and string_of_expr = function
   | Num n -> "Num(" ^ (string_of_float n) ^ "0)"
   | Var x -> (Encoding.encode_prefix x) ^ ".val"
   | SpecVar x -> string_of_specvar x
+  | Str v -> "Str(" ^v^ ")"
 
   | Assign (n, expr) ->
       let name = Encoding.encode_prefix n in
