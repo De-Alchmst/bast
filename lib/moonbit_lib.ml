@@ -522,7 +522,6 @@ fn cons_len(cons: Value) -> Value {
   Num(aux(0.0, cons))
 }
 
-// ARRAYS //
 
 fn val_len(argv: Array[Value]) -> Value {
   match argv[0] {
@@ -537,6 +536,7 @@ fn val_len(argv: Array[Value]) -> Value {
   }
 }
 
+// join
 
 fn list_join(l1: Value, l2: Value) -> Value {
   match l1 {
@@ -549,8 +549,6 @@ fn list_join(l1: Value, l2: Value) -> Value {
   }
 }
 
-
-// JOIN //
 fn val_join(argv: Array[Value]) -> Value {
   match argv[0] {
     Str(s) => Str(s + value_to_string(argv[1]))
@@ -577,6 +575,18 @@ fn val_join(argv: Array[Value]) -> Value {
         panic()
       }
     
+  }
+}
+
+// array stuff
+
+fn val_array_make(argv: Array[Value]) -> Value {
+  match argv[0] {
+    Num(n) => Arr(Array::make(n.to_int(), argv[1]))
+    _ => {
+      println("array-make expects a number as first argument, got \{argv[0]}")
+      panic()
+    }
   }
 }
 

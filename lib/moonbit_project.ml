@@ -3,7 +3,7 @@ open Moonbit_codegen
 open Ast
 
 let basedir = "_BAST_work_dir/"
-let version = "moonbit-t.8"
+let version = "moonbit-t.11"
 let version_file_name = basedir ^ "compiler.version"
 
 let gen_moon_mod () =
@@ -104,8 +104,10 @@ let gen_version_file () =
 let gen_skelet () =
   if Sys.file_exists version_file_name then
     if not (version = Files.read_file version_file_name) then
+    begin
       print_endline "re-creating build dir";
       Files.rmrf basedir;
+    end;
   
   Files.mkdir  basedir;
   gen_version_file ();

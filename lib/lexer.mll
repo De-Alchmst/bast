@@ -61,8 +61,7 @@ rule tokenize = parse
   | "lambda" | "lamb" | "λ" { LAMBDA }
   | "do" | "blk" | "blck" | "block" { DO }
 
-  | "println"     { SPECIAL_IDENT "println" }
-  | "len"         { SPECIAL_IDENT "len" }
+  | "println" | "len"    { SPECIAL_IDENT (Lexing.lexeme lexbuf) }
   | "nil"   | "n" { SPECIAL_IDENT "nil" }
   | "true"  | "t" { SPECIAL_IDENT "true" }
   | "false" | "f" { SPECIAL_IDENT "false" }
@@ -70,7 +69,8 @@ rule tokenize = parse
         |'!'|"&&"|"||"|"^^"|"<="|">="|'='|'<'|'>')
       { SPECIAL_IDENT (Lexing.lexeme lexbuf) }
   | "f!=" | "f<>" { SPECIAL_IDENT "f!=" }
-  | "to-strig" | "2string" { SPECIAL_IDENT "to-strig" }
+  | "to-strig" | "2string"    { SPECIAL_IDENT "to-strig" }
+  | "arr-make" | "array-make" { SPECIAL_IDENT "array-make" }
 
   | "+>"           { add_to_block (); LSQUARE }
 
