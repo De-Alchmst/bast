@@ -107,6 +107,10 @@ and string_of_specvar = function
   | "push!"      -> "Fun(val_push_dest, 2)"
   | "pop"        -> "Fun(val_pop, 1)"
   | "pop!"       -> "Fun(val_pop_dest, 1)"
+  | "insert"     -> "Fun(val_insert, 3)"
+  | "insert!"    -> "Fun(val_insert_dest, 3)"
+  | "remove"     -> "Fun(val_remove, 2)"
+  | "remove!"    -> "Fun(val_remove_dest, 2)"
   | _            -> "Nil"
 
 and string_of_expr = function

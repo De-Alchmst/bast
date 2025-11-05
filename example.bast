@@ -20,4 +20,16 @@ func [main]:[
   [println hi-arr]
   [println [pop! hi-arr]]
   [println hi-arr]
+
+  [println "-------------------"]
+  [println [insert hi-arr 2 "MAYBE~"]]
+  [println hi-arr]
+  [println [insert! hi-arr 2 "MAYBE~"]]
+  [println hi-arr]
+
+  [println "-------------------"]
+  [println [remove hi-arr 2]]
+  [println hi-arr]
+  [println [remove! hi-arr 2]]
+  [println hi-arr]
 ]

@@ -61,7 +61,8 @@ rule tokenize = parse
   | "lambda" | "lamb" | "λ" { LAMBDA }
   | "do" | "blk" | "blck" | "block" { DO }
 
-  | "println" | "len" | "push!" | "push" | "pop!" | "pop"
+  | "println" | "len" | "push!" | "push" | "pop!" | "pop" | "insert!" | "insert"
+  | "remove!" | "remove"
       { SPECIAL_IDENT (Lexing.lexeme lexbuf) }
   | "nil"   | "n" { SPECIAL_IDENT "nil" }
   | "true"  | "t" { SPECIAL_IDENT "true" }

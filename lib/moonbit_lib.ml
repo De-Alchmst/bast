@@ -658,4 +658,88 @@ fn val_pop(argv: Array[Value]) -> Value {
   }
 }
 
+
+fn val_insert_dest(argv: Array[Value]) -> Value {
+  match argv[0] {
+    Arr(arr) =>
+      match argv[1] {
+        Num(n) => {
+          let idx = n.to_int()
+          if idx < 0 || idx > arr.length() {
+            println("Insert index \{idx} out of bounds for array of length \{arr.length()}")
+            panic()
+          }
+          arr.insert(idx, argv[2])
+          argv[2]
+        }
+
+        _ => {
+          println("Insert index must be a number, got \{argv[1]}")
+          panic()
+        }
+      }
+
+    _ => {
+      println("Can insert only into arrays, got \{argv[0]}")
+      panic()
+    }
+  }
+}
+
+
+fn val_insert(argv: Array[Value]) -> Value {
+  match argv[0] {
+    Arr(arr) => {
+      let new = Arr(arr.copy())
+      let _= val_insert_dest([new, argv[1], argv[2]])
+      new
+    }
+    _ => {
+      println("Can insert only into arrays, got \{argv[0]}")
+      panic()
+    }
+  }
+}
+
+
+fn val_remove_dest(argv: Array[Value]) -> Value {
+  match argv[0] {
+    Arr(arr) =>
+      match argv[1] {
+        Num(n) => {
+          let idx = n.to_int()
+          if idx < 0 || idx >= arr.length() {
+            println("Remove index \{idx} out of bounds for array of length \{arr.length()}")
+            panic()
+          }
+          arr.remove(idx)
+        }
+
+        _ => {
+          println("Remove index must be a number, got \{argv[1]}")
+          panic()
+        }
+      }
+
+      _ => {
+        println("Can remove only from arrays, got \{argv[0]}")
+        panic()
+      }
+  }
+}
+
+fn val_remove(argv: Array[Value]) -> Value {
+  match argv[0] {
+    Arr(arr) => {
+      let new = Arr(arr.copy())
+      let _= val_remove_dest([new, argv[1]])
+      new
+    }
+    _ => {
+      println("Can remove only from arrays, got \{argv[0]}")
+      panic()
+    }
+  }
+}
+
 |}

@@ -1,0 +1,4 @@
+let version = "moonbit-t.19"
+let version_file_name = basedir ^ "compiler.version"
+
+let gen_moon_mod () =

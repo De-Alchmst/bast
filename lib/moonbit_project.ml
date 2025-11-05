@@ -3,7 +3,7 @@ open Moonbit_codegen
 open Ast
 
 let basedir = "_BAST_work_dir/"
-let version = "moonbit-t.17"
+let version = "moonbit-t.22"
 let version_file_name = basedir ^ "compiler.version"
 
 let gen_moon_mod () =
