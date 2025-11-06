@@ -45,4 +45,32 @@ func [map iter fn]:[
     [panic "cannot map onto " ~ [2debug iter]]
   ]
 ]
+
+
+func [filter iter fn]:[
+  cond
+  [+> list? iter]:[
+    var aux : lamb [acc lst]:[
+      if [+> nil? lst]:[+> rev acc]:[
+        +> aux
+        if [+> fn [car lst]]:[[car lst]\acc]:[acc]
+        [cdr lst]
+      ]
+    ]
+    +> aux N iter
+
+  ]:[+> array? iter]:[
+    var new : {}
+
+    for [ind 0 => [len iter]]:[
+      itm : r [iter ind]
+    ]:[
+      if [+> fn itm]:[+> push! new itm]
+    ]
+    new
+
+  ]:[T]:[
+    [panic "cannot filter " ~ [2debug iter]]
+  ]
+]
 |}

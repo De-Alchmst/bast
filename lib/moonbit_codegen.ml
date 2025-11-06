@@ -185,7 +185,6 @@ and string_of_expr = function
 
   | For (ftype, ind, from, upto, dec, body) ->
       let pref_ind = Encoding.encode_prefix ind in
-      (* sprintf "{let mut _rval=Nil;for %s=Var::{name:\"%s\",val:%s};val_to_bool(%s([%s.val,%s]));%s.val=%s([%s.val, Num(1.0)]){_rval={\n %s\n %s\n }};_rval}" *)
       sprintf "{let mut _rval=Nil;let %s:Var={name:\"%s\",val:%s};while val_to_bool(%s([%s.val,%s])){_rval={\n %s\n %s\n };%s.val=%s([%s.val, Num(1.0)])};_rval}"
         pref_ind ind (string_of_expr from)
         (match ftype with | Ascending -> "val_lower_eq" | Descending -> "val_greater_eq")

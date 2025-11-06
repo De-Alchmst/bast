@@ -380,7 +380,7 @@ for_loop_head:
       { (Ascending, ind, down, up) }
 
   | LSQUARE; ind = IDENT; down = expr; FAT_ARROW_LEFT; up = expr; RSQUARE
-      { (Descending, ind, up, (BinOp ((Add NoMod), down, Num 1.)))}
+      { (Descending, ind, (BinOp ((Sub NoMod), up, Num 1.)), down)}
   | LSQUARE; ind = IDENT; down = expr; FAT_ARROW_RIGHT; up = expr; RSQUARE
       { (Ascending, ind, down, (BinOp ((Sub NoMod), up, Num 1.))) }
 
