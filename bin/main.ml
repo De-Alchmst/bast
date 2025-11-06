@@ -70,9 +70,11 @@ let () =
           if return_code != 0 then exit return_code);
 
   if Moonbit_project.version_changed then
+  begin
     let return_code = compile_string "BAST lib" "bast-lib.mbt"
                                      (String.lowercase_ascii Bast_lib.src) in
       if return_code != 0 then exit return_code;
+  end;
 
   (* remove untracked moonbit files *)
   Sys.readdir Moonbit_project.basedir |> Array.iter (fun filename ->

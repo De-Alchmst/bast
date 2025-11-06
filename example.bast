@@ -1,3 +1,12 @@
+func [add2 xx]:[
+  xx + 2
+]
+
+
 func [main]:[
-  [println TEST]
+  foo:{1 2 3}
+  bar:1\2\3\N
+]:[
+  [println [rev [map foo add2]]]
+  [println [rev [map bar add2]]]
 ]

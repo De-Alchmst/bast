@@ -62,8 +62,16 @@ rule tokenize = parse
   | "do" | "blk" | "blck" | "block" { DO }
 
   | "println" | "len" | "push!" | "push" | "pop!" | "pop" | "insert!" | "insert"
-  | "remove!" | "remove" | "split" | "chars"
+  | "remove!" | "remove" | "split" | "chars" | "panic"
       { SPECIAL_IDENT (Lexing.lexeme lexbuf) }
+
+  | "nil?" | "num?" | "atom?" | "bool?" | "func?" | "cons?" | "list?"
+  | "array?" | "string?"
+      { SPECIAL_IDENT (Lexing.lexeme lexbuf) }
+
+  | "i32" | "i64" | "u32" | "u64" | "f32" | "f64" | "str" | "bool"
+      { TYPE (Lexing.lexeme lexbuf) }
+
   | "nil"   | "n" { SPECIAL_IDENT "nil" }
   | "true"  | "t" { SPECIAL_IDENT "true" }
   | "false" | "f" { SPECIAL_IDENT "false" }
@@ -72,6 +80,7 @@ rule tokenize = parse
       { SPECIAL_IDENT (Lexing.lexeme lexbuf) }
   | "f!=" | "f<>" { SPECIAL_IDENT "f!=" }
   | "to-strig" | "2string"    { SPECIAL_IDENT "to-strig" }
+  | "to-debug" | "2debug"     { SPECIAL_IDENT "to-debug" }
   | "arr-make" | "array-make" { SPECIAL_IDENT "array-make" }
 
   | "+>"           { add_to_block (); LSQUARE }
@@ -94,13 +103,6 @@ rule tokenize = parse
   | "cons"  | "f\\"    { SPECIAL_IDENT "cons" }
   | 'c' ad+ 'r'        { CXR (Lexing.lexeme lexbuf) }
   | 'r' ad+ 'c'        { CXR (Encoding.string_rev (Lexing.lexeme lexbuf)) }
-
-  | "nil?" | "num?" | "atom?" | "bool?" | "func?" | "cons?" | "list?"
-  | "array?" | "string?"
-      { SPECIAL_IDENT (Lexing.lexeme lexbuf) }
-
-  | "i32" | "i64" | "u32" | "u64" | "f32" | "f64" | "str" | "bool"
-      { TYPE (Lexing.lexeme lexbuf) }
 
   (* strings are all converted to lower-case, because the entire source code is *)
   | '"' ([^'"'] | "\\\"" )* '"' 

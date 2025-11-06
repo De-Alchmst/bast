@@ -444,9 +444,19 @@ fn val_to_string(argv: Array[Value]) -> Value {
   Str(value_to_string(argv[0]))
 }
 
+fn val_to_debug(argv: Array[Value]) -> Value {
+  Str(argv[0].to_string())
+}
+
 fn val_println(argv: Array[Value]) -> Value {
   println(value_to_string(argv[0]))
   Nil
+}
+
+
+fn val_panic(argv: Array[Value]) -> Value {
+  let _= val_println(argv)
+  panic()
 }
 
 
