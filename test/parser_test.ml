@@ -1,4 +1,4 @@
-open Bast_lib
+open Bast_comp_lib
 open Ast
 
 let parse_string str =

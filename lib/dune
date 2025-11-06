@@ -1,7 +1,7 @@
 (library
- (name bast_lib)
+ (name bast_comp_lib)
  (modules files encoding ast lexer parser
-          moonbit_codegen moonbit_project moonbit_lib moonbit_conf)
+          moonbit_codegen moonbit_project moonbit_lib bast_lib moonbit_conf)
  (libraries str unix
             menhirLib))
 

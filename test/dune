@@ -1,5 +1,5 @@
 (test
  (name parser_test)
  (modules parser_test)
- (libraries bast_lib))
+ (libraries bast_comp_lib))
  ;(modes byte exe)) ; debug
