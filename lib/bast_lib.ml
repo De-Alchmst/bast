@@ -70,6 +70,11 @@ func [indmap iter fn]:[
 ]
 
 
+func [automap iter fn]:[
+  if [[arity fn] = 1]:[+> map iter fn]:[+> indmap iter fn]
+]
+
+
 func [filter iter fn]:[
   cond
   [+> list? iter]:[

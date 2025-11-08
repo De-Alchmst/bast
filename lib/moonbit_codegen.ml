@@ -115,6 +115,7 @@ and string_of_specvar = function
   | "remove!"    -> "Fun(val_remove_dest, 2)"
   | "split"      -> "Fun(val_split, 2)"
   | "chars"      -> "Fun(val_chars, 1)"
+  | "arity"      -> "Fun(val_arity, 1)"
   | _            -> "Nil"
 
 and string_of_expr = function

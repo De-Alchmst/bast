@@ -62,7 +62,7 @@ rule tokenize = parse
   | "do" | "blk" | "blck" | "block" { DO }
 
   | "println" | "len" | "push!" | "push" | "pop!" | "pop" | "insert!" | "insert"
-  | "remove!" | "remove" | "split" | "chars" | "panic"
+  | "remove!" | "remove" | "split" | "chars" | "panic" | "arity"
       { SPECIAL_IDENT (Lexing.lexeme lexbuf) }
 
   | "nil?" | "num?" | "atom?" | "bool?" | "func?" | "cons?" | "list?"

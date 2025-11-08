@@ -787,4 +787,16 @@ fn val_chars(argv: Array[Value]) -> Value {
   }
 }
 
+
+// functions
+fn val_arity(argv: Array[Value]) -> Value {
+  match argv[0] {
+    Fun(_, arity) => Num(arity.to_double())
+    _ => {
+      println("arity expects a function, got \{argv[0]}")
+      panic()
+    }
+  }
+}
+
 |}
