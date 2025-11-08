@@ -20,4 +20,9 @@ func [main]:[
   [println [filter [rev [automap foo add2-ind]] gt3]]
   [println [rev [automap bar add2]]]
   [println [filter [rev [map bar add2]] gt3]]
+
+  [println [foldl {1 2 3 4 5} 0 f-]]
+  [println [foldl 1\2\3\4\5\N 0 f-]]
+  [println [foldr {1 2 3 4 5} 0 f-]]
+  [println [foldr 1\2\3\4\5\N 0 f-]]
 ]

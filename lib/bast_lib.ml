@@ -101,4 +101,33 @@ func [filter iter fn]:[
     [panic "cannot filter " ~ [2debug iter]]
   ]
 ]
+
+
+;; more on folding behavior:
+;; https://en.wikipedia.org/wiki/Fold_(higher-order_function)
+
+func [foldl iter init fn]:[
+  cond
+  [+> list? iter]:[
+    var aux : lamb [acc lst]:[
+      if [+> nil? lst]:[acc]:[+> aux  [fn acc [car lst]]  [cdr lst]]
+    ]
+    +> aux init iter
+
+  ]:[+> array? iter]:[
+    var acc : init
+
+    for [ind 0 => [len iter]]:+>
+      acc := [fn acc r [iter ind]]
+
+  ]:[T]:[
+    [panic "cannot fold " ~ [2debug iter]]
+  ]
+]
+
+
+func [foldr iter init fn]:[
+  +> foldl [rev iter] init lamb [itm1 itm2]:[+> fn itm2 itm1]
+]
+
 |}

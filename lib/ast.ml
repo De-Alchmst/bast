@@ -70,6 +70,7 @@ and expr =
   | Read of expr * expr list (* source, index *)
   | Write of expr * expr list * expr (* source, index, new value *)
 
+
 (* Statements - things that do actions *)
 and stmt = (* 'and' for mutually recursive types *)
   | Declare of string * expr 
