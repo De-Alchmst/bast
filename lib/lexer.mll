@@ -75,7 +75,7 @@ rule tokenize = parse
   | "nil"   | "n" { SPECIAL_IDENT "nil" }
   | "true"  | "t" { SPECIAL_IDENT "true" }
   | "false" | "f" { SPECIAL_IDENT "false" }
-  | 'f' ('+'|'-'|'*'|"//"|'/'|'%'|'~'
+  | 'f' ('+'|'-'|'*'|"//"|'/'|'%'|'~'|'^'
         |'!'|"&&"|"||"|"^^"|"<="|">="|'='|'<'|'>')
       { SPECIAL_IDENT (Lexing.lexeme lexbuf) }
   | "f!=" | "f<>" { SPECIAL_IDENT "f!=" }
@@ -126,6 +126,7 @@ rule tokenize = parse
   | '+'            { PLUS }
   | '-'            { MINUS }
   | '*'            { TIMES }
+  | '^'            { POWER }
   | "//"           { WHOLE_DIVIDE }
   | '/'            { DIVIDE }
   | '%'            { MODULO }

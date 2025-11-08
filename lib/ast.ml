@@ -18,6 +18,7 @@ and binop =
   | Mul of opmod
   | Div of opmod
   | Mod of opmod
+  | Pow of opmod
   | WholeDiv of opmod
   | Equals
   | NotEquals

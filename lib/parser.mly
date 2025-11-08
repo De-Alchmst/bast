@@ -22,7 +22,7 @@
 %token <string> STRING
 %token INCREMENT DECREMENT
 %token BIND PIPE
-%token PLUS MINUS TIMES DIVIDE WHOLE_DIVIDE MODULO
+%token PLUS MINUS TIMES DIVIDE WHOLE_DIVIDE MODULO POWER
 %token EQUALS NOT_EQUALS LESSER LESSER_OR_EQUAL GREATER GREATER_OR_EQUAL
 %token NEGATE
 %token NOT OR AND XOR
@@ -44,7 +44,7 @@
 %left LESSER GREATER LESSER_OR_EQUAL GREATER_OR_EQUAL
 %left TILDE
 %left PLUS MINUS
-%left TIMES DIVIDE WHOLE_DIVIDE MODULO
+%left TIMES DIVIDE WHOLE_DIVIDE MODULO POWER
 %nonassoc unary
 
 (* The start symbol - what the parser tries to parse.
@@ -243,6 +243,9 @@ expr:
   | e1 = expr; WHOLE_DIVIDE; m=bin_op_mod ; e2 = expr
     { BinOp ((WholeDiv m), e1, e2) }
 
+  | e1 = expr; POWER; m=bin_op_mod; e2 = expr
+    { BinOp ((Pow m), e1, e2) }
+
   | e1 = expr; EQUALS; e2 = expr            { BinOp (Equals, e1, e2) }
   | e1 = expr; LESSER; e2 = expr            { BinOp (Lesser, e1, e2) }
   | e1 = expr; GREATER; e2 = expr           { BinOp (Greater, e1, e2) }
@@ -311,6 +314,7 @@ bin_op:
   | TIMES;        m = bin_op_mod { Mul      m }
   | DIVIDE;       m = bin_op_mod { Div      m }
   | MODULO;       m = bin_op_mod { Mod      m }
+  | POWER;        m = bin_op_mod { Pow      m }
   | WHOLE_DIVIDE; m = bin_op_mod { WholeDiv m }
 
 

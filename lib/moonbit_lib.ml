@@ -225,6 +225,10 @@ fn op_val_div(mod: Mod, argv: Array[Value]) -> Value {
   }, "divide", argv)
 }
 
+fn op_val_pow(mod: Mod, argv: Array[Value]) -> Value {
+  val_num_binop(mod, fn (x: Double, y:Double) -> Double {x.pow(y)}, "power", argv)
+}
+
 fn op_val_div_remles(mod: Mod, argv: Array[Value]) -> Value {
   val_num_binop(mod, fn (x: Double, y:Double) -> Double {
       if y == 0 {
@@ -240,6 +244,7 @@ fn val_sub(argv: Array[Value]) -> Value { op_val_sub(NoMod, argv) }
 fn val_mul(argv: Array[Value]) -> Value { op_val_mul(NoMod, argv) }
 fn val_div(argv: Array[Value]) -> Value { op_val_div(NoMod, argv) }
 fn val_mod(argv: Array[Value]) -> Value { op_val_mod(NoMod, argv) }
+fn val_pow(argv: Array[Value]) -> Value { op_val_pow(NoMod, argv) }
 fn val_div_remles(argv: Array[Value]) -> Value { op_val_div_remles(NoMod, argv) }
 
 // unops

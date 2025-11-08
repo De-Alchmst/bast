@@ -19,6 +19,7 @@ and string_of_binop = function
   | Mul m      -> "op_val_mul(" ^ (string_of_opmod m)
   | Div m      -> "op_val_div(" ^ (string_of_opmod m)
   | Mod m      -> "op_val_mod(" ^ (string_of_opmod m)
+  | Pow m      -> "op_val_pow(" ^ (string_of_opmod m)
   | WholeDiv m -> "val_div_remles(" ^ (string_of_opmod m)
   | Equals     -> "val_equal("
   | NotEquals  -> "val_not_equal("
@@ -71,9 +72,10 @@ and string_of_specvar = function
   | "f+"         -> "Fun(val_add, 2)"
   | "f-"         -> "Fun(val_sub, 2)"
   | "f*"         -> "Fun(val_mul, 2)"
-  | "f//"        -> "Fun(val_div_remles, 2)"
   | "f/"         -> "Fun(val_div, 2)"
   | "f%"         -> "Fun(val_mod, 2)"
+  | "f^"         -> "Fun(val_pow, 2)"
+  | "f//"        -> "Fun(val_div_remles, 2)"
   | "f&&"        -> "Fun(val_and, 2)"
   | "f||"        -> "Fun(val_or , 2)"
   | "f^^"        -> "Fun(val_xor, 2)"
