@@ -1,4 +1,5 @@
-func [add2 xx]:[
+func [add2 ind xx]:[
+  [println "" ~ ind ~ ": " ~ xx]
   xx + 2
 ]
 
@@ -12,7 +13,7 @@ func [main]:[
   foo:{1 2 3}
   bar:1\2\3\N
 ]:[
-  [println [filter [rev [map foo add2]] gt3]]
-  [println [rev [map bar add2]]]
-  [println [filter [rev [map bar add2]] gt3]]
+  [println [filter [rev [indmap foo add2]] gt3]]
+  [println [rev [indmap bar add2]]]
+  [println [filter [rev [indmap bar add2]] gt3]]
 ]

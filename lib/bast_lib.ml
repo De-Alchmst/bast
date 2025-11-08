@@ -47,6 +47,29 @@ func [map iter fn]:[
 ]
 
 
+func [indmap iter fn]:[
+  cond
+  [+> list? iter]:[
+    var aux : lamb [ind acc lst]:[
+      if [+> nil? lst]:[+> rev acc]
+                      :[+> aux  ind+1  [fn ind [car lst]]\acc  [cdr lst]]
+    ]
+    +> aux 0 N iter
+
+  ]:[+> array? iter]:[
+    var new : [array-make [len iter] Nil]
+
+    for [ind 0 => [len iter]]:[
+      w [new ind [fn ind r [iter ind]]]
+    ]
+    new
+
+  ]:[T]:[
+    [panic "cannot map onto " ~ [2debug iter]]
+  ]
+]
+
+
 func [filter iter fn]:[
   cond
   [+> list? iter]:[

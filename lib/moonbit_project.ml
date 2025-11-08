@@ -3,7 +3,7 @@ open Moonbit_codegen
 open Ast
 
 let basedir = "_BAST_work_dir/"
-let version = "moonbit-t.37"
+let version = "moonbit-t.38"
 let version_file_name = basedir ^ "compiler.version"
 let version_changed = 
   if Sys.file_exists version_file_name then
