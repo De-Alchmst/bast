@@ -83,17 +83,19 @@ let tests = [
        Num 2.)))]);
   
   ("all binary operators",
-   "foo := 1 + 2 - 3 * 4 / 5 // 4 % 3",
+   "foo := 1 + 2 - 3 * 4 / 5 // 4 % 3 ^ 2",
    [ExprStmt (Assign ("foo",
      BinOp (Sub NoMod,
        BinOp (Add NoMod, Num 1., Num 2.),
-       BinOp (Mod NoMod,
-              BinOp (WholeDiv NoMod,
-                     BinOp (Div NoMod,
-                            BinOp (Mul NoMod, Num 3., Num 4.),
-                            Num 5.),
-                     Num 4.),
-              Num 3.))))]);
+       BinOp (Pow NoMod,
+         BinOp (Mod NoMod,
+                BinOp (WholeDiv NoMod,
+                       BinOp (Div NoMod,
+                              BinOp (Mul NoMod, Num 3., Num 4.),
+                              Num 5.),
+                       Num 4.),
+                Num 3.),
+         Num 2.))))]);
 
   ("all of unary operators",
    "!(3 * `foo)",
@@ -253,8 +255,8 @@ let tests = [
   ("for loop complex",
    "for [ind 5+6 <= 7-6]:[foo:666]:[foo+ind]",
     [ExprStmt (For (Descending, "ind",
-                    BinOp (Sub NoMod, Num 7., Num 6.),
-                    BinOp (Add NoMod, BinOp (Add NoMod, Num 5., Num 6.), Num 1.),
+                    BinOp (Sub NoMod, BinOp (Sub NoMod, Num 7., Num 6.), Num 1.),
+                    BinOp (Add NoMod, Num 5., Num 6.),
                     StmtList [Declare ("foo", Num 666.)],
                     Block ([], BinOp (Add NoMod, Var "foo", Var "ind"))))]);
 
