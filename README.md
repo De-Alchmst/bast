@@ -4,6 +4,27 @@ BAST is an experimental programming language made for educational purchases.
 It is currently only in alpha stage and is unable to do any real work, but it
 implements enough to do basic calculations.
 
+```
+func [main]:[
+  [println [fact-fun 5] = [fact-imp 5]]
+]
+
+
+func [fact-fun num]:[
+  aux : lamb [acc num]:[
+    if [num > 0]:[+> aux  acc * num  num - 1]:[acc]]
+]:[
+  +> aux 1 num
+]
+
+
+func [fact-imp num]:[
+  acc : 1
+]:[
+  while [num > 0] :+> acc:* --:num
+]
+```
+
 ## features
 
 - dynamic typing
