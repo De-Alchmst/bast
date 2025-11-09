@@ -2,6 +2,13 @@
 
 open Bast_comp_lib
 
+let original_dir = Sys.getcwd ()
+
+let clean_exit code =
+  Sys.chdir original_dir;
+  exit code
+
+
 let is_bast str =
   let name = String.lowercase_ascii str in
   let rec aux = function
@@ -54,6 +61,22 @@ let build () =
 
 (* Entry point *)
 let () =
+  if Array.length Sys.argv > 2 then
+  begin
+    print_string "usage: bast [dir to compile in]";
+    exit 1
+  end
+  else if Array.length Sys.argv = 2 then
+  begin
+    if not (Sys.file_exists Sys.argv.(1)) then
+    begin
+      Printf.eprintf "Error: Directory %s does not exist.\n" Sys.argv.(1);
+      exit 1
+    end;
+    Sys.chdir Sys.argv.(1)
+  end;
+
+
   Moonbit_conf.parse_config ();
 
   Moonbit_project.gen_skelet ();
@@ -67,13 +90,13 @@ let () =
         registered_filenames := out_filename :: !registered_filenames;
 
         let return_code = compile_file filename out_filename in
-          if return_code != 0 then exit return_code);
+          if return_code != 0 then clean_exit return_code);
 
-  if Moonbit_project.version_changed then
+  if Moonbit_project.version_changed || !Moonbit_project.first_compile then
   begin
     let return_code = compile_string "BAST lib" "bast-lib.mbt"
                                      (String.lowercase_ascii Bast_lib.src) in
-      if return_code != 0 then exit return_code;
+      if return_code != 0 then clean_exit return_code;
   end;
 
   (* remove untracked moonbit files *)
@@ -85,4 +108,4 @@ let () =
   Moonbit_project.gen_extern ();
 
   build ();
-  exit 0
+  clean_exit 0

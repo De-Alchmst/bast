@@ -5,10 +5,12 @@ open Ast
 let basedir = "_BAST_work_dir/"
 let version = "moonbit-t.44"
 let version_file_name = basedir ^ "compiler.version"
-let version_changed = 
+let version_changed =
   if Sys.file_exists version_file_name then
     if not (version = Files.read_file version_file_name) then true else false
   else true
+
+let first_compile = ref false
 
 let gen_moon_mod () =
   Files.create_file_string (basedir ^ "moon.mod.json") 
@@ -18,7 +20,7 @@ let gen_moon_mod () =
 
 
 let gen_moon_pkg () =
-  Files.create_file_string (basedir ^ "moon.pkg.json")
+  Files.write_file_string (basedir ^ "moon.pkg.json")
   (Printf.sprintf
 {|{
   "warn-list": "-1-2-3-4-5-6-7-8-9",
@@ -53,7 +55,7 @@ let gen_moon_main () =
   if !entrypoint = "" then
     Files.rmrf main_filename
   else
-    Files.create_file_string main_filename
+    Files.write_file_string main_filename
     ((Encoding.encode_prefix !entrypoint)
     |> Printf.sprintf
 {|fn main{
@@ -112,6 +114,7 @@ let gen_skelet () =
     Files.rmrf basedir;
   end;
   
+  first_compile := not (Sys.file_exists basedir);
   Files.mkdir  basedir;
   gen_version_file ();
   gen_moon_lib     ();
