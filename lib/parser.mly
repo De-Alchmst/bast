@@ -39,13 +39,14 @@
    
 %right CONS
 
+%nonassoc unary_not
 %left AND OR XOR
 %left EQUALS NOT_EQUALS
 %left LESSER GREATER LESSER_OR_EQUAL GREATER_OR_EQUAL
 %left TILDE
 %left PLUS MINUS
 %left TIMES DIVIDE WHOLE_DIVIDE MODULO POWER
-%nonassoc unary
+%nonassoc unary_negate
 
 (* The start symbol - what the parser tries to parse.
    <Ast.program> is the type that this rule returns. *)
@@ -260,9 +261,9 @@ expr:
 
 
   (* Unary operations *)
-  | NOT; e = expr %prec unary
+  | NOT; e = expr %prec unary_not
       { UnOp (Not, e) }
-  | NEGATE; e = expr %prec unary
+  | NEGATE; e = expr %prec unary_negate
       { UnOp (Negate, e)  }
 
 
@@ -316,6 +317,7 @@ bin_op:
   | MODULO;       m = bin_op_mod { Mod      m }
   | POWER;        m = bin_op_mod { Pow      m }
   | WHOLE_DIVIDE; m = bin_op_mod { WholeDiv m }
+  | TILDE;                       { Join }
 
 
 bin_op_mod:

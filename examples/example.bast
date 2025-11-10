@@ -25,6 +25,35 @@ func [main]:[
   [println [foldl 1\2\3\4\5\N 0 f-]]
   [println [foldr {1 2 3 4 5} 0 f-]]
   [println [foldr 1\2\3\4\5\N 0 f-]]
+  var bach : 10
+  bach :+:%:<:5:15:> 10
+  [println bach]
 
   [println 2 ^ 10]
+
+  foo :~ {"a" "b" "c"}
+  [println foo]
+
+  [println ! 2 + 2 = 5]
+  [println !8]
+
+  foo := 0
+  [println
+    while [false]:[
+      foo:++
+    ]
+  ]
+
+  foo := ""
+  for [ind 0 <= 10]:[
+    foo := foo ~ ind ~ " "
+  ]
+  [println foo] ; "9 8 7 6 5 4 3 2 1 0"
+
+  do [
+    foo:N
+  ]:[
+    [println foo]
+  ]
+  [println foo]
 ]
