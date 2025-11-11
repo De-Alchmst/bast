@@ -1,59 +1,17 @@
-func [add2-ind ind xx]:[
-  [println "" ~ ind ~ ": " ~ xx]
-  xx + 2
-]
-
-func [add2 xx]:[
-  xx + 2
-]
-
-
-func [gt3 xx]:[
-  xx > 3
-]
-
-
 func [main]:[
-  foo:{1 2 3}
-  bar:1\2\3\N
+  data : {1\2\3\N 2\3\4\N 3\4\5\N}
+  aux  : lamb [acc lst]:[
+    cond
+      [[nil? lst]]:[acc]
+     :[T]:[[aux acc + [car lst] [cdr lst]]]
+  ]
 ]:[
-  [println [filter [rev [automap foo add2-ind]] gt3]]
-  [println [rev [automap bar add2]]]
-  [println [filter [rev [map bar add2]] gt3]]
-
-  [println [foldl {1 2 3 4 5} 0 f-]]
-  [println [foldl 1\2\3\4\5\N 0 f-]]
-  [println [foldr {1 2 3 4 5} 0 f-]]
-  [println [foldr 1\2\3\4\5\N 0 f-]]
-  var bach : 10
-  bach :+:%:<:5:15:> 10
-  [println bach]
-
-  [println 2 ^ 10]
-
-  foo :~ {"a" "b" "c"}
-  [println foo]
-
-  [println ! 2 + 2 = 5]
-  [println !8]
-
-  foo := 0
-  [println
-    while [false]:[
-      foo:++
+  if [+> array? data]:[
+    for [ind 0 => +> len data]:[
+      [println [aux 0 r [data ind]]]
     ]
   ]
 
-  foo := ""
-  for [ind 0 <= 10]:[
-    foo := foo ~ ind ~ " "
-  ]
-  [println foo] ; "9 8 7 6 5 4 3 2 1 0"
-
-  do [
-    foo:N
-  ]:[
-    [println foo]
-  ]
-  [println foo]
+  [println +> list? N]
 ]
+

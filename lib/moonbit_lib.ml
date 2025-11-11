@@ -539,6 +539,10 @@ fn cons_len(cons: Value) -> Value {
       Nil        => acc
       Cons(_, x) => aux(acc + 1.0, x)
       _          => -1.0
+      _          => {
+        println("Cannot measure length of non-list CONS: \{cell}")
+        panic()
+      }
     }
   }
   Num(aux(0.0, cons))

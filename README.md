@@ -32,6 +32,10 @@ func [fact-imp num]:[
 - unusual minimal syntax
 - compiled to WASM
 
+## documentation
+
+[doc.md](./doc.md)
+
 ## build
 
 As the compiler is written in [OCaml](https://ocaml.org/) one naturally needs
