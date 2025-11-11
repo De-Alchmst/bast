@@ -451,7 +451,7 @@ func [main]:[
 BAST has two primary data structures: arrays and singly linked lists.
 
 Lets start with arrays.
-Arrays are created with curly braces
+Arrays are created with curly braces.
 
 ```
 func [main]:[
@@ -462,10 +462,9 @@ func [main]:[
 Arrays are indexed from 0.
 Data can be read from an array with the `read` or `r` expression.
 Read takes a block containing the array itself and index of the element to read.
-To access nested arrays, multiple indexes can be put inside one `read`.
+To access nested arrays, multiple indices can be put inside one `read`.
 To write data to an array, use the `write` or `r` expression.
-In addition to the array and indices, it also takes the value to write at the
-end.
+In addition to the array and indices, it also takes the value to write.
 
 ```
 func [main]:[
@@ -476,18 +475,18 @@ func [main]:[
   }
 ]:[
   w [foo 0 1 2]
-  [println r [foo 0 1]]
+  [println r [foo 0 1]] ; 2
 ]
 ```
 
-Multiple functions to manipulate arrays exist.
+Multiple functions for array manipulation exist.
 The basic ones are:
 
-- `[push arr val]` - returns a new array with `val` appended to the end
-- `[pop arr]`  - returns a new array without it's last element
-- `[insert arr ind val]` - returns a new array with `val` inserted to to index `ind`
-- `[remove arr ind]` - returns a new array without the value at index `ind`
-- `[push! arr val]` - adds `val` at the end of `arr` and returns `val`
+- `[push arr val]` - returns a copy of `arr` with `val` appended to the end
+- `[pop arr]`  - returns a copy of `arr` without it's last element
+- `[insert arr ind val]` - returns a copy of `arr` with `val` inserted to index `ind`
+- `[remove arr ind]` - returns a copy of `arr` without the value at index `ind`
+- `[push! arr val]` - adds `val` to the end of `arr` and returns `val`
 - `[pop! arr]`  - removes the last value from `arr` and returns it
 - `[insert! arr ind val]` - inserts `val` to `arr` at the index `ind` and returns it
 - `[remove! arr ind]` - removes the value at index `ind` from `arr` and returns it
@@ -504,7 +503,9 @@ func [main]:[
 
 Lists can be formed in three ways.
 First is with the `list` expression.
-Since lists are formed from CONS cells, the cons (`\`) operator.
+Since lists are formed from
+[cons cells](https://cs.gmu.edu/~sean/lisp/cons/),
+the second one is the cons (`\`) operator.
 Last option is using the `cons` function.
 Note that when creating lists manually via consing, one needs to provide the
 `Nil` value at the end.
@@ -571,13 +572,13 @@ func [main]:[
 ### +> block syntax
 
 BAST uses quite a lot of square brackets.
-A lot of trailing brackets often end up at the end of blocks, which does not
+Trailing brackets tend to group at the end of blocks, which does not
 look particularly nice.
 To combat this, the `+>` block syntax was introduced.
 
 `+>` acts syntactically the same as if everything from it to the end of the
 parent block was enclosed in extra set of brackets.
-It is easier to show.
+It is easier to show on an example.
 
 ```
 func [main]:[
@@ -591,9 +592,11 @@ func [main]:[
     for [ind 0 => +> len data]:+>
       +> println +> aux 0 r +> data ind
 ]
+```
 
-;; same as
+This code is the same as:
 
+```
 func [main]:[
   data : {1\2\3\N  2\3\4\N  3\4\5\N}
   aux  : lamb [acc lst]:[
@@ -611,8 +614,9 @@ func [main]:[
 ```
 
 Yes, I admit, this is a bit excessive.
-You would usually not use `+>`to this extend, but it is a nice example of `+>`
-being really just a syntactic sugar and working in everywhere brackets work.
+You would usually not use `+>`to this extend, but it is a nice demonstration
+of `+>`
+being really just a syntactic sugar and working everywhere brackets would.
 It is usually used for when calling a function as a condition or for
 functions/blocks in the return position.
 
@@ -642,25 +646,21 @@ Note that `iter` can be either an array, or a list.
 - `[string? val]` - is `val` a string?
 - `[bool? val]` - is `val` a boolean?
 - `[func? val]` - is `val` a function?
+- `[cons? val]` - is `val` a cons cell?
+- `[nil? val]` - is `val` a `Nil`?
 - `[list? val]` - is `val` a list? (cons chain ending in `Nil`, just `Nil` is also a valid list)
 - `[array? val]` - is `val` an array?
 - `[atom? val]` - is `val` anything but array or cons cell?
-- `[nil? val]` - is `val` a `Nil`?
-- `[cons? val]` - is `val` a cons cell?
-
 - `[split str sep]` - returns a list of all substrings of `str` separated by `sep`
 - `[chars str]` - returns a list of strings, each being one character of `str`
-
-- `[arity fn]` - returns the number of arguments given function takes
+- `[arity fn]` - returns the number of arguments `fn` takes
 - `[panic val]` - prints `val` and exits the program
-
-- `[to-string val]` or `[2string val]` -  returns a pretty string representing given value
-- `[to-debug val]` or `[2debug val]` - returns a internal representation of the given value
+- `[to-string val]` or `[2string val]` -  returns a pretty string representing `val`
+- `[to-debug val]` or `[2debug val]` - returns a internal representation of the `val`
 - `[array-make num val]` or `[arr-make num val]` - returns a new array of `num` elements, all having the value `val`
-
 - `[rev iter]` - returns the reversed version of `iter`
 - `[map iter fn]` - returns a version of `iter` where each element is it's value, after applying `fn` to it
-- `[indmap iter fn]` - just like `map`, but `fn` takes first an index, and then the value
+- `[indmap iter fn]` - just like `map`, but `fn` first takes an index, and then the value
 - `[automap iter fn]` - either `map` or `indmap`, depending on `fn`'s arity
 - `[filter iter]` - returns a version of `iter` with only the elements, whose value is true after applying `fn` to them
 - `[foldl iter val fn]` - left fold, see [https://en.wikipedia.org/wiki/Fold_(higher-order_function)](https://en.wikipedia.org/wiki/Fold_(higher-order_function))
