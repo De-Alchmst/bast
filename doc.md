@@ -2,7 +2,8 @@
 
 ## Abstract
 
-BAST is an experimental language that I made in order to learn some basics of
+BAST is an experimental programming language that I made in order to learn some
+basics of
 compiler development in OCaml and to experiment with novel syntax ideas.
 The main goals with the syntax design is to keep it clean and aesthetically
 pleasing.
@@ -10,16 +11,16 @@ pleasing.
 It aims to provide basic tools for both procedural and functional programming
 and allow mixing both approaches as seem fitting.
 
-The original idea was to target the
+The original goal was to target the
 [WASM-4](https://wasm4.org/)
 platform, but that ended up being out of the project scope for now.
 
-The original syntax design turned to be a bit too lax, and the parser had
+The original syntax design turned out being a bit too lax, and the parser had
 problems with handling it, so some corners had to be cut.
-Main artefacts of this are the `read`/`write` constructs and `\`` for
+Main artefacts of this are the `read`/`write` constructs and `` ` `` for
 unary minus.
 
-Consider this to be just a demo.
+Consider this to be just a demo of what could have been.
 
 ## Compiler usage
 
@@ -59,7 +60,7 @@ func [main]:[
 ```
 
 As one can see, BAST uses S-expression-like syntax when calling functions.
-I say "hello, world!", as for implementation reasons, all strings are converted
+I say "hello, world!", since for implementation reasons all strings are converted
 to lower-case.
 In fact, all of BAST is case insensitive, so the following code does the exact
 same thing.
@@ -112,14 +113,16 @@ func [main]:[
 ]
 ```
 
-Here, `N` is a shorthand for `nil`. BAST allows a fair share of alternative for
-some keywords.
-It also reserves all single-letter names for special use, so you can't name
-variables things like `x` or `i`, but you need to get a bit more creative.
-Variables usually use kebab-case, but they cannot either start nor end with `-`.
+Here, `N` is a shorthand for `nil`. BAST allows alternative forms for some
+keywords.
+It also reserves all single-letter names for special use, so you can't give
+variables names like `x` or `i`.
+You need to get a bit more creative.
+Variables usually use kebab-case, but they cannot neither start nor end with `-`.
+`_` is not allowed in function names, as it is reserved for future use.
 
-To declare functions that take arguments, just simply write their names after
-the function's name.
+To declare a functions that takes arguments, just simply write the argument
+names after the function's name.
 
 ```
 func [print2 aa bb]:[
@@ -166,15 +169,15 @@ func [main]:[
 
 This example demonstrates multiple things.
 First, that variables are assigned with `:=`.
-This actually creates an infix operator by binding `=` to a variable name and it
+This actually creates an unary operator by binding `=` to a variable name and it
 returns the newly assigned value, but more on that later.
 
-The next are that variables are dynamically typed, that math is done with infix
-operators, as is usual in ALGOL-like languages, and that BAST do not
-differentiate between whole and decimal numbers.
+Variables are dynamically typed.
+Math is done with infix operators, as is usual in ALGOL-like languages
+And lastly, BAST does not differentiate between whole and decimal numbers.
 
 Due to poor syntax design, unary minus, also used for negative literals, is
-written using the `\`` symbol.
+written using the `` ` `` symbol.
 Otherwise it wouldn't be possible to tell whether an expression starts with an
 unary minus, or if the previous expression continues with a binary one.
 
@@ -204,8 +207,9 @@ Here is a list of all the infix operators:
 - `^^`  : logical xor
 - `xor` : logical xor
 
-All operators (except word `and`,  `or` and `xor` variants) can also have a
-function counterpart, so the previous code can be also written like so.
+All operators (except word `and`,  `or` and `xor` variants) also have a
+function counterpart, created by prepending them with "f",
+so the previous code can be also written like so:
 
 ```
 func [main]:[
@@ -219,7 +223,7 @@ func [main]:[
 ```
 
 The concatenation operator (`~`) can be used to join strings, lists and arrays
-together. If the left-hand side is a string, the right-hand side is
+together. If the left hand side is a string, the right hand side is
 automatically converted to string as well.
 
 ```
@@ -243,10 +247,9 @@ func [main]:[
 
 Arithmetic operators can be further modified by adding special constraints to
 them.
-By binding a less-than (`<`) and a numeric expression to an operator, one
+By binding a less-than (`<`) and a numeric expression to an operator
 prevents the result from exceeding the specified value.
-Binding greater-than (`>`) prevents the result from being lower than the value
-instead.
+Binding greater-than (`>`) prevents it from being lower instead.
 Binding modulo (`%`) applies modulo of the given value to the result.
 
 ```
@@ -257,20 +260,21 @@ func [main]:[
 ]
 ```
 
-To specify both upper and lower bounds, an "interval" form can be used:
-`<`, lower bound, upper bound `>`.
-By adding module before the interval, the result will loop in the interval,
+To specify both upper and lower bounds, an "interval" form can be used by
+binding:
+`<`, lower bound, upper bound, `>`.
+By adding modulo before the interval, the result will loop in the interval,
  instead of being stopped at the bounds.
 
 ```
 func [main]:[
   [println 10 +:<:5:15:> 10]   ; result is 15
   [println 10 +:%:<:5:15:> 10] ; result is 9
-]                              ; (15 and 5 left, which loops to 5→6→7→8→9)
+]                              ; (15 and 5 left, which loops to 5 -> 6 -> 7 -> 8 -> 9)
 ```
 
-For simplicity, when only expression is provided, it is interpreted as a
-upper bound.
+For simplicity, when only an numeric expression is provided, it is interpreted
+as an upper bound.
 
 Any arithmetic operator, including modified ones, and concatenation can be bound
 to a variable instead of `=`.
@@ -311,7 +315,7 @@ Lets start with conditionals.
 The `if` expression can take two forms.
 First of it's blocks always contains a logical expression.
 Only false expression is the `false` value.
-Zero, empty lists and similar are all true.
+Zero, nil, empty array and similar values are all true.
 
 The second block is a code block that will be executed when the expression is
 true, and it's last expression is returned as per usual.
@@ -348,11 +352,11 @@ func [main]:[
 ```
 
 Next, there are the loops.
-The `while` loop takes a condition block, followed by code block, which will be
-executed for as long as the condition is true.
-In addition, it can also have a variable block just like functions.
-All variables are initialised anew each iteration.
-Just like `if`, it has a `until` counterpart.
+The `while` loop takes a condition block, followed by a code block, which will
+be executed for as long as the condition is true.
+In addition, it can also have a variable block, just like a function.
+All variables in the declaration block are initialised anew each iteration.
+Just like `if`, it has the `until` counterpart.
 As per usual, the value of the last expression in the last iteration is returned
 
 ```
@@ -374,7 +378,7 @@ variants, which act the same, but ignore the expression for the first iteration.
 func [main]:[
   foo:0
 ]:[
-  [println ; prints 1, even the the expression wasn not ever true
+  [println ; prints 1, even tho the expression was never true
     do-while [foo > 1]:[
       foo:++
     ]
@@ -385,7 +389,7 @@ func [main]:[
 If a loop does not get executed at all, it returns `Nil`.
 
 Next is the `for` loop.
-The for loop is special, because it declares and iterates over a local variable.
+The `for` loop is special, as it declares and iterates over a local variable.
 The head of a `for` loop first expects a name for the iterator. Then it takes
 two numeric expressions, first one lower than the other, separated by an arrow.
 The arrow can take four forms:
@@ -407,7 +411,7 @@ func [main]:[
 ```
 
 Last is the creatively named `loop` loop.
-It does not take condition and it iterates endlessly.
+It does not take a condition and it iterates endlessly.
 How to escape from it then?
 Well, there comes the `return` statement, which exits from a function early.
 
@@ -422,10 +426,10 @@ func [main]:[
 ]
 ```
 
-In addition, there is one similar expression named `do`, `block`, `blck` or
-`blk`.
+In addition, there is one similar expression named either `do`, `block`, `blck`
+or `blk`.
 It does not take condition, and it executes exactly once.
-Therefor it is technically not a loop, but it is similar enough.
+Therefor it is technically not a loop, but it is similar enough to put here.
 
 ```
 func [main]:[

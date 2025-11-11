@@ -1,0 +1,23 @@
+;; fibonacci numbers start at 0!
+;; https://en.wikipedia.org/wiki/Fibonacci_sequence
+func [make-fib-gen]:[
+  first:0
+  second:1
+  third:1
+]:[
+  lamb []:[
+    ret:first
+  ]:[
+    first  := second
+    second := third
+    third  := first + second 
+    ret
+  ]
+]
+
+
+func [example]:[
+  var next-fib-number : [make-fib-gen]
+  for [ind 0 -> 20]:+>
+    [println [next-fib-number]]
+]
