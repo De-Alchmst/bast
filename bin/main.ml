@@ -92,6 +92,7 @@ let () =
         let return_code = compile_file filename out_filename in
           if return_code != 0 then clean_exit return_code);
 
+  (* compile BAST library as if it was a file (cannot be in moonbit_project) *)
   if Moonbit_project.version_changed || !Moonbit_project.first_compile then
   begin
     let return_code = compile_string "BAST lib" "bast-lib.mbt"

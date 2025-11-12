@@ -1,0 +1,14 @@
+func [fizz-buzz upto]:[
+  for [num 1 -> upto]:[
+    +> println cond
+      [num % 3 = 0 and num % 5 = 0]:["fizzbuzz"]:
+      [num % 5 = 0]:["fizz"]:
+      [num % 3 = 0]:["buzz"]:
+      [T]:[num]
+  ]
+]
+
+
+func [example]:[
+  [fizz-buzz 37]
+]
