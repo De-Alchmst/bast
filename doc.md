@@ -673,9 +673,9 @@ For lexer, I am using
 [ocamllex](https://ohama.github.io/ocaml/ocamllex-tutorial/).
 All lexer code can be found in
 [lib/lexer.mll](lib/lexer.mll).
-In addition to the usual lexer features, I need some extra functionality, all in
-order to support `+>`, as I decided that it will be easiest to replace it by
+I decided that the best implementation of `+>` would be to replace it with
 brackets at lex-time.
+To do this I will need some non-standard lexer functionality.
 
 I need matches to be able to return multiple values, which I implemented using
 a queue.
@@ -683,25 +683,24 @@ Lexer looks if there are any tokens in the queue.
 If so, it pops one and returns it, else it lexes like usual, which might add
 some tokens to the queue to be returned next.
 
-I also need some sort of counting how many brackets to close.
+I also need some sort of counting of how many brackets to close.
 This I implemented with a stack.
 Each opening bracket pushes a new value to the stack and closing one returns a
-number of closing bracket tokens based on that number.
+number of closing bracket tokens based on that value.
 All `+>` needs to do is to add to the number at the top of the stack and return
 opening a bracket token.
 
 As far as parser goes, it is pretty standard.
 It uses [Menhir](https://gitlab.inria.fr/fpottier/menhir)
-and can be fount in
+and can be found in
 [lib/parser.mly](lib/parser.mly).
 
 The parser does allow only some types of statements at top-level.
 That is a good thing, but it also makes writing tests for it annoying.
-That is why in addition to `prog`, it also exports `prog_debug`, which does not
-have any such limitation.
+That is why in addition to `prog`, it also exports the `prog_debug` function,
+which does not have any such limitation.
 The tests themselves can be found in
 [test/parser_test.ml](test/parser_test.ml).
-The tests themselves technically also test the lexer.
 
 The parser generates AST (available in [lib/ast.ml](lib/ast.ml)), which is then
 passed to codegen.
@@ -714,9 +713,9 @@ where it puts all the MoonBit stuff, including the generated source code.
 Some files in `_BAST_work_dir` only need to be written once, as they change only
 with new compiler version.
 For this reason, the compiler tracks it's current version and stores it in then
-`_BAST_work_dir/compiler.version` file.
+`_BAST_work_dir/compiler.version` file, so that it knows when to rewrite them.
 
-When the `_BAST_work_dir` skelet is complete, code generation can start.
+When the `_BAST_work_dir` skeleton is complete, code generation can start.
 [lib/moonbit_codegen.ml](lib/moonbit_codegen.ml)
 is not all that interesting, as it is mostly just some minimal pattern matching
 on the ATS.
@@ -728,7 +727,7 @@ typing and all the basic functions and operators.
 Values are stored as an enum type.
 Variables are a struct, which holds it's name and a value.
 The name was supposed to be used for error messages, but as variable itself is
-rarely passed around, it only comes to play when variable is called as a
+rarely passed around, it only comes to play when a variable is called as a
 function.
 
 Functions are implemented as MoonBit functions taking a list of arguments, with
@@ -743,7 +742,7 @@ Due to the way cons cells are implemented (a simple enum entry of two values),
 and the way arguments are passed around (by value), writing to a cons cell
 directly is currently not supported.
 This could be solved by making it it's own structure, to which the enum value
-only holds a reference.
+only holds a reference to.
 It was, however, not important enough to implement yet.
 
 In addition to

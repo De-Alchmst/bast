@@ -38,7 +38,7 @@ func [fact-imp num]:[
 
 ## examples
 
-[examples/][examples/] contains some example programs.
+[examples/](examples/) contains some example programs.
 To run them, simply do:
 
 ```
