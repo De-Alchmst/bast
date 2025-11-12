@@ -14,7 +14,7 @@
     | _     -> NoType
 %}
 
-%token <float> NUM
+%token <float>  NUM
 %token <string> IDENT
 %token <string> SPECIAL_IDENT
 %token <string> CXR
@@ -65,6 +65,7 @@ prog_debug:
   | stmts = list(stmt); EOF
       { stmts }
 
+
 toplevel_stmt:
   | VAR; dec = declare_toplevel_block
       { dec }
@@ -93,6 +94,7 @@ toplevel_stmt:
   | EXPORT; LSQUARE; name = IDENT; RSQUARE; BIND; body = code_block
       { ExportDeclareFunc (name, body) }
 
+
 stmt:
   | VAR; dec = declare_block
       { dec }
@@ -115,7 +117,7 @@ stmt:
   | e = expr
       { ExprStmt e }
 
-(* Expression grammar - builds up expression AST nodes *)
+
 expr:
   (* outsourcing := foxes issues with precedence, as this was considered infix *)
   | name = IDENT; assign; e = expr
@@ -131,19 +133,6 @@ expr:
       { Assign (name, BinOp (Sub (m), Var (name), Num 1.)) }
 
 
-  (* post assign binds *)
-  (* for some mystical occult reason I'm too much of a quiche-eater to
-     understand, in this case, the bin_op_mod cannot properly handle empty
-     cases, so there needs to be some duplicity *)
-  (* same problem here now, it just does not like starting with stuff that has
-     precedence, except that unary +/- are fine...*)
-  (* | EQUALS; BIND; name = IDENT; e = expr *)
-  (*     { PostAssign (name, e) } *)
-
-  (** this still throws parsers errors though... *)
-  (* | PLUS; BIND; name = IDENT; e = expr *)
-  (*     { PostAssign (name, BinOp (Add NoMod, Var (name), e)) } *)
-
   | INCREMENT; BIND; name = IDENT
       { PostAssign (name, BinOp (Add NoMod, Var (name), Num 1.)) }
   | DECREMENT; BIND; name = IDENT
@@ -154,10 +143,9 @@ expr:
   | DECREMENT; m = bin_op_mod; BIND; name = IDENT
       { PostAssign (name, BinOp (Sub (m), Var (name), Num 1.)) }
   
-
-  (* Parenthesized expression - just returns the inner expression *)
   | LPAREN; e = expr; RPAREN
       { e }
+
 
   | DO; dec = declare_block; BIND; body = code_block
       { match dec with | StmtList (stmts) -> Block (stmts, body) | _ -> Block ([], body) }
@@ -183,7 +171,6 @@ expr:
         | []         -> Block ([], SpecVar "nil")(* how to raise error again? *)
         | Var h :: t -> VarFunc (h, t)
         | h :: t     -> ValFunc (h, t)}
-
 
 
   | WHILE; cond = code_block; BIND; dec = declare_block; BIND; body = code_block
@@ -260,7 +247,6 @@ expr:
   | e1 = expr; TILDE; e2 = expr             { BinOp (Join, e1, e2) }
 
 
-  (* Unary operations *)
   | NOT; e = expr %prec unary_not
       { UnOp (Not, e) }
   | NEGATE; e = expr %prec unary_negate
@@ -302,12 +288,17 @@ expr:
   | s = STRING
       { Str s }
 
-assign: | BIND; EQUALS {}
+
+assign:
+  | BIND; EQUALS
+      {}
+
 num:
   | NEGATE; n = NUM
       { Num (-.n)}
   | n = NUM
       { Num n }
+
 
 bin_op:
   | PLUS;         m = bin_op_mod { Add      m }
@@ -349,9 +340,11 @@ code_block:
           | ExprStmt(e) :: t -> Block (List.rev t, e)
           | x -> Block (List.rev x, SpecVar "nil")}
 
+
 declare_block:
   | LSQUARE; s = nonempty_list(declare_var); RSQUARE
       { StmtList s }
+
 
 declare_var:
   | name = IDENT; BIND; value = expr
@@ -360,24 +353,26 @@ declare_var:
   | name = IDENT
       { Declare (name, SpecVar "nil") }
 
+
 declare_toplevel_block:
   | LSQUARE; s = nonempty_list(declare_toplevel_var); RSQUARE
       { StmtList s }
+
 
 declare_toplevel_var:
   | name = IDENT; BIND; value = expr
       { ToplevelDeclare (name, value) }
 
-  (* | name = IDENT *)
-  (*     { ToplevelDeclare (name, SpecVar "nil") } *)
 
 arg_block:
   | LSQUARE; params = list(argument); RSQUARE
       { params }
 
+
 argument:
   | name = IDENT
       { SimpleArg name }
+
 
 for_loop_head:
   | LSQUARE; ind = IDENT; down = expr; ARROW_LEFT; up = expr; RSQUARE
@@ -390,13 +385,16 @@ for_loop_head:
   | LSQUARE; ind = IDENT; down = expr; FAT_ARROW_RIGHT; up = expr; RSQUARE
       { (Ascending, ind, down, (BinOp ((Sub NoMod), up, Num 1.))) }
 
+
 cond_branch:
   | cond = code_block; BIND; body = code_block
       { (cond, body) }
 
+
 bind_cond_branch:
   | BIND; branch = cond_branch
       { branch }
+
 
 external_argument:
   | name = IDENT; BIND; t = TYPE

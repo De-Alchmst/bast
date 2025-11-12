@@ -36,6 +36,18 @@ func [fact-imp num]:[
 
 [doc.md](./doc.md)
 
+## examples
+
+[examples/][examples/] contains some example programs.
+To run them, simply do:
+
+```
+$ ./bast examples/<example-to-run>
+```
+
+In addition, the [lib/bast_lib.ml](lib/bast_lib.ml) file contains definitions
+of some BAST builtin function in BAST itself.
+
 ## build
 
 As the compiler is written in [OCaml](https://ocaml.org/) one naturally needs

@@ -667,3 +667,89 @@ Note that `iter` can be either an array, or a list.
 - `[foldr iter val fn]` - right fold, see [https://en.wikipedia.org/wiki/Fold_(higher-order_function)](https://en.wikipedia.org/wiki/Fold_(higher-order_function))
 
 ## Implementation
+
+At the core of most compilers stands the lexer, and the parser.
+For lexer, I am using
+[ocamllex](https://ohama.github.io/ocaml/ocamllex-tutorial/).
+All lexer code can be found in
+[lib/lexer.mll](lib/lexer.mll).
+In addition to the usual lexer features, I need some extra functionality, all in
+order to support `+>`, as I decided that it will be easiest to replace it by
+brackets at lex-time.
+
+I need matches to be able to return multiple values, which I implemented using
+a queue.
+Lexer looks if there are any tokens in the queue.
+If so, it pops one and returns it, else it lexes like usual, which might add
+some tokens to the queue to be returned next.
+
+I also need some sort of counting how many brackets to close.
+This I implemented with a stack.
+Each opening bracket pushes a new value to the stack and closing one returns a
+number of closing bracket tokens based on that number.
+All `+>` needs to do is to add to the number at the top of the stack and return
+opening a bracket token.
+
+As far as parser goes, it is pretty standard.
+It uses [Menhir](https://gitlab.inria.fr/fpottier/menhir)
+and can be fount in
+[lib/parser.mly](lib/parser.mly).
+
+The parser does allow only some types of statements at top-level.
+That is a good thing, but it also makes writing tests for it annoying.
+That is why in addition to `prog`, it also exports `prog_debug`, which does not
+have any such limitation.
+The tests themselves can be found in
+[test/parser_test.ml](test/parser_test.ml).
+The tests themselves technically also test the lexer.
+
+The parser generates AST (available in [lib/ast.ml](lib/ast.ml)), which is then
+passed to codegen.
+Before that happens, tho, the configuration file is red in
+[lib/moonbit_conf.ml](lib/moonbit_conf.ml)
+and compilation directory is created/updated from
+[lib/moonbit_project](lib/moonbit_project).
+The compiler creates a directory named `_BAST_work_dir` in the source directory,
+where it puts all the MoonBit stuff, including the generated source code.
+Some files in `_BAST_work_dir` only need to be written once, as they change only
+with new compiler version.
+For this reason, the compiler tracks it's current version and stores it in then
+`_BAST_work_dir/compiler.version` file.
+
+When the `_BAST_work_dir` skelet is complete, code generation can start.
+[lib/moonbit_codegen.ml](lib/moonbit_codegen.ml)
+is not all that interesting, as it is mostly just some minimal pattern matching
+on the ATS.
+The interesting stuff happens in
+[lib/moonbit_lib.ml](lib/moonbit_lib.ml).
+
+This file contains MoonBit source code which implements both basic dynamic
+typing and all the basic functions and operators.
+Values are stored as an enum type.
+Variables are a struct, which holds it's name and a value.
+The name was supposed to be used for error messages, but as variable itself is
+rarely passed around, it only comes to play when variable is called as a
+function.
+
+Functions are implemented as MoonBit functions taking a list of arguments, with
+it's arity stored in the enum value.
+They are called with intermediary functions, which check for arity.
+
+For numeric binary operators, special wrapper function `val_num_binop` exists,
+which checks that both arguments are numbers and applies any modifiers if
+specified.
+
+Due to the way cons cells are implemented (a simple enum entry of two values),
+and the way arguments are passed around (by value), writing to a cons cell
+directly is currently not supported.
+This could be solved by making it it's own structure, to which the enum value
+only holds a reference.
+It was, however, not important enough to implement yet.
+
+In addition to
+[lib/moonbit_lib.ml](lib/moonbit_lib.ml),
+there is also
+[lib/bast_lib.ml](lib/bast_lib.ml),
+which implements more advanced functions in BAST itself.
+Due to this, it needs to be compiled like a file, but it still recompiles only
+on version changes.

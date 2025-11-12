@@ -4,12 +4,13 @@
    generated lexer.ml file. We use it for helper functions and exceptions. *)
 {
   open Parser
-  
   exception LexError of string
 
+  (* Queue allows matches to return multiple tokens *)
   let token_queue = Queue.create ()
   let queue_token tok = Queue.add tok token_queue
 
+  (* Stack is used to for replacing '+>' with brackets *)
   let closing_block_stack = Stack.create ()
 
   let new_block () = Stack.push 0 closing_block_stack
