@@ -58,6 +58,5 @@ the MoobBit CLI needs to be installed as well.
 Once all the compilers are installed, the BAST compiler can be compiled with:
 
 ```
-dune install
-dune exec bin/main.exe
+$ ./build.sh
 ```
