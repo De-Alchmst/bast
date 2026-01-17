@@ -198,8 +198,6 @@ Here is a list of all the infix operators:
 - `<=`  : less or equal than
 - `>`   : greater than
 - `>=`  : greater or equal than
-- `== ` : deep comparison
-- `<=>` : identity check
 - `&&`  : logical and
 - `and` : logical and
 - `||`  : logical or
